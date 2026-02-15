@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "bierner.markdown-mermaid",
+        "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+        "esbenp.prettier-vscode",
+        "redhat.vscode-yaml",
+        "rvest.vs-code-prettier-eslint",
+        "streetsidesoftware.code-spell-checker",
+        "DavidAnson.vscode-markdownlint"
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    },
+    "cSpell.ignorePaths": [
+        "**/pubspec.lock",
+        ".git/**",
+        ".idea/**",
+        ".vscode/**",
+        ".fvm/**",
+        "**/build/**",
+        ".dart_tool/**",
+        "**/*.gen.dart",
+        "**/*.g.dart",
+        "**/*.freezed.dart"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always",
+        "source.organizeImports": "always",
+        "source.sortMembers": "always"
+    },
+}

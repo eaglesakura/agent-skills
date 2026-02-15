@@ -1,0 +1,257 @@
+# Delegate パターン
+
+## 概要
+
+Delegate パターンは、親クラス（ViewModel、Repository、Usecase など）から **メソッド単体を独立したクラスとして分割** することで、コードの見通しを良くする設計パターンである。本アプリでは、「クラスが肥大化したとき、メソッドを Delegate クラスとして切り出す」という方針を一貫して採用している。
+
+本パターンの本質的な目的は以下の2点である。
+
+* **見通しの良さ**: 親クラスから個々の処理を Delegate として切り出すことで、親クラスはメソッドの呼び出し（オーケストレーション）のみに専念でき、全体の流れが一目で把握できる
+* **単一責務の分離**: 1つの Delegate は1つの処理だけを担当する。これにより、各クラスの責務が明確になり、変更時の影響範囲が限定される
+
+上記の目的を達成するための副次的な利点として、以下がある。
+
+* **テスト容易性**: Delegate は独立してユニットテスト可能であり、親クラス全体のモックなしにテストできる
+* **レイヤー横断**: Screen、Data、Usecase の各レイヤーで一貫したパターンとして採用される
+
+## Delegate の基本構造
+
+Delegate は **単一の機能のみを提供するクラス** であり、public メソッドとして `execute` を1つだけ持つ。
+
+### コンストラクタの設計
+
+Delegate のコンストラクタは、**呼び出し元クラスのプロパティのサブセット** を受け取る。親クラスが保持する依存のうち、その Delegate が必要とするものだけをコンストラクタ引数とする。
+
+### execute メソッドの設計
+
+`execute` メソッドの引数は、**呼び出し元のメソッド引数と同等** とする。親クラスのメソッドが受け取る引数を、そのまま `execute` に渡す形となる。戻り値型も呼び出し元の属性を引き継ぐ。`Future`、同期型、`Stream` など、呼び出し元のメソッドに応じた型とする。
+
+### Delegate の基本構造のテンプレート
+
+```dart
+/// ${処理の説明}Delegate.
+@internal
+class ${処理名}Delegate {
+  /// 呼び出し元クラスのプロパティのサブセット.
+  @internal
+  final ${依存型} ${依存名};
+
+  const ${処理名}Delegate({
+    required this.${依存名},
+  });
+
+  /// ${処理の説明}を実行する.
+  ${呼び出し元と同等の戻り値型} execute(${呼び出し元と同等の引数}) {
+    // 処理ロジック
+  }
+}
+```
+
+### 基本構造の実装例
+
+呼び出し元（ViewModel）が保持する依存のサブセットを Delegate のコンストラクタに渡し、呼び出し元のメソッド引数はそのまま `execute` に渡す。
+
+```dart
+// screen_feature_kanji_kanamajiri, kanji_kanamajiri_screen_view_model.action.dart
+// ViewModel は extractAllowedKanjiUsecase, translateKanjiKanamajiriFunction, errorQueryUsecase, state を保持
+// Delegate のコンストラクタにはこれらのサブセットを渡す
+Future<void> onTapConvertButton() async {
+  final delegate = OnTapConvertButtonDelegate(
+    state: state,
+    extractAllowedKanjiUsecase: extractAllowedKanjiUsecase,
+    translateKanjiKanamajiriFunction: translateKanjiKanamajiriFunction,
+    errorQueryUsecase: errorQueryUsecase,
+  );
+  await delegate.execute();
+}
+```
+
+```dart
+// data_repository_authentication_impl, firebase_account_repository_impl.dart
+// Repository は stateStream, firebaseAuth, googleSignIn 等を保持
+// signIn メソッドの引数 request は execute にそのまま渡す
+@override
+Future<AuthenticationResult> signIn(AuthenticationRequest request) async {
+  final signInDelegate = SignInDelegate(
+    stateStream: stateStream,
+    auth: firebaseAuth,
+    googleSignIn: googleSignIn,
+    crashlytics: crashlytics,
+    onDeviceLoginFunction: onDeviceLoginFunction,
+    applicationMetadata: applicationMetadata,
+    preferencesRepository: preferencesRepository,
+  );
+  return signInDelegate.execute(
+    request: request,
+    eulaVersion: eulaVersion.version,
+  );
+}
+```
+
+## Delegate の適用範囲
+
+Delegate の適用範囲は特定の種類に限定されない。親クラスのメソッドが複雑になった場合、そのメソッドを Delegate として切り出すことが推奨される。以下は、本アプリで頻出する代表的な種類である。
+
+| 種類 | 配置例 |
+| -- | -- |
+| ユーザー操作やイベントに対する処理 | `OnTapConvertButtonDelegate`、`SignInDelegate` |
+| データアクセスや永続化 | `SignInDelegate`、`DatabaseSyncDelegate` |
+| 画面遷移の判定ロジック | `RoutingRedirectDelegate` |
+| アプリ起動時の初期化シーケンス | `StartUpDelegate` |
+
+## 配置規則
+
+### ディレクトリ配置
+
+Delegate は、親クラスと同じパッケージ内の `delegate/` サブディレクトリに配置する。
+
+```text
+${親クラスを格納するパッケージ}/
+├── ${親クラス名}.dart
+└── delegate/
+    ├── ${処理名}_delegate.dart
+    └── ${別処理名}_delegate.dart
+```
+
+### 配置の実装例
+
+```text
+app_packages/screen/feature/kanji_kanamajiri/lib/src/viewmodel/
+├── kanji_kanamajiri_screen_view_model.dart
+├── kanji_kanamajiri_screen_view_model.action.dart
+├── usecase/
+│   └── screen_state_to_entity_delegate.dart
+└── delegate/
+    ├── on_initialize_delegate.dart
+    ├── on_input_text_changed_delegate.dart
+    ├── on_selected_grade_changed_delegate.dart
+    └── on_tap_convert_button_delegate.dart
+```
+
+```text
+app_packages/data/repository/authentication/_impl/lib/src/firebase_account_repository/
+├── firebase_account_repository_impl.dart
+└── delegate/
+    ├── initialize_delegate.dart
+    ├── sign_in_delegate.dart
+    ├── sign_out_delegate.dart
+    └── save_eula_agreement_version_delegate.dart
+```
+
+## インスタンス化のパターン
+
+Delegate のインスタンス化には、依存関係とライフサイクルに応じて2つのパターンがある。
+
+### パターン1: 呼び出しごとに生成
+
+親クラスのメソッド内で、呼び出しのたびに Delegate を生成する。依存関係がその都度変わる場合や、親クラスが多くの依存を保持したくない場合に適する。
+
+#### 呼び出しごとに生成の補足
+
+Repository の各メソッドが異なる Delegate を必要とする場合、メソッド内で必要な依存を渡して Delegate を生成する。親クラスのフィールド数を抑えられる。
+
+#### 呼び出しごとに生成の実装例
+
+```dart
+// data_repository_authentication_impl, firebase_account_repository_impl.dart
+@override
+Future<AuthenticationResult> signIn(
+  AuthenticationRequest request,
+) async {
+  final signInDelegate = SignInDelegate(
+    stateStream: stateStream,
+    auth: firebaseAuth,
+    googleSignIn: googleSignIn,
+    crashlytics: crashlytics,
+    onDeviceLoginFunction: onDeviceLoginFunction,
+    applicationMetadata: applicationMetadata,
+    preferencesRepository: preferencesRepository,
+  );
+  return signInDelegate.execute(
+    request: request,
+    eulaVersion: eulaVersion.version,
+  );
+}
+```
+
+### パターン2: フィールドとして保持
+
+親クラスのコンストラクタで Delegate を生成し、フィールドとして保持する。同一 Delegate を複数回使用する場合に適する。
+
+#### フィールドとして保持の補足
+
+PreferencesRepository のように、初期化時に DatabaseSyncDelegate を起動し、edit 時に DatabaseEditDelegate を使用する場合、両方をフィールドとして保持する。
+
+#### フィールドとして保持の実装例
+
+```dart
+// data_repository_preferences_impl, preferences_repository_impl.dart
+final databaseSyncDelegate = DatabaseSyncDelegate(
+  database: appDatabase,
+  preferencesFactory: const db.PreferencesFactory(),
+);
+
+final databasePutDelegate = DatabaseEditDelegate(
+  database: appDatabase,
+);
+
+final result = PreferencesRepositoryImpl._(
+  stateStream: MutableStateStream(initial),
+  databaseSyncDelegate: databaseSyncDelegate,
+  databasePutDelegate: databasePutDelegate,
+);
+// ...
+PreferencesRepositoryImpl._({
+  required this.stateStream,
+  required this.databaseSyncDelegate,
+  required this.databasePutDelegate,
+}) {
+  databaseSyncDelegate.execute(stateStream);
+}
+```
+
+## 命名規則
+
+Delegate クラス名は、`${処理内容}Delegate` の形式とする。処理内容は動詞句または名詞句で、責務が明確になるようにする。
+
+| パターン | 例 |
+| -- | -- |
+| ユーザーアクション | `OnTapConvertButtonDelegate`、`OnInitializeDelegate` |
+| 処理 | `SignInDelegate`、`DatabaseSyncDelegate`、`RoutingRedirectDelegate` |
+
+## 可視性
+
+Delegate はパッケージ内部でのみ使用するため、`@internal` アノテーションを付与する。テストで必要となるプロパティには `@visibleForTesting` を付与する。
+
+## よくあるパターンとアンチパターン
+
+### 推奨されるパターン
+
+1. **1 Delegate = 1 `execute` メソッドとする**
+   * Delegate は単一の機能のみを提供し、public メソッドは `execute` の1つだけとする
+
+2. **コンストラクタは呼び出し元のプロパティのサブセットとする**
+   * 親クラスが保持する依存のうち、その Delegate が必要とするもののみをコンストラクタ引数にする
+
+3. **`delegate/` ディレクトリに配置する**
+   * 親クラスと同じパッケージ内の `delegate/` に配置し、発見しやすくする
+
+4. **依存の渡し方を用途に合わせる**
+   * 呼び出しごとに変わる場合は都度生成、再利用する場合はフィールド保持
+
+5. **Delegate を単体テストする**
+   * Delegate は独立してテスト可能であるため、親クラスより小さな単位でテストする
+
+### 避けるべきパターン
+
+1. **親クラスに処理を直書きする**
+   * 複雑な処理を親クラスに書くと、クラスが肥大化し、テストが困難になる
+
+2. **1つの Delegate に複数の public メソッドを持たせる**
+   * Delegate は `execute` のみを公開し、複数の機能を1つの Delegate に詰め込まない
+
+3. **Delegate をパッケージ外に公開する**
+   * Delegate は実装詳細であり、`@internal` でパッケージ外への露出を防ぐ
+
+4. **Flutter の Delegate と混同する**
+   * `LocalizationsDelegate`、`SliverChildBuilderDelegate` 等は Flutter フレームワークの Delegate であり、本ドキュメントで扱うアプリ固有の Delegate パターンとは別物である
