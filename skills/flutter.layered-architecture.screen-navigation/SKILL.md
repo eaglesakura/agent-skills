@@ -21,10 +21,7 @@ description: Flutter-Layered-Architecture アプリの画面遷移設計能力�
 
 ## ドキュメント
 
-## 追加ドキュメント
-
-文脈に応じて、下記のドキュメントを追加ロードする.
+下記のドキュメントを追加ロードする.
 ドキュメント記載の内容を遵守し、ユーザーの指示と統合して出力を行う.
 
-* [依存注入](./references/dependency-injection.md)
-  * 例: インターフェース設計、全体設計時
+* [navigation](./references/navigation.md)

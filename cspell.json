@@ -2,10 +2,14 @@
     "version": "0.2",
     "language": "en",
     "words": [
+        "dartx",
         "eaglesakura",
+        "kanamajiri",
+        "mvvm",
         "pubspec",
         "Riverpod",
         "Usecase",
+        "viewmodel",
         "worktrees"
     ]
 }
