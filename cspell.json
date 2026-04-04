@@ -2,12 +2,17 @@
     "version": "0.2",
     "language": "en",
     "words": [
+        "cocoapods",
         "dartx",
         "eaglesakura",
+        "GOMODCACHE",
+        "gsutil",
         "kanamajiri",
         "mvvm",
+        "nodebrew",
         "pubspec",
         "Riverpod",
+        "sdkman",
         "Usecase",
         "viewmodel",
         "worktrees"
