@@ -24,7 +24,7 @@ description: Markdown(*.md) ファイルのFormatterとLint対応を行う。Mar
 ### ステップ1. markdownlint実行
 
 ```bash
-mise exec -- npx markdownlint-cli --fix path/to/markdown_file.md"
+mise exec -- npx markdownlint-cli2 --fix path/to/markdown_file.md
 ```
 
 ### ステップ2. 個別対応
