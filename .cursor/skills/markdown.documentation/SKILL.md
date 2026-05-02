@@ -1,6 +1,6 @@
 ---
-name: documentation.knowledge
-description: 技術ドキュメント作成・更新のための能力を提供する。Markdown形式を前提としており、*.mdファイル等では必ず守るべきルールである。
+name: markdown.documentation
+description: Markdownでの技術ドキュメント作成・更新のためのSKILL。Markdown形式を前提としており、*.mdファイルの差分を提案する場合は必ずロードする。
 ---
 # ドキュメンテーション / 技術文書の記載
 

@@ -3,7 +3,7 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "[markdown]": {
-        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
     "cSpell.ignorePaths": [
         "**/pubspec.lock",
