@@ -36,7 +36,7 @@
     git diff origin/main HEAD
     ```
 
-3. [Pull Requestテンプレート](./github.create-pull-request/template.md) を使用してPR本文を作成する
+3. [Pull Requestテンプレート](../extra/github.create-pull-request/template.md) を使用してPR本文を作成する
     * テキストは日本語で記載する
     * 規定された一時ファイル置き場に保存し、作業完了後に削除する
 

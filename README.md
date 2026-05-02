@@ -7,15 +7,76 @@
 * 基本的にCursorで使用することを想定している
 * すべて日本語で記載されており、Token数の最適化については考慮されていない
 
+## `.cursor/` 配下の構成
+
+| パス | 役割 |
+| --- | --- |
+| `.cursor/command/` | Slash Command 本体（`/コマンド名` で起動する Markdown） |
+| `.cursor/agents/` | Sub Agent 定義（職能・レビュアーなどのハーネス） |
+| `.cursor/extra/` | コマンド・SKILL から参照するテンプレート・補助原稿 |
+| `.cursor/skills/` | Cursor Agent Skills（ディレクトリ名が SKILL 識別子に対応） |
+
 ## 収録Slash-Command
 
 ※ `.cursor/command/` 直下の Markdown ファイルと対応する（アルファベット順）。サブディレクトリ内はテンプレート等であり、Slash Command 本体ではない。
 
+### coding.design
+
+* Coding-Commands のステップ2である（`/coding.requirement` → `/coding.design` → `/coding.execute`）。
+* 要件を踏まえアーキテクチャを確認し、ジュニアエンジニアが実装可能な粒度の詳細設計を計画ファイルへ反映する。
+* 出力フォーマットは [extra/coding/design.md](.cursor/extra/coding/design.md) に準ずる。計画ファイルは `.ai-agent/plan/*.md` を上書き保存する。
+
+### coding.execute
+
+* Coding-Commands のステップ3である。事前に構築された計画に基づき実装を反映する。
+* 計画ファイルと作業範囲を読み、`coding-assistant.junior-engineer` 等の Sub Agent へテンプレートに沿った指示を渡す手順を規定する。
+
+### coding.requirement
+
+* Coding-Commands のステップ1である。
+* 要件の初期案から実装計画を `.ai-agent/plan/{計画名}.md` に保存する。出力フォーマットは [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) に準ずる。
+* ガードレールとして、計画・レビュー関連ファイル以外の変更を行わない要件定義モードを規定する。
+
 ### github.create-pull-request
 
 * ブランチでの作業完了後に Pull Request を作成する、または既存 PR の本文を更新する。
-* 差分の整理・[Pull Request テンプレート](.cursor/command/github.create-pull-request/template.md) による本文作成・`gh pr create` / `gh pr edit` の利用を手順として規定する。
+* 差分の整理・[Pull Request テンプレート](.cursor/extra/github.create-pull-request/template.md) による本文作成・`gh pr create` / `gh pr edit` の利用を手順として規定する。
 * 対象リポジトリ・base ブランチ・既存 Pull Request URL はオプションで指定できる。
+
+## 収録Sub-Agents
+
+※ `.cursor/agents/` 直下の Markdown と対応する（アルファベット順）。
+
+### coding-assistant.junior-engineer
+
+* ジュニアエンジニア職能として、与えられた実装計画から逸脱しない範囲で実装を行う。
+* [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
+* 計画確認・宣誓・中断時は親 Agent へ報告する。
+
+### coding-assistant.requirement-reviewer
+
+* 要件定義のレビュアー。不足・不明瞭な要件の洗い出しと判断材料の提示を行う（`readonly`・バックグラウンド実行想定）。
+* [engineer.software-requirement](.cursor/skills/engineer.software-requirement/SKILL.md) と [要件定義フォーマット](.cursor/extra/coding/requirements.md) を参照する。
+
+### coding-assistant.senior-engineer
+
+* シニアエンジニア職能として、要件達成に必要な最小限の計画逸脱を認めつつ計画範囲内で自律的にコーディングする。
+* [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
+
+### coding-assistant.software-design-reviewer
+
+* 詳細設計ドキュメントや実装のレビュアー。指摘は要約せず一覧で親 Agent に渡す（`readonly`・バックグラウンド実行想定）。
+* [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
+
+## `.cursor/extra/` 補助ファイル
+
+Slash Command または SKILL からパス参照されるテンプレートである。
+
+| ファイル | 参照元の例 |
+| --- | --- |
+| [extra/coding/design.md](.cursor/extra/coding/design.md) | `/coding.design`、詳細設計レビュー・ジュニア／シニア Engineer Agent |
+| [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) | `/coding.requirement`、要件レビュアー Agent、[engineer.software-requirement](.cursor/skills/engineer.software-requirement/SKILL.md) |
+| [extra/github.create-pull-request/template.md](.cursor/extra/github.create-pull-request/template.md) | `/github.create-pull-request` |
 
 ## 収録SKILL一覧
 
@@ -38,6 +99,18 @@
 * AI Agent が使ってよい一時領域（`.ai-agent/`）のルート・サブディレクトリ・Ignore を規定する。
 * 一時スクリプトや調査メモは `.ai-agent/tmp/`、実行計画は `.ai-agent/plan/` に置く。
 * `assets/` の構成を参考にディレクトリを用意し、コミット対象外とする。
+
+### engineer.software-design
+
+* 要件を満たす詳細設計を行い、変更内容を提案する。実装計画（プランニング）時はロードすることが前提となる。
+* **コード変更は行わず**、要件確認・関連ドキュメント調査・設計出力に特化する。
+* コードレビュー用途の SKILL と併用することが望ましい。
+
+### engineer.software-requirement
+
+* 要件定義に特化し、適切な要件定義ドキュメントの出力を行う。
+* **コード変更は行わず**、[要件定義フォーマット](.cursor/extra/coding/requirements.md) に沿って整理する。
+* 完了条件・前提・テスト観点・影響範囲などを SKILL の手順で確認する。
 
 ### flutter.coding-rules
 

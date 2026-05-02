@@ -84,19 +84,19 @@ func TestXXXXXXXX_YYYYYY(t *testing.T) {
 // `go.work` と `container` が存在しないディレクトリのとき、探索失敗として panic し、
 // panic メッセージに `foundation_container` を含む。
 func TestConfigureWorkingDirectory_panicsInEmptyDir(t *testing.T) {
-	t.Chdir(t.TempDir())
-	var recovered any
-	func() {
-		defer func() { recovered = recover() }()
-		configureWorkingDirectory()
-	}()
-	if recovered == nil {
-		t.Fatal("expected panic, got success")
-	}
-	s, ok := recovered.(string)
-	if !ok || !strings.Contains(s, "foundation_container") {
-		t.Fatalf("unexpected panic value: %v (want string with foundation_container)", recovered)
-	}
+ t.Chdir(t.TempDir())
+ var recovered any
+ func() {
+  defer func() { recovered = recover() }()
+  configureWorkingDirectory()
+ }()
+ if recovered == nil {
+  t.Fatal("expected panic, got success")
+ }
+ s, ok := recovered.(string)
+ if !ok || !strings.Contains(s, "foundation_container") {
+  t.Fatalf("unexpected panic value: %v (want string with foundation_container)", recovered)
+ }
 }
 ```
 

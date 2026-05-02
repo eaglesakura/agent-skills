@@ -10,15 +10,15 @@
 
 import (
     // ローカルモジュールではない
-	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+ secretmanager "cloud.google.com/go/secretmanager/apiv1"
 
     // go.workに記述されたローカルモジュール
-	ew "github.com/eaglesakura/example_words"
+ ew "github.com/eaglesakura/example_words"
 
     // go.workに記述されたローカルモジュール
     // 略語が `ewf` のように重複する場合
-	ew_factory "github.com/eaglesakura/example_words_factory"
-	ew_fantasy "github.com/eaglesakura/example_words_fantasy"
+ ew_factory "github.com/eaglesakura/example_words_factory"
+ ew_fantasy "github.com/eaglesakura/example_words_fantasy"
 )
 
 ```
