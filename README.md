@@ -18,7 +18,7 @@
 
 ## 収録Slash-Command
 
-※ `.cursor/command/` 直下の Markdown ファイルと対応する（アルファベット順）。サブディレクトリ内はテンプレート等であり、Slash Command 本体ではない。
+※ `.cursor/commands/` 直下の Markdown ファイルと対応する（アルファベット順）。サブディレクトリ内はテンプレート等であり、Slash Command 本体ではない。
 
 ### coding.*
 
