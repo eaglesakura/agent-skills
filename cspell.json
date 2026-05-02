@@ -5,6 +5,7 @@
         "cocoapods",
         "dartx",
         "eaglesakura",
+        "golangci",
         "GOMODCACHE",
         "gsutil",
         "kanamajiri",
