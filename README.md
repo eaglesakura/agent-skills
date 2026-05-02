@@ -20,22 +20,26 @@
 
 ※ `.cursor/command/` 直下の Markdown ファイルと対応する（アルファベット順）。サブディレクトリ内はテンプレート等であり、Slash Command 本体ではない。
 
-### coding.design
+### coding.*
+
+* 詳細は [coding-command](docs/coding-command.md)
+
+#### coding.requirement
+
+* Coding-Commands のステップ1である。
+* 要件の初期案から実装計画を `.ai-agent/plan/{計画名}.md` に保存する。出力フォーマットは [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) に準ずる。
+* ガードレールとして、計画・レビュー関連ファイル以外の変更を行わない要件定義モードを規定する。
+
+#### coding.design
 
 * Coding-Commands のステップ2である（`/coding.requirement` → `/coding.design` → `/coding.execute`）。
 * 要件を踏まえアーキテクチャを確認し、ジュニアエンジニアが実装可能な粒度の詳細設計を計画ファイルへ反映する。
 * 出力フォーマットは [extra/coding/design.md](.cursor/extra/coding/design.md) に準ずる。計画ファイルは `.ai-agent/plan/*.md` を上書き保存する。
 
-### coding.execute
+#### coding.execute
 
 * Coding-Commands のステップ3である。事前に構築された計画に基づき実装を反映する。
 * 計画ファイルと作業範囲を読み、`coding-assistant.junior-engineer` 等の Sub Agent へテンプレートに沿った指示を渡す手順を規定する。
-
-### coding.requirement
-
-* Coding-Commands のステップ1である。
-* 要件の初期案から実装計画を `.ai-agent/plan/{計画名}.md` に保存する。出力フォーマットは [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) に準ずる。
-* ガードレールとして、計画・レビュー関連ファイル以外の変更を行わない要件定義モードを規定する。
 
 ### github.create-pull-request
 
