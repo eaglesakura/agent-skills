@@ -11,7 +11,7 @@
 
 | パス | 役割 |
 | --- | --- |
-| `.cursor/command/` | Slash Command 本体（`/コマンド名` で起動する Markdown） |
+| `.cursor/commands/` | Slash Command 本体（`/コマンド名` で起動する Markdown） |
 | `.cursor/agents/` | Sub Agent 定義（職能・レビュアーなどのハーネス） |
 | `.cursor/extra/` | コマンド・SKILL から参照するテンプレート・補助原稿 |
 | `.cursor/skills/` | Cursor Agent Skills（ディレクトリ名が SKILL 識別子に対応） |
@@ -51,23 +51,25 @@
 
 ※ `.cursor/agents/` 直下の Markdown と対応する（アルファベット順）。
 
-### coding-assistant.junior-engineer
+### coding.* 関連
+
+#### coding-assistant.junior-engineer
 
 * ジュニアエンジニア職能として、与えられた実装計画から逸脱しない範囲で実装を行う。
 * [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
 * 計画確認・宣誓・中断時は親 Agent へ報告する。
 
-### coding-assistant.requirement-reviewer
+#### coding-assistant.requirement-reviewer
 
 * 要件定義のレビュアー。不足・不明瞭な要件の洗い出しと判断材料の提示を行う（`readonly`・バックグラウンド実行想定）。
 * [engineer.software-requirement](.cursor/skills/engineer.software-requirement/SKILL.md) と [要件定義フォーマット](.cursor/extra/coding/requirements.md) を参照する。
 
-### coding-assistant.senior-engineer
+#### coding-assistant.senior-engineer
 
 * シニアエンジニア職能として、要件達成に必要な最小限の計画逸脱を認めつつ計画範囲内で自律的にコーディングする。
 * [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
 
-### coding-assistant.software-design-reviewer
+#### coding-assistant.software-design-reviewer
 
 * 詳細設計ドキュメントや実装のレビュアー。指摘は要約せず一覧で親 Agent に渡す（`readonly`・バックグラウンド実行想定）。
 * [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
