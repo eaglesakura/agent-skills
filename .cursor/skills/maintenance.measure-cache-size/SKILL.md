@@ -1,8 +1,10 @@
 ---
 name: maintenance.measure-cache-size
 description: ローカルPCのキャッシュサイズを特定する。インストールされている開発ツールごとに測定し、不要なキャッシュを表示する
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # メンテナンス / キャッシュサイズ特定
 
 * ローカルPCにインストールされているツールのキャッシュサイズを特定する際に使用する

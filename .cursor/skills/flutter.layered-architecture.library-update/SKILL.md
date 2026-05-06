@@ -1,6 +1,9 @@
 ---
 name: flutter.layered-architecture.library-update
 description: Layered Architectureの推奨設計に従い、ライブラリ更新を行う
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
 # Flutter-Layered-Architecture / ライブラリアップデート
 

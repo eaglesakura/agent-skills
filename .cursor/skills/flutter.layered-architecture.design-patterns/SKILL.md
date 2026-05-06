@@ -1,8 +1,10 @@
 ---
 name: flutter.layered-architecture.design-patterns
 description: Flutter-Layered-Architecture アプリに最適化された汎用的デザインパターンを知るためのSKILL。コード調査についても、アーキテクチャを知ることで精度を高めることができる。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # Flutter-Layered-Architecture / デザインパターン
 
 ## Usecase層 / Usecase設計

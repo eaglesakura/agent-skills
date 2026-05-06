@@ -1,8 +1,10 @@
 ---
 name: flutter.layered-architecture.screen-navigation
 description: Flutter-Layered-Architecture アプリの画面遷移設計能力を得るSKILL。コード調査についても、アーキテクチャを知ることで精度を高めることができる。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # Flutter-Layered-Architecture / ナビゲーション
 
 * レイヤードアーキテクチャの `screen層` では、画面間が疎結合になるように設計・実装される

@@ -1,8 +1,10 @@
 ---
 name: golang.coding-rules
 description: Golangコーディング規約遵守のSKILL, *.goファイルを記述するに当たって必ず守らなければならないルール、一般的な実装パターンのアーキテクチャ説明
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # Golangコーディング規約
 
 * `*.go` ファイルについて実装や修正を行う場合、必ずこのSKILLに示された規約に従う

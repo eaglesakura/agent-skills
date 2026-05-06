@@ -1,8 +1,10 @@
 ---
 name: agent.job-description
 description: 職能ごとの技能を把握するSKILL。 「ジュニアエンジニアが作業可能」等、エンジニアレベルや職能を指定されたとき、このSKILLの技能定義に合わせた内容とする。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # エンジニア技能・職能定義
 
 ## ジュニアエンジニア

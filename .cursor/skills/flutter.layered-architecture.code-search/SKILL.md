@@ -1,6 +1,9 @@
 ---
 name: flutter.layered-architecture.code-search
 description: コードベースのドキュメントや既存コードの場所の詳細な調査を行うSKILL。特定機能に関するドキュメント、ディレクトリ、パッケージ等の場所や内容を調べます。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
 # Flutter / コード検索
 

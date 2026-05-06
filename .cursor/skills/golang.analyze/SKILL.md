@@ -1,8 +1,10 @@
 ---
 name: golang.analyze
 description: Golangの静的解析やテスト、フォーマッタ適用等、品質担保を行うためのSKILL
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # Golangコード品質向上SKILL
 
 * Golangのコード品質を向上させ、開発する上での様々なリスクを低減するためのSKILL

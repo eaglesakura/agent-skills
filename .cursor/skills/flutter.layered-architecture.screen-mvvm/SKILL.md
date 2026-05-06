@@ -1,8 +1,10 @@
 ---
 name: flutter.layered-architecture.screen-mvvm
 description: Flutter-Layered-ArchitectureでのScreen層のModel-View-ViewModel設計SKILL。画面を設計・開発する際に必須となる。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # Flutter / Model-View-ViewModelによる画面構築
 
 * Flutterアプリ開発で、Model-View-ViewModelのアーキテクチャを採用する場合に、このSKILLを適用する

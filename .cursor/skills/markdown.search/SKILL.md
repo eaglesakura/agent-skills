@@ -1,6 +1,9 @@
 ---
 name: markdown.search
 description: ワークスペース内のドキュメント内容を検索・把握するSKILL。ワークスペース内のMarkdownドキュメント検索に特化している。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
 # ドキュメント検索
 

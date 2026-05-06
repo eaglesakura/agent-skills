@@ -1,8 +1,10 @@
 ---
 name: git.branch-rule
 description: リポジトリのブランチ運用ルールを規定したSKILL。指定されたブランチ名から、内容を推測するために使用する。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # 基本構成
 
 ## `main` ブランチ

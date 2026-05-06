@@ -1,8 +1,10 @@
 ---
 name: github.actions-workflow.build
 description: Github ActionsのWorkflow構築に関わるSKILL。守るべきセキュリティ上のプラクティスや、基本的なルールについて指示している。 `.github/**/*.yaml` の編集に際し、必ずロードする。
+license: MIT License
+metadata:
+  author: @eaglesakura
 ---
-
 # Github / Github Actions / ワークフロー構築
 
 * Github Actionsのワークフロー構築する際に守るべきSKILL
