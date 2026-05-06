@@ -3,7 +3,7 @@ name: markdown.documentation
 description: Markdownでの技術ドキュメント作成・更新のためのSKILL。Markdown形式を前提としており、*.mdファイルの差分を提案する場合は必ずロードする。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # ドキュメンテーション / 技術文書の記載
 

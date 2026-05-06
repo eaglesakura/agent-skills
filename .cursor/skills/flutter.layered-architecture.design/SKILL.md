@@ -3,7 +3,7 @@ name: flutter.layered-architecture.design
 description: Flutter-Layered-Architecture アプリに最適化された設計を知るためのSKILL。コード調査についても、アーキテクチャを知ることで精度を高めることができる。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # Flutter-Layered-Architecture / 設計
 

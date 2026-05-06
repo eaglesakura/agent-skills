@@ -3,7 +3,7 @@ name: parse.url-to-metadata
 description: URLからメタデータをパースするためのSKILL. タスクIDやタイトル等、URLから取得可能な情報を整理する
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # メタデータ取得 / URL
 

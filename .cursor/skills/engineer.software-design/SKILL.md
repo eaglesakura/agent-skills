@@ -3,7 +3,7 @@ name: engineer.software-design
 description: 与えられた要件を満たすための詳細設計を行い、変更内容を提案するSKILL。実装計画（Planning、Planモードの利用時も含む）を行う際には必ずロードし、適切な提案内容とする。コードレビューに関するSKILLを同時にロードすることが望ましい。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # エンジニア / 詳細設計
 

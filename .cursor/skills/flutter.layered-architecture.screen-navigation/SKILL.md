@@ -3,7 +3,7 @@ name: flutter.layered-architecture.screen-navigation
 description: Flutter-Layered-Architecture アプリの画面遷移設計能力を得るSKILL。コード調査についても、アーキテクチャを知ることで精度を高めることができる。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # Flutter-Layered-Architecture / ナビゲーション
 

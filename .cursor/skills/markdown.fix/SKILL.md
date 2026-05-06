@@ -3,7 +3,7 @@ name: markdown.fix
 description: Markdown(*.md) ファイルのFormatterとLint対応を行う。Markdownを提供する際は、可能な限りこのSKILLによって書式を統一する。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # Markdown / Fix Lint, Fix Format
 

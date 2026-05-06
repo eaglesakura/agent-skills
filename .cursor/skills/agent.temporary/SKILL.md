@@ -3,7 +3,7 @@ name: agent.temporary
 description: AI Agentがタスクを実行するにあたり、利用しても良いTemporary領域を規定するSKILL。一時的なスクリプト、テンポラリファイル、計画ドキュメント、調査結果ドキュメント等を保存する場合、このSKILLにしたがって処理を行う。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # AI Agent / Temporary
 

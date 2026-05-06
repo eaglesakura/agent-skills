@@ -3,7 +3,7 @@ name: flutter.monolith.localization
 description: CSVファイルを使用した文字列の外部リソース化・L10n対応と、利用方法について得るためのSKILL
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # monolith / L10n対応
 

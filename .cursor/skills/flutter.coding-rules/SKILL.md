@@ -3,7 +3,7 @@ name: flutter.coding-rules
 description: Flutter / dartコーディング規約遵守のSKILL, dartファイルを記述するに当たって必ず守らなければならないルール、一般的なDelegateパターン等、実装パターンのアーキテクチャ説明
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # Flutter & Dartコーディング規約
 

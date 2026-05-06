@@ -3,7 +3,7 @@ name: agent.memory.save
 description: AI Agentのコンテキストを一時的に保存するためのSKILL。Agentが現在のチャット文脈の保存を依頼された場合、このSKILLを使用して不揮発化し、その後の整理に活用する。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # AI Agent / Memory Save
 

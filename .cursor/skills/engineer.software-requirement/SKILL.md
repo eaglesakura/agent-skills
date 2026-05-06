@@ -3,7 +3,7 @@ name: engineer.software-requirement
 description: 要件定義に特化し、適切な要件定義ドキュメントの出力を行うSKILL.実装計画（Planning、Planモードの利用時も含む）を行う際には必ずロードし、適切な提案内容とする。コードレビューに関するSKILLを同時にロードすることが望ましい。
 license: MIT License
 metadata:
-  author: @eaglesakura
+  author: "@eaglesakura"
 ---
 # エンジニア / 要件定義スキル
 
