@@ -23,7 +23,7 @@ gh api repos/flutter/flutter/tags --paginate --jq '.[].name'
 gh api repos/flutter/flutter/tags --paginate --jq '.[].name' | rg '^3\.'
 ```
 
-## 変更サマリを取得
+## 各リリースバージョンごとの変更サマリを取得
 
 * [CHANGELOG](https://github.com/flutter/flutter/blob/master/CHANGELOG.md) を取得する
 * `flutter --version` で取得した現在のバージョンと、対象バージョンの差分を確認する
