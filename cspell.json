@@ -5,6 +5,7 @@
         "cocoapods",
         "dartx",
         "eaglesakura",
+        "flutterx",
         "golangci",
         "GOMODCACHE",
         "gsutil",
@@ -14,6 +15,7 @@
         "pubspec",
         "Riverpod",
         "sdkman",
+        "testx",
         "Usecase",
         "viewmodel",
         "worktrees"
