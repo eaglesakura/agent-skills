@@ -22,13 +22,14 @@
 
 ### coding.*
 
-* 詳細は [coding-command](docs/coding-command.md)
+* メインの3ステップ（要件 → 詳細設計 → 実施）の手順は [coding-command](docs/coding-command.md) を参照する。
+* `coding.comment`・`coding.format-plan` は同系の補助コマンドである。
 
-#### coding.requirement
+#### coding.comment
 
-* Coding-Commands のステップ1である。
-* 要件の初期案から実装計画を `.ai-agent/plan/{計画名}.md` に保存する。出力フォーマットは [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) に準ずる。
-* ガードレールとして、計画・レビュー関連ファイル以外の変更を行わない要件定義モードを規定する。
+* 指定スコープのコードコメント粒度をプロジェクト方針に合わせて適正化する。
+* 言語に応じた SKILL・ドキュメントをロードし、コメントは原則として追記のみとし、関連コードとコメントの整合を確認する。
+* Internal / Private でも Public と同等のコメント基準とし、関数・メソッドには言語の記法に沿った example を含める。
 
 #### coding.design
 
@@ -41,11 +42,29 @@
 * Coding-Commands のステップ3である。事前に構築された計画に基づき実装を反映する。
 * 計画ファイルと作業範囲を読み、`coding-assistant.junior-engineer` 等の Sub Agent へテンプレートに沿った指示を渡す手順を規定する。
 
+#### coding.format-plan
+
+* `/coding.*` 用の補助コマンド。対象の計画ファイルを [requirements.md](.cursor/extra/coding/requirements.md) または [design.md](.cursor/extra/coding/design.md) の書式に沿って整理し、レビュアー・実装者の読解負荷を下げる。
+* ガードレールとして、書式整理のみとし、要件・詳細設計・実施内容の意味を変えない。
+* 詳細設計モードでは作業手順を `ステップ1` から始まるようインデックスを整える。
+
+#### coding.requirement
+
+* Coding-Commands のステップ1である。
+* 要件の初期案から実装計画を `.ai-agent/plan/{計画名}.md` に保存する。出力フォーマットは [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) に準ずる。
+* ガードレールとして、計画・レビュー関連ファイル以外の変更を行わない要件定義モードを規定する。
+
 ### github.create-pull-request
 
 * ブランチでの作業完了後に Pull Request を作成する、または既存 PR の本文を更新する。
 * 差分の整理・[Pull Request テンプレート](.cursor/extra/github.create-pull-request/template.md) による本文作成・`gh pr create` / `gh pr edit` の利用を手順として規定する。
 * 対象リポジトリ・base ブランチ・既存 Pull Request URL はオプションで指定できる。
+
+### plan.init
+
+* Plan モード開始前に Agent の初期化ルールを適用する。ユーザーへの提案書式は [extra/plan/plan-mode.md](.cursor/extra/plan/plan-mode.md) に従う。
+* 計画の粒度はシニアエンジニアが作業可能な水準を目安とし、詳細化指示時はジュニアエンジニアが扱えるレベルまで落とす。
+* 積極的に SKILL（例: `engineer.software-requirement`・`engineer.software-design`）と Sub Agent レビュー（例: `coding-assistant.plan-reviewer`・`coding-assistant.requirement-reviewer`）を利用する。
 
 ## 収録Sub-Agents
 
@@ -58,6 +77,11 @@
 * ジュニアエンジニア職能として、与えられた実装計画から逸脱しない範囲で実装を行う。
 * [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
 * 計画確認・宣誓・中断時は親 Agent へ報告する。
+
+#### coding-assistant.plan-reviewer
+
+* ジュニアエンジニア職能の前提で、実装計画の実現性可否を判断する（`readonly`・バックグラウンド実行想定）。
+* [agent.job-description](.cursor/skills/agent.job-description/SKILL.md) 等の職能定義と照らし、計画逸脱なく実行可能かをチェックリスト形式で親 Agent に返す。
 
 #### coding-assistant.requirement-reviewer
 
@@ -80,9 +104,10 @@ Slash Command または SKILL からパス参照されるテンプレートで�
 
 | ファイル | 参照元の例 |
 | --- | --- |
-| [extra/coding/design.md](.cursor/extra/coding/design.md) | `/coding.design`、詳細設計レビュー・ジュニア／シニア Engineer Agent |
-| [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) | `/coding.requirement`、要件レビュアー Agent、[engineer.software-requirement](.cursor/skills/engineer.software-requirement/SKILL.md) |
+| [extra/coding/design.md](.cursor/extra/coding/design.md) | `/coding.design`、`/coding.format-plan`（詳細設計モード）、詳細設計レビュー・ジュニア／シニア Engineer Agent |
+| [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) | `/coding.requirement`、`/coding.format-plan`（要件定義モード）、要件レビュアー Agent、[engineer.software-requirement](.cursor/skills/engineer.software-requirement/SKILL.md) |
 | [extra/github.create-pull-request/template.md](.cursor/extra/github.create-pull-request/template.md) | `/github.create-pull-request` |
+| [extra/plan/plan-mode.md](.cursor/extra/plan/plan-mode.md) | `/plan.init` |
 
 ## 収録SKILL一覧
 
@@ -142,6 +167,12 @@ Slash Command または SKILL からパス参照されるテンプレートで�
 * Usecase は 1 インターフェース 1 機能と Request/Result パターン、Repository は Read/Write の抽象化として設計する。
 * Repository と Usecase の依存関係と、循環参照を避けるための Riverpod `Provider.dependencies` の扱いを定める。
 
+### flutter.layered-architecture.library-update
+
+* Layered Architecture の推奨に沿って依存ライブラリの更新手順を規定する。
+* `flutter pub outdated` で更新候補を確認し、ルート `pubspec.yaml` の `dependency_overrides` を更新する。
+* `flutter pub get` 等で検証し、互換性の問題で上げられないバージョンはスキップする。
+
 ### flutter.layered-architecture.screen-mvvm
 
 * Screen 層の Model-View-ViewModel 設計 SKILL。画面の設計・開発時に必須とする。
@@ -154,6 +185,17 @@ Slash Command または SKILL からパス参照されるテンプレートで�
 * `screen_navigation` に Request/Result を集約し、`{画面名}Factory` と DI で画面間を疎結合にする。
 * `go_router` を推奨し、`Navigator` の直接利用を避けてナビゲーションライブラリを隠蔽する。
 
+### flutter.layered-architecture.workspace
+
+* Dart workspace（ルート `pubspec.yaml` の `workspace:`）によるパッケージ一覧とレイアウトの把握手順を規定する。
+* ルートの `dependency_overrides` による依存の一元管理と、`app/` でのビルド慣習を示す。
+* レイヤードアーキテクチャ SKILL と併用し、変更対象パッケージの特定に使う。
+
+### flutter.maintenance.check-latest-version
+
+* Flutter SDK 自体の最新リリース調査手順を規定する（例: `gh api` で `flutter/flutter` の tags 取得）。
+* `CHANGELOG.md` と `flutter --version` を照らし、採用候補バージョンの変更内容を把握する。
+
 ### flutter.monolith.localization
 
 * CSV（`res/strings.csv`）による文字列の外部リソース化・L10n 対応と利用方法を規定する。
@@ -165,6 +207,12 @@ Slash Command または SKILL からパス参照されるテンプレートで�
 * `main`・`feature/id/...`・`release/...` などブランチ運用ルールを規定する。
 * ブランチ名から Issue との対応や作業種別を推測する際の参照とする。
 * `gh` でタスク内容を引くことと整合する命名規約を SKILL 本文で示す。
+
+### github.actions-workflow.build
+
+* GitHub Actions のワークフロー（`.github/**/*.yaml`）編集時に守るセキュリティ・運用ルールを規定する。
+* 外部アクションは SHA ピン留めとし、`uses: org/action@tag` のような可変タグ指定を避ける。
+* `gh api` 等でタグとコミット SHA を取得し、コメントで人間が追える形にする。
 
 ### golang.analyze
 
