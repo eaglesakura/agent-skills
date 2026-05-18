@@ -16,6 +16,7 @@ metadata:
 * [general](./references/general.md)
   * 一般コーディング規約
   * *.goファイル全般に関わるコーディング規約
+  * errorsの基本ルール
 * [data_object](./references/data_object.md)
   * 例: データオブジェクト（Data transfer objectや、data class, typedef, 構造体といった文脈）を扱う場合
 * [code_comment](./references/code_comment.md)

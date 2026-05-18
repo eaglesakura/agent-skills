@@ -119,14 +119,14 @@ func TestExample(t *testing.T) {
 
 ### 推奨パターン
 
+* 主語が文脈から明確である場合、記載する必要はない.
 * **役割、パラメータ・戻り値、副作用・注意点を日本語で記述する。**
 * **パラメータは `[param]` 形式で参照する。**
 * **非自明な判断理由は `NOTE:` で補足する。**
 
 ```go
 // domain_japanese, japanese_character.go
-// NewKanji は Kanji を生成する。
-//
+// Kanji を生成する。
 // [character] は漢字1文字である必要がある。
 func NewKanji(character string) (Kanji, error) {
   if utf8.RuneCountInString(character) != 1 {
@@ -140,7 +140,7 @@ func NewKanji(character string) (Kanji, error) {
 ```
 
 ```go
-// FetchUser は外部IDからユーザーを取得する。
+// 外部IDからユーザーを取得する。
 func FetchUser(ctx context.Context, externalID string) (*User, error) {
   // NOTE: レート制限のため、ここでは常にキャッシュを先に参照する。
   // キャッシュミス時のみ下流APIへ行き、バーストを避ける。
@@ -191,9 +191,9 @@ type ApiKey string
 
 ```go
 // infra_firebase, firebase_analytics_proxy.go
-// AnalyticsProxy は Firebase Analytics にイベントを記録する。
+// Firebase Analytics にイベントを記録する。
 type AnalyticsProxy interface {
-  // LogEvent はイベントを記録する。
+  // イベントを記録する。
   //
   // [name] はイベント名である。
   // [parameters] はイベントパラメータである。
@@ -202,7 +202,7 @@ type AnalyticsProxy interface {
   LogEvent(ctx context.Context, name string, parameters map[string]any) error
 }
 
-// ExampleAnalyticsProxy_LogEvent は LogEvent の利用例を示す。
+// LogEvent の利用例を示す。
 func ExampleAnalyticsProxy_LogEvent() {
   ctx := context.Background()
 
@@ -228,6 +228,8 @@ type ApiKey string
 // アンチパターン: 構造体とメソッドにコメントがない
 type ExampleService struct{}
 
+// アンチパターン: 情報が一切増えていない
+// GetData は、 DataをGetする
 func (s *ExampleService) GetData() string {
   return ""
 }
