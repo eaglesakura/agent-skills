@@ -18,6 +18,7 @@
         "sdkman",
         "secretmanager",
         "testx",
+        "toplevel",
         "Usecase",
         "viewmodel",
         "worktrees"
