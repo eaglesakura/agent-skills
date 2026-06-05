@@ -45,8 +45,8 @@ flutter build ...
 
 # flutter / dartバージョンは、ワークスペース内で統一する
 environment:
-  sdk: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.0 <4.0.0"
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0 <4.0.0"
 
 dependency_overrides:
   armyknife_dartx: "^1.0.0"         # バージョンを特定する
@@ -64,8 +64,8 @@ resolution: workspace
 
 # flutter / dartバージョンは、ワークスペース内で統一する
 environment:
-  sdk: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.0 <4.0.0"
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0 <4.0.0"
 
 dependencies:
   flutter:
