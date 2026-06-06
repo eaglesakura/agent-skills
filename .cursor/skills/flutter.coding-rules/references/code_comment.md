@@ -28,6 +28,20 @@
 * **パラメータ・戻り値**は `[param]` 形式でドキュメント内から参照できる。
 * **AI Agent がインターフェースを提案するとき**は、コメントに**利用時の Example コード**を必ず含める。
 
+## 主語の省略
+
+宣言名（型・関数・メソッド・フィールド）はコード上で既に明示されている。コメントで `PreferenceKey は` のように主語として繰り返すと冗長になる。**役割・制約・意図を、主語なしで述べる。**
+
+```dart
+/// ✅️ DO
+/// Preferences に与える単一キーを表す。
+class PreferenceKey {}
+
+// ⚠️ DO NOT
+// PreferenceKey は Preferences に与える単一キーを表す。
+class PreferenceKey {}
+```
+
 ## コードコメントの実装例
 
 ### クラス・型の説明
@@ -39,20 +53,18 @@ class Hiragana implements JapaneseCharacter {
   @override
   final String character;
 
+   // domain_japanese, japanese_character.dart
+   /// 漢字を作成する.
+   ///
+   /// [character] は漢字1文字である必要がある.
+   ///
+   /// Example:
+   /// ```dart
+   /// final kanji = Kanji(example);
+   /// ```
   const Hiragana(this.character)
     : assert(character.length == 1, "ひらがなは1文字である必要があります");
 }
-```
-
-### コンストラクタとパラメータの説明
-
-```dart
-// domain_japanese, japanese_character.dart
-/// 漢字を作成する.
-///
-/// [character] は漢字1文字である必要がある.
-const Kanji(this.character)
-  : assert(character.length == 1, "漢字は1文字である必要があります");
 ```
 
 ### NOTE と前提・注意点
@@ -114,7 +126,14 @@ class ExampleClass {
 ### 自明なコメント
 
 ```dart
-// アンチパターン: 自明なコメント
+// ⚠️ DO NOT
+/// 値を取得する.
+/// 10文字以内の任意の値が設定されている.
+///
+/// example: "ABC", "ほげ"
+String get value => _value;
+
+// ⚠️ DO NOT
 /// 値を取得する
 String get value => _value;
 ```
@@ -130,6 +149,36 @@ String get value => _value;
 * **analysis_options.yaml**: `comment_references` が有効。ドキュメント内の `[symbol]` 等は実在するシンボルを参照している必要がある。
 * **type_annotate_public_apis**: 公開 API に型注釈を要求するルールと合わせ、ドキュメントコメントで「何をする API か」を補足する。
 * **ファイル編集後の確認**: Analyzer 実行時の確認ポイントの一つに「ドキュメントコメントが不足していないか」が含まれる。プロジェクトの編集後チェックリストを参照する。
+
+## Unit Test
+
+### 推奨パターン
+
+`*_test.dart` のようなテストコードでは、テストの意図と失敗時の可読性を高めるため、以下を必須ルールとする。
+
+1. **テスト内容を関数コメントに記載する**  
+   `test()` の直前に「どの条件を検証するテストか」を日本語で記述する。  
+   期待値・前提条件・優先順位のどれを確認しているかを簡潔に書く。
+2. **`expect` のreason引数を入力し、日本語で記載する**  
+   失敗時に CI ログだけで意味が通るよう、期待値と実測値を日本語で示す。  
+   例: `t.Fatalf("ProjectIdが不一致: expected=%q actual=%q", expected, actual)`
+
+```dart
+group("Flavor系のテスト", (){
+   // テスト対象:
+   // {テスト対象としているモジュール等}
+   //
+   // テスト内容:
+   // {XXXがYYYのとき、ZZZとなる。等の想定結果}
+   test("Flavor.current", () {
+      expect(
+      Flavor.current,
+      isA<FlavorDevelopment>(),
+      reason: "Flavor.currentとFlavorDevelopmentが一致すること",
+      );
+   });
+});
+```
 
 ## よくあるパターンとアンチパターン
 

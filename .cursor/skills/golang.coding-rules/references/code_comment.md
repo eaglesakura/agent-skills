@@ -7,7 +7,32 @@
 * すべての構造体・インターフェース・プロパティ・関数・定数等、外部から参照される箇所には、**必ず日本語のドキュメントコメント**を付与する。
 * クラスインターフェース・構造体・メソッド・関数には、**利用時の Example を記載する**。
 * コメントでは**意図・前提・副作用・注意点**に焦点を当て、自明な記述は避ける。
+* **型名・関数名・フィールド名を主語にした繰り返しは書かない**（主語の不要）。宣言直下のコメントは、識別子の説明から始める。
 * コードや設計の**なぜそうしたか**（判断理由・トレードオフ・将来の読者への注釈）が、名前や通常の説明だけでは伝わらない場合は、**`NOTE:`** として残す（Dart のドキュメントコメントにおける `NOTE.` と同じ役割）。
+
+## 主語の省略
+
+宣言名（型・関数・メソッド・フィールド）はコード上で既に明示されている。コメントで `PreferenceKey は` のように主語として繰り返すと冗長になる。**役割・制約・意図を、主語なしで述べる。**
+
+```go
+// ✅️ DO
+// Preferences に与える単一キーを表す。
+type PreferenceKey string
+
+// ⚠️ DO NOT
+// PreferenceKey は Preferences に与える単一キーを表す。
+type PreferenceKey string
+```
+
+```go
+// ✅️ DO
+// 外部IDからユーザーを取得する。
+func FetchUser(ctx context.Context, externalID string) (*User, error)
+
+// ⚠️ DO NOT
+// FetchUser は外部IDからユーザーを取得する。
+func FetchUser(ctx context.Context, externalID string) (*User, error)
+```
 
 ## NOTEブロック
 
@@ -27,7 +52,7 @@ Dart のコードコメント規約と同様、**「何をしているか」は�
 
 ```go
 // domain_preferences, preference_key.go
-// PreferenceKey は Preferences に与える単一キーを表す。
+// Preferences に与える単一キーを表す。
 //
 // NOTE:
 // DBからの復元やUnit Testで使いやすいように NewPreferenceKey を公開しているが、
@@ -119,14 +144,14 @@ func TestExample(t *testing.T) {
 
 ### 推奨パターン
 
-* 主語が文脈から明確である場合、記載する必要はない.
+* **[主語の不要](#主語の不要)** に従い、関数名・メソッド名を主語にしない。
 * **役割、パラメータ・戻り値、副作用・注意点を日本語で記述する。**
 * **パラメータは `[param]` 形式で参照する。**
 * **非自明な判断理由は `NOTE:` で補足する。**
 
 ```go
 // domain_japanese, japanese_character.go
-// Kanji を生成する。
+// 漢字1文字の値を生成する。
 // [character] は漢字1文字である必要がある。
 func NewKanji(character string) (Kanji, error) {
   if utf8.RuneCountInString(character) != 1 {
@@ -155,12 +180,14 @@ func FetchUser(ctx context.Context, externalID string) (*User, error) {
 ### アンチパターン
 
 ```go
+// DO NOT: 関数名を主語にし、名前の言い換えだけを書いている
 // GetValue は値を取得する。
 func (s *ExampleService) GetValue() string {
   return s.value
 }
 ```
 
+* 宣言名を主語にした冗長な繰り返し（[主語の不要](#主語の不要) に違反）。
 * 名前から明らかな説明のみで、意図や制約がない。
 * パラメータ・戻り値の前提や副作用が必要なのに明示していない。
 * `NOTE:` が必要な判断理由をコード側に埋もれさせている。
@@ -169,6 +196,7 @@ func (s *ExampleService) GetValue() string {
 
 ### 推奨パターン
 
+* **[主語の不要](#主語の不要)** に従い、型名・フィールド名を主語にしない。
 * **構造体・インターフェースの役割を日本語で明示する。**
 * **`type ApiKey string` のような独自型定義にも、用途・制約・意図をコメントする。**
 * **すべてのフィールド/メソッドの意味・制約をコメントする。**
@@ -176,15 +204,15 @@ func (s *ExampleService) GetValue() string {
 
 ```go
 // domain_japanese, japanese_character.go
-// Hiragana はひらがな1文字を示す。
+// ひらがな1文字を示す。
 type Hiragana struct {
-  // Character はひらがな1文字を保持する。
+  // ひらがな1文字を保持する。
   Character string
 }
 ```
 
 ```go
-// ApiKey は API 認証に利用するキー文字列を表す。
+// API 認証に利用するキー文字列を表す。
 // 外部入力をそのまま string で扱わないためのドメイン型である。
 type ApiKey string
 ```
@@ -228,8 +256,8 @@ type ApiKey string
 // アンチパターン: 構造体とメソッドにコメントがない
 type ExampleService struct{}
 
-// アンチパターン: 情報が一切増えていない
-// GetData は、 DataをGetする
+// アンチパターン: 主語の繰り返しと、情報が一切増えていない言い換え
+// GetData は Data を Get する。
 func (s *ExampleService) GetData() string {
   return ""
 }
