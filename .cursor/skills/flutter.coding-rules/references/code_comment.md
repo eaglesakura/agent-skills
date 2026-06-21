@@ -4,10 +4,12 @@
 
 本ドキュメントは、プロジェクト内の Dart コードに付与する**ドキュメントコメント**の規約を定義する。
 
-* すべてのクラス名・プロパティ名・関数名には、**必ず日本語のドキュメントコメント**を付与する。
-* クラスインターフェース・メソッド・関数には、**利用時の Example を記載する**（特に AI Agent がインターフェースを提案する場合は必須）。
-* コメントでは**意図・前提・副作用・注意点**に焦点を当て、自明な記述は避ける。
+* すべてのクラス名・プロパティ名・関数名・変数等のアクセス可能シンボルには、下記の要素を満たしたコメントブロックを記載する
+  * **技術文書として自然な日本語コメント**を付与する。
+  * **利用時の Example**
+  * コメントでは**意図・前提・副作用・注意点**に焦点を当て、自明な記述は避ける。
 * ワークスペースの静的解析では `comment_references` が有効であり、ドキュメント内の参照（`[symbol]` 等）が正しく解決される必要がある。
+* コメント付与対象を Private/Internal/Public等で区別しない。全てのシンボル対してコメントは必要である。
 
 ## 必須付与対象
 
@@ -46,6 +48,8 @@ class PreferenceKey {}
 
 ### クラス・型の説明
 
+* コンストラクタパラメータ等、内容の重複を許容する（コンストラクタコメントと、引数のコメント両方に記載する）
+
 ```dart
 // domain_japanese, japanese_character.dart
 /// ひらがな1文字を示す.
@@ -62,7 +66,10 @@ class Hiragana implements JapaneseCharacter {
    /// ```dart
    /// final kanji = Kanji(example);
    /// ```
-  const Hiragana(this.character)
+  const Hiragana({
+   /// 対象文字。漢字1文字である必要がある。
+   required this.character,
+  })
     : assert(character.length == 1, "ひらがなは1文字である必要があります");
 }
 ```
@@ -80,7 +87,9 @@ extension type const PreferenceKey(String _value) {
 }
 ```
 
-### インターフェース・メソッドと Example（AI Agent 提案時必須）
+### 呼び出し可能シンボル（メソッド、関数等）
+
+* 関数等のコメントと引数コメント、といった内容の重複を許容する（両方に記載する）
 
 ```dart
 // infra_firebase, firebase_analytics_proxy.dart
@@ -103,7 +112,9 @@ extension type const PreferenceKey(String _value) {
 /// );
 /// ```
 Future<void> logEvent({
+  /// イベント名
   required String name,
+  /// イベントパラメータ
   Map<String, Object>? parameters,
 });
 ```
@@ -112,11 +123,14 @@ Future<void> logEvent({
 
 以下のようなコメントや欠如は避ける。
 
-### クラス・メソッドにコメントがない
+### Privateなシンボルにコメントがない
 
 ```dart
-// アンチパターン: クラスにコメントがない
-class ExampleClass {
+// ⚠️ DO NOT
+// アンチパターン: PrivateなシンボルのコメントやExample等が省略されている
+
+
+class _ExampleClass {
   String getData() {
     return "";
   }
@@ -157,13 +171,14 @@ String get value => _value;
 `*_test.dart` のようなテストコードでは、テストの意図と失敗時の可読性を高めるため、以下を必須ルールとする。
 
 1. **テスト内容を関数コメントに記載する**  
-   `test()` の直前に「どの条件を検証するテストか」を日本語で記述する。  
+   すべてのテスト関数 `test()` のコメントに「どの条件を検証するテストか」を日本語で記述する。  
    期待値・前提条件・優先順位のどれを確認しているかを簡潔に書く。
 2. **`expect` のreason引数を入力し、日本語で記載する**  
    失敗時に CI ログだけで意味が通るよう、期待値と実測値を日本語で示す。  
    例: `t.Fatalf("ProjectIdが不一致: expected=%q actual=%q", expected, actual)`
 
 ```dart
+// ✅️ DO
 group("Flavor系のテスト", (){
    // テスト対象:
    // {テスト対象としているモジュール等}
@@ -176,6 +191,15 @@ group("Flavor系のテスト", (){
       isA<FlavorDevelopment>(),
       reason: "Flavor.currentとFlavorDevelopmentが一致すること",
       );
+   });
+
+   // テスト対象:
+   // {テスト対象としているモジュール等}
+   //
+   // テスト内容:
+   // {XXXがYYYのとき、ZZZとなる。等の想定結果}
+   test("XXXXのテスト", () {
+      // テスト内容..
    });
 });
 ```
@@ -203,3 +227,6 @@ group("Flavor系のテスト", (){
    メソッド・インターフェースに利用例がなく、使い方が推測しづらい。
 4. **誤った comment_references**  
    存在しないシンボルを `[symbol]` で参照し、リンターエラーになる。
+5. **自動生成コードへのコメント更新**
+   自動生成コードは、更新しても再度出力で崩れるため、このコメントの更新は不要
+   例: `*.freezed.dart` `*.gen.dart` `*.g.dart` 等

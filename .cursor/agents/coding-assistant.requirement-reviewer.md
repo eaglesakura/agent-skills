@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.requirement-reviewer
-model: default
+model: composer-2.5[fast=false]
 description: 要件定義のレビューを行います。与えられた情報を元に、より良い要件について検討します。
 readonly: true
 is_background: true

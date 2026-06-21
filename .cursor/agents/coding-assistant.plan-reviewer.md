@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.plan-reviewer
-model: default
+model: composer-2.5[fast=false]
 description: ジュニアエンジニアとしての計画の実現性可否を判断するSub Agent。ジュニアエンジニアのSKILLと照らし合わせ、実行可否を判断する。
 readonly: true
 is_background: true

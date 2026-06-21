@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.software-design-reviewer
-model: default
+model: composer-2.5[fast=false]
 description: 実装されたソフトウェアや、詳細設計ドキュメントのレビューを行います。与えられた情報とレビュー観点をもとに検討し、改善案を提示します。
 readonly: true
 is_background: true

@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.junior-engineer
-model: default
+model: composer-2.5[fast=false]
 description: ジュニアエンジニアとしての作業を行うSub Agentであり、事前に定義された職能の範囲で作業を行うことができる。
 ---
 # 実装アシスタント / ジュニアエンジニア
