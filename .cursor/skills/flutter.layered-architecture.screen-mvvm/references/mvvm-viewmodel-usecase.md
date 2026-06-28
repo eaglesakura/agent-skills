@@ -16,7 +16,8 @@ ViewModel 文脈の **Usecase** は、**その画面固有のビジネスロジ�
   * **Delegate 間のロジック共通化**: 複数の Delegate が参照する共通ロジックを Usecase に集約する。
 * **1 クラス 1 機能** とする。単一責務を守る。
 * **冪等性は問わない**。内部で `StateStream` の操作を行ってもよいし、冪等な結果を返却してもよい。画面固有の都合に合わせて設計する。
-* **Internal 専用** であるため、**Provider による DI は不要** であり、**直接インスタンスを作成してよい**。ただし、**外部レイヤー（Data 層・Usecase 層・Infra 層など）のインターフェースを利用する場合** には、従来通り DI（`ref.watch` 等）を使用する。
+* **Internal 専用** であるため、**Provider による DI は不要** である。画面固有 Usecase のインスタンス化は **Delegate を `new` する `onXXXX()` 内** で行う。ただし、**外部レイヤー（Data 層・Usecase 層・Infra 層など）のインターフェースを利用する場合** には、ViewModel の provider で DI（`ref.watch` 等）し、ViewModel のフィールドとして保持する。
+* **コンストラクタ注入が必須** である。Delegate が利用する画面固有 Usecase は、Delegate 内で `new` せず、**`onXXXX()` 内で事前にインスタンス化してコンストラクタ引数で渡す**。未使用の Usecase が含まれてもよい（無駄なインスタンス化のコストは受け入れる）。
 
 ## 責務と配置
 
@@ -27,15 +28,17 @@ ViewModel 文脈の **Usecase** は、**その画面固有のビジネスロジ�
 ## 実装のポイント
 
 * **1 クラス 1 機能**: 一つの Usecase クラスは一つの責務のみ持つ。
-* **外部レイヤーを使う場合のみ DI**: 画面外の Repository・Usecase・Infra のインターフェースを参照する場合は、ViewModel の provider で `ref.watch` し、コンストラクタで受け取る。画面内の Delegate や他の画面固有 Usecase だけを使う場合は、呼び出し元で直接 `const` または通常コンストラクタでインスタンス化してよい。
+* **外部レイヤーは ViewModel の provider で DI**: 画面外の Repository・Usecase 層・Infra のインターフェースは、ViewModel の provider で `ref.watch` し、ViewModel のフィールドとして保持する。
+* **画面固有 Usecase は `onXXXX()` 内で `new`**: Provider による DI を行わない画面固有 Usecase は、ViewModel の provider では生成しない。Delegate を `new` する **`onXXXX()` 内** でインスタンス化し、Delegate のコンストラクタ引数として渡す。Delegate の `execute` 内で `Usecase(...)` を `new` してはならない。
+* **無駄なインスタンス化のコストは受け入れる**: ある `onXXXX()` が一部の Usecase しか使わなくても、Delegate に渡す Usecase は事前にすべて生成してよい。テスト容易性と依存の明示を優先する。
 * **冪等性**: 必須としない。StateStream の更新を行っても、純粋に値を返すだけでもよい。
 * **public メソッド**: Delegate と同様に `execute` を 1 つ持つ形を推奨するが、StateStream の購読開始など「開始メソッド」が必要な場合は `start` など別名でもよい（1 クラス 1 機能の範囲で）。
 
 ## 実装例（ワークスペース）
 
-### パターン1: 値を返す Usecase（外部 Repository を DI で受け取る）
+### パターン1: 値を返す Usecase（Delegate 経由で利用）
 
-画面のアクション内で都度 Usecase を生成し、ViewModel が DI で保持する Repository を渡して `execute` を呼ぶ。
+画面固有 Usecase は `onXXXX()` 内で生成し、Delegate にはコンストラクタ注入する。外部 Repository は ViewModel の provider で DI 済みのフィールドを参照する。
 
 ```dart
 // screen_feature_school_grade, usecase/school_grade_sort_load_usecase.dart
@@ -55,74 +58,130 @@ class SchoolGradeSortLoadUsecase {
 }
 ```
 
-ViewModel のアクションからの利用（呼び出しごとに Usecase を生成）:
+ViewModel の provider では **外部レイヤーのみ DI** する（画面固有 Usecase は生成しない）:
 
 ```dart
-// screen_feature_school_grade, school_grade_screen_view_model.action.dart
-Future<void> initialize() async {
-  await state.updateWithLock((oldState, emitter) async {
-    final usecase = SchoolGradeSortLoadUsecase(
+// screen_feature_school_grade, school_grade_screen_view_model.dart
+static final provider = Provider.autoDispose<SchoolGradeScreenViewModel>(
+  (ref) {
+    final preferencesRepository = ref.watch(PreferencesRepository.provider);
+    final kanjiListBySchoolGradeUsecase = ref.watch(
+      KanjiListBySchoolGradeUsecase.provider,
+    );
+    return SchoolGradeScreenViewModel._(
+      state: MutableStateStream(/* ... */),
+      kanjiListBySchoolGradeUsecase: kanjiListBySchoolGradeUsecase,
       preferencesRepository: preferencesRepository,
     );
-    final savedSortType = await usecase.execute();
-    // ...
+  },
+  dependencies: [
+    PreferencesRepository.provider,
+    KanjiListBySchoolGradeUsecase.provider,
+  ],
+);
+```
+
+Delegate には `onXXXX()` 内で生成した Usecase をコンストラクタ注入する（Delegate 内では `new` しない）:
+
+```dart
+// screen_feature_school_grade, delegate/on_initialize_delegate.dart
+@internal
+class OnInitializeDelegate {
+  final MutableStateStream<SchoolGradeScreenState> state;
+  final KanjiListBySchoolGradeUsecase kanjiListBySchoolGradeUsecase;
+  final SchoolGradeSortLoadUsecase schoolGradeSortLoadUsecase;
+
+  const OnInitializeDelegate({
+    required this.state,
+    required this.kanjiListBySchoolGradeUsecase,
+    required this.schoolGradeSortLoadUsecase,
   });
+
+  Future<void> execute() async {
+    await state.updateWithLock((oldState, emitter) async {
+      final savedSortType = await schoolGradeSortLoadUsecase.execute();
+      // ...
+    });
+  }
 }
 ```
 
-同様に、`SchoolGradeSortSaveUsecase` は `execute(SchoolGradeSortType)` で Preferences に保存する。ViewModel は `preferencesRepository` を `ref.watch` で受け取り、アクション内で Usecase に渡す。
+```dart
+// screen_feature_school_grade, school_grade_screen_view_model.action.dart
+Future<void> onInitialize() async {
+  final schoolGradeSortLoadUsecase = SchoolGradeSortLoadUsecase(
+    preferencesRepository: preferencesRepository,
+  );
+  final delegate = OnInitializeDelegate(
+    state: state,
+    kanjiListBySchoolGradeUsecase: kanjiListBySchoolGradeUsecase,
+    schoolGradeSortLoadUsecase: schoolGradeSortLoadUsecase,
+  );
+  await delegate.execute();
+}
+```
 
-### パターン2: StateStream を操作する Usecase（冪等でない）
+同様に、`SchoolGradeSortSaveUsecase` は `onChangeSortType()` 内で生成し、`OnChangeSortTypeDelegate` に注入する。ViewModel は `preferencesRepository` を `ref.watch` で受け取り、画面固有 Usecase のコンストラクタへ渡す。
 
-認証状態や他リポジトリのストリームを購読し、ViewModel の `MutableStateStream` を更新する。外部 Repository は ViewModel の provider で `ref.watch` し、Usecase のコンストラクタで渡す。
+### パターン2: StateStream を操作する Usecase（ViewModel ライフサイクルで開始）
+
+認証状態や他リポジトリのストリームを購読し、ViewModel の `MutableStateStream` を更新する。Delegate 経由ではなく、**ViewModel のコンストラクタ内** で画面固有 Usecase を `new` し、`start()` 等で購読を開始する。外部 Repository は ViewModel の provider で `ref.watch` し、ViewModel のフィールドとして保持する。
 
 ```dart
-// screen_feature_home2, usecase/data_sync_usecase.dart
-/// データ同期用のUsecase.
+// screen_feature_settings2, usecase/settings_sync_usecase.dart
+/// 設定画面のデータ同期Usecase.
 @internal
-final class DataSyncUsecase {
-  final AuthenticationRepository authenticationRepository;
+class SettingsSyncUsecase {
+  final AuthenticationRepository2 authenticationRepository;
 
-  const DataSyncUsecase({
+  SettingsSyncUsecase({
     required this.authenticationRepository,
   });
 
   /// 認証状態の変更を監視する.
-  void startAuthentication(
-    MutableStateStream<HomeScreenState> dataStream,
-  ) {
-    dataStream.withSubscription(
-      authenticationRepository.authenticationStream.listen((e) {
-        _onAuthenticationStateChanged(dataStream, e);
-      }),
-    );
+  void start(MutableStateStream<SettingsScreenState> dataStream) {
+    // ...
   }
-  // ...
 }
 ```
 
-ViewModel の provider での生成（外部依存を DI で渡す）:
+ViewModel の provider では外部依存のみ DI し、コンストラクタ内で画面固有 Usecase を `new` する:
 
 ```dart
-// screen_feature_home2, home_screen_view_model.dart
-static final provider = Provider.autoDispose<HomeScreenViewModel>(
+// screen_feature_settings2, settings_screen_view_model.dart
+static final provider = Provider.autoDispose<SettingsScreenViewModel>(
   (ref) {
     final authenticationRepository = ref.watch(
-      AuthenticationRepository.provider,
+      AuthenticationRepository2.provider,
     );
-    return HomeScreenViewModel._(
-      state: MutableStateStream(HomeScreenState.initial(...)),
-      dataSyncUsecase: DataSyncUsecase(
-        authenticationRepository: authenticationRepository,
-      ),
-      // ...
+    final preferencesRepository = ref.watch(
+      PreferencesRepository.provider,
+    );
+    final stateStream = MutableStateStream<SettingsScreenState>(/* ... */);
+    return SettingsScreenViewModel._(
+      data: stateStream,
+      authenticationRepository: authenticationRepository,
+      preferencesRepository: preferencesRepository,
     );
   },
-  dependencies: [AuthenticationRepository.provider, ...],
+  dependencies: [
+    AuthenticationRepository2.provider,
+    PreferencesRepository.provider,
+  ],
 );
+
+SettingsScreenViewModel._({
+  required this.data,
+  required this.authenticationRepository,
+  required this.preferencesRepository,
+}) {
+  SettingsSyncUsecase(
+    authenticationRepository: authenticationRepository,
+  ).start(data);
+}
 ```
 
-`SettingsSyncUsecase` も同様に、`AuthenticationRepository` と `AiQuotaRepository` をコンストラクタで受け取り、`start(MutableStateStream<SettingsScreenState>)` でストリーム購読を開始する。ViewModel のコンストラクタ内で `SettingsSyncUsecase(...).start(data)` として即座に生成・実行している。
+このパターンは ViewModel 初期化時のストリーム購読開始であり、**Delegate 経由のアクションとは別** である。Delegate 経由で画面固有 Usecase を使う場合は、パターン1に従い `onXXXX()` 内で `new` する。
 
 ### ディレクトリ構成（ワークスペース）
 
@@ -143,14 +202,14 @@ app_packages/screen/feature/school_grade/lib/src/viewmodel/
 app_packages/screen/feature/home2/lib/src/viewmodel/
 ├── home_screen_view_model.dart
 └── usecase/
-    └── data_sync_usecase.dart   # 認証状態の監視・State 更新
+    └── (画面固有 Usecase が必要な場合)
 ```
 
 ```text
 app_packages/screen/feature/settings2/lib/src/viewmodel/
 ├── settings_screen_view_model.dart
 └── usecase/
-    └── settings_sync_usecase.dart   # 認証・AIチケットの監視・State 更新
+    └── settings_sync_usecase.dart   # 認証状態の監視・State 更新（コンストラクタで start）
 ```
 
 ## 関連文書
@@ -164,11 +223,9 @@ app_packages/screen/feature/settings2/lib/src/viewmodel/
 
 * 複雑なビジネスロジックは ViewModel に書かず、画面固有 Usecase に切り出す。
 * 複数の Delegate で同じロジックが必要な場合は、その部分を Usecase にまとめ、Delegate のコンストラクタで Usecase を受け取る。テストでは Mock と実物を切り替えやすくなる。
-* **インスタンスの作成を柔軟に取り扱う**。次のいずれも許容し、テストや差し替えのしやすさで選ぶ。
-  * **都度 new**: アクション内で `Usecase(依存)` を生成し `execute` を呼ぶ。依存は ViewModel が DI で保持する。
-  * **ViewModel のフィールドで保持**: provider 内で 1 回生成し、ViewModel に渡す。外部依存は provider で `ref.watch` し、Usecase のコンストラクタに渡す。
-  * **Usecase 自体を Provider にする**: 画面固有 Usecase を `Provider` や `Provider.autoDispose` で提供する。テストでは `container.override` で Mock Usecase に差し替えられる。
-* **Delegate のコンストラクタで Usecase を渡す**: Delegate が画面固有 Usecase に依存する場合、コンストラクタ引数で受け取る。本番では実装を、テストでは Mock を渡すことで、Delegate 単体のテストや ViewModel のテストのカバレッジを上げやすい。
+* **Delegate 経由の画面固有 Usecase は `onXXXX()` 内で `new` する**。ViewModel の provider では生成しない。Delegate には生成済みインスタンスをコンストラクタ注入する。
+* **Delegate のコンストラクタで Usecase を渡す**: 本番では実装を、テストでは Mock を渡すことで、Delegate 単体のテストや ViewModel のテストのカバレッジを上げやすい。
+* **無駄なインスタンス化のコストは受け入れる**: あるアクションが一部の Usecase しか使わなくても、依存の明示とテスト容易性を優先し、事前生成した Usecase をすべて渡してよい。
 
 ### 避けるべきパターン
 
@@ -176,5 +233,9 @@ app_packages/screen/feature/settings2/lib/src/viewmodel/
   * 対応: `@internal` を付ける。
 * 1 クラスに複数の無関係な機能を持たせる。
   * 対応: 1 クラス 1 機能を守る。
+* **ViewModel の provider で画面固有 Usecase をフィールドとして保持する**（Delegate 経由で使う場合）。
+  * 対応: `onXXXX()` 内で `new` し、Delegate のコンストラクタへ渡す。
+* **Delegate の `execute` 内で Usecase を `new` する**。
+  * 対応: `onXXXX()` 内で事前にインスタンス化し、コンストラクタ引数で渡す。
 * 外部レイヤーのインターフェースを直接 new せず、DI で受け取る。
   * 対応: プロジェクトのDI設計を遵守する

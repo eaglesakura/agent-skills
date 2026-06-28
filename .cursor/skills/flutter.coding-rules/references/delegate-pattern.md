@@ -26,6 +26,58 @@ Delegate のコンストラクタは、**呼び出し元クラスのプロパテ
 
 `execute` メソッドの引数は、**呼び出し元のメソッド引数と同等** とする。親クラスのメソッドが受け取る引数を、そのまま `execute` に渡す形となる。戻り値型も呼び出し元の属性を引き継ぐ。`Future`、同期型、`Stream` など、呼び出し元のメソッドに応じた型とする。
 
+### ステートレス原則
+
+Delegate クラスは **ステートレス（Stateless）であることを必須** とする。
+
+* Delegate は `execute` の呼び出しをまたいで **内部状態を保持・変更しない**
+* フィールドは `final` のみとし、コンストラクタで注入された依存（StateStream、Usecase、Repository 等）への参照を保持するにとどめる
+* `execute` 実行中に得た値をインスタンスフィールドへ書き戻さない
+* 可能な限り `const` コンストラクタを用いる
+
+#### ステートレス原則の補足
+
+ここでいう「ステートレス」とは、Flutter の `StatefulWidget` とは無関係である。Delegate が `MutableStateStream` 等の **外部状態** を操作することは許容するが、**Delegate インスタンス自身が呼び出し間で変化する状態を持つこと** は禁止する。
+
+ステートレスを守ることで、以下が成立する。
+
+* **テスト容易性**: 依存を Mock 注入し、`execute` 単位で副作用を検証できる
+* **再入性の確保**: 同一 Delegate を複数回呼び出しても、前回の実行結果が次回に漏れない
+* **ライフサイクルの単純化**: 呼び出しごとに生成・使い捨てしても安全である
+
+状態の保持・更新は、Delegate が依存として受け取る `MutableStateStream` や Repository に委ねる。Delegate 自身が「記憶」しない。
+
+#### ステートレス原則の実装例
+
+```dart
+// 良い例: フィールドは final の依存参照のみ
+@internal
+class OnInputTextChangedDelegate {
+  @internal
+  final MutableStateStream<KanjiKanamajiriScreenState> state;
+
+  const OnInputTextChangedDelegate({required this.state});
+
+  Future<void> execute(String text) async {
+    await state.updateWithLock((oldState, emitter) async {
+      return emitter.emit(oldState.copyWith(inputText: text));
+    });
+  }
+}
+```
+
+```dart
+// 悪い例: execute 間で変化する mutable フィールドを持つ
+@internal
+class BadDelegate {
+  int callCount = 0; // NG: Delegate 自身が状態を保持している
+
+  Future<void> execute() async {
+    callCount++; // NG: 呼び出しをまたいで内部状態が変化する
+  }
+}
+```
+
 ### Delegate の基本構造のテンプレート
 
 ```dart
@@ -146,6 +198,8 @@ Delegate のインスタンス化には、依存関係とライフサイクル�
 
 親クラスのメソッド内で、呼び出しのたびに Delegate を生成する。依存関係がその都度変わる場合や、親クラスが多くの依存を保持したくない場合に適する。
 
+**ViewModel のアクション Delegate（`OnXxxxxDelegate`）は、常にこのパターンを採用する。** ViewModel フィールドとして保持せず、`onXXXX()` 内で都度生成・使い捨てとする。これは Delegate のステートレス原則を守るためである。
+
 #### 呼び出しごとに生成の補足
 
 Repository の各メソッドが異なる Delegate を必要とする場合、メソッド内で必要な依存を渡して Delegate を生成する。親クラスのフィールド数を抑えられる。
@@ -242,6 +296,9 @@ Delegate はパッケージ内部でのみ使用するため、`@internal` ア�
 5. **Delegate を単体テストする**
    * Delegate は独立してテスト可能であるため、親クラスより小さな単位でテストする
 
+6. **ステートレスを守る**
+   * フィールドは `final` の依存参照のみとし、`execute` をまたいで変化する mutable フィールドを持たない
+
 ### 避けるべきパターン
 
 1. **親クラスに処理を直書きする**
@@ -255,3 +312,6 @@ Delegate はパッケージ内部でのみ使用するため、`@internal` ア�
 
 4. **Flutter の Delegate と混同する**
    * `LocalizationsDelegate`、`SliverChildBuilderDelegate` 等は Flutter フレームワークの Delegate であり、本ドキュメントで扱うアプリ固有の Delegate パターンとは別物である
+
+5. **Delegate をステートフルにする**
+   * `execute` 間で変化する mutable フィールドを持たせない。カウンタ、キャッシュ、前回結果の保持などは Delegate 内に置かず、StateStream や Repository へ委ねる

@@ -34,6 +34,8 @@ metadata:
 
 * [mvvm-viewmodel-design](./references/mvvm-viewmodel-design.md)
   * 例: MVVMのViewModel/Modelレイヤー、ViewModel の基本設計（1画面1ViewModel、provider、ファイルレイアウト等）を行う場合
+* [mvvm-viewmodel-design-action](./references/mvvm-viewmodel-design-action.md)
+  * 例: ViewModel アクション（`onXXXX()`）の設計、Delegate 分離、`.action.dart` の実装を行う場合
 * [mvvm-viewmodel-entity](./references/mvvm-viewmodel-entity.md)
   * 例: ScreenEntity の設計、State→Entity 変換（StateToEntityDelegate）を行う場合
 * [mvvm-viewmodel-usecase](./references/mvvm-viewmodel-usecase.md)
