@@ -13,8 +13,8 @@
 * **Riverpod の役割**: Riverpod への依存は、**DI によるインターフェースの解決**と**ライフサイクル解決**に限る。`@riverpod` は用いず、`static final provider = Provider.autoDispose<...>(...)` を ViewModel に定義する。
 * **ViewModel.provider**: 各 ViewModel は `ViewModel.provider`（`Provider.autoDispose<ViewModel>`）を持ち、画面破棄時にインスタンスが破棄される。
 * **private コンストラクタ**: ViewModel は private コンストラクタ（`ViewModel._(...)`）を持ち、インスタンスは Provider のコールバック内からのみ作成する。
-* **単一ステート**: 単一ステートの原則に従い、`MutableStateStream<ScreenState> state`（または `data` など一貫した名前）で状態を管理する。詳細は [mvvm-viewmodel-state.md](./mvvm-viewmodel-state.md) に従う。
-* **全属性 final の原則**: ViewModel が保持する **すべてのフィールドは `final`** とする。画面状態の変化は `MutableStateStream<ScreenState>`（または `data`）経由でのみ行い、ViewModel インスタンス自身が State 以外の Stateful な要素（`execute` をまたいで変化する mutable フィールド、カウンタ、キャッシュ、前回結果の保持など）を持たないようにする。
+* **単一ステート**: 単一ステートの原則に従い、`MutableStateStream<ScreenState> state` で状態を管理する。詳細は [mvvm-viewmodel-state.md](./mvvm-viewmodel-state.md) に従う。
+* **全属性 final の原則**: ViewModel が保持する **すべてのフィールドは `final`** とする。画面状態の変化は `MutableStateStream<ScreenState> state` 経由でのみ行い、ViewModel インスタンス自身が State 以外の Stateful な要素（`execute` をまたいで変化する mutable フィールド、カウンタ、キャッシュ、前回結果の保持など）を持たないようにする。
 * **表示状態の公開**: 表示状態は `StateStream<ScreenEntity> get entity` で公開する。State→Entity 変換は StateToEntityDelegate に委譲する。詳細は [mvvm-viewmodel-entity.md](./mvvm-viewmodel-entity.md) に従う。
 * **イベントの公開**: イベントを持つ必要がある場合は `Stream<ScreenEvent> get event` で公開する。詳細は [mvvm-viewmodel-event.md](./mvvm-viewmodel-event.md) に従う。
 * **リソース解放**: `_close()` メソッドを実装し、Provider の解放コールバック（`ref.onDisposeAsync(result._close)`）で実行する。主に `MutableStateStream` の `close()` を呼ぶ。
@@ -32,7 +32,7 @@
 ### ファイルレイアウトの補足
 
 ViewModel および関連型は、画面パッケージの `lib/src/viewmodel/` 以下に配置する。
-本体・アクション・必要に応じて factory / ui を part で分割し、state / entity / delegate / usecase はサブディレクトリで整理する。
+本体は `{画面名}_screen_view_model.dart` に置き、アクションは `{画面名}_screen_view_model.action.dart` に **part で分離** する。state / entity / delegate / usecase はサブディレクトリで整理する。
 
 ### 標準ディレクトリ構成
 
@@ -55,69 +55,20 @@ lib/src/viewmodel/
     └── {型名}.dart
 ```
 
-画面によっては、ViewModel を factory / ui に分割する場合がある。
+ViewModel 本体の part 分割は **`{画面名}_screen_view_model.action.dart` のみ** を推奨する。provider・entity・event・`_close` 等は ViewModel 本体に置く。上記以外の part 分割・フィールド命名・配置は非推奨とする（詳細は「よくあるパターンとアンチパターン」参照）。
 
-* **factory**: 初期状態の構築や Provider の依存解決を分離した part ファイル（例: `settings_screen_view_model.factory.dart`）。
-* **ui**: Entity 変換など UI 用の変換メソッドを分離した part ファイル（例: `settings_screen_view_model.ui.dart`）。
-
-### ファイルレイアウトの実装例（ワークスペース）
-
-#### 参照実装（kanji_kanamajiri）
-
-アクションの Delegate 分離・`onXXXX()` 命名の最新実装。新規画面はこの構成を参照する。
+### ファイルレイアウトの実装例
 
 ```text
-app_packages/screen/feature/kanji_kanamajiri/lib/src/viewmodel/
-├── kanji_kanamajiri_screen_view_model.dart
-├── kanji_kanamajiri_screen_view_model.action.dart
+app_packages/screen/feature/{画面名}/lib/src/viewmodel/
+├── {画面名}_screen_view_model.dart
+├── {画面名}_screen_view_model.action.dart
 ├── delegate/
-│   ├── on_initialize_delegate.dart
-│   ├── on_input_text_changed_delegate.dart
-│   ├── on_selected_grade_changed_delegate.dart
-│   └── on_tap_convert_button_delegate.dart
+│   ├── {画面名}_screen_state_to_entity_delegate.dart
+│   └── on_{動詞句}_delegate.dart
 ├── entity/
 ├── state/
 └── usecase/
-    └── screen_state_to_entity_delegate.dart
-```
-
-#### 移行対象の構成（school_grade）
-
-`.action.dart` にロジックが残存している。改修時は [mvvm-viewmodel-design-action.md](./mvvm-viewmodel-design-action.md) に従い Delegate 分離へ移行する。
-
-```text
-app_packages/screen/feature/school_grade/lib/src/viewmodel/
-├── school_grade_screen_view_model.dart
-├── school_grade_screen_view_model.action.dart
-├── entity/
-├── state/
-├── usecase/
-│   ├── school_grade_screen_state_to_entity_delegate.dart
-│   ├── school_grade_sort_load_usecase.dart
-│   └── school_grade_sort_save_usecase.dart
-└── model/
-```
-
-#### factory / ui 分割あり（settings2）
-
-```text
-app_packages/screen/feature/settings2/lib/src/viewmodel/
-├── settings_screen_view_model.dart
-├── settings_screen_view_model.factory.dart
-├── settings_screen_view_model.ui.dart
-├── entity/
-│   ├── settings_screen_entity.dart
-│   ├── account_group_entity.dart
-│   ├── ai_quota_entity.dart
-│   └── debug_group_entity.dart
-├── state/
-│   ├── settings_screen_state.dart
-│   ├── settings_screen_state.modifier.dart
-│   ├── settings_screen_event.dart
-│   ├── ai_quota_state.dart
-│   └── debug_setting_state.dart
-└── usecase/
-    └── settings_sync_usecase.dart
 ```
 
 ### 実装例（ViewModel 本体の骨格）
@@ -164,7 +115,7 @@ final class SchoolGradeScreenViewModel {
     required this.schoolGradeScreenStateToEntityDelegate,
   });
 
-  /// Delegate の public メソッドは execute（[delegate-pattern](../../flutter.coding-rules/references/delegate-pattern.md) に従う）.
+  /// StateToEntityDelegate の public メソッドは execute（Delegate パターンに従う）.
   StateStream<SchoolGradeScreenEntity> get entity =>
       state.map(schoolGradeScreenStateToEntityDelegate.execute);
 
@@ -187,8 +138,9 @@ final class SchoolGradeScreenViewModel {
 * 1 画面 1 ViewModel を守り、スコープが重ならないようにする。タブなどで親子がある場合は、それぞれ専用 ViewModel を用意するか、スコープを明示する。
 * `ref.onDisposeAsync(result._close)` で必ず解放コールバックを登録する。
 * 外部依存は `ref.watch` で取得し、`dependencies` に列挙する。画面内の Delegate は const または通常コンストラクタで直接生成してよい。
-* 状態のプロパティ名は `state` または `data` のいずれかに統一する（パッケージ内で一貫させる）。
+* 状態のプロパティ名は `state` とする（`MutableStateStream<ScreenState> state`）。
 * ViewModel のフィールドはすべて `final` とし、状態変化は `MutableStateStream` に集約する（全属性 final の原則）。
+* ViewModel の part 分割は `{viewmodel}.action.dart` のみとする。provider・entity・event は ViewModel 本体に置く。
 
 ### 避けるべきパターン
 
@@ -196,4 +148,6 @@ final class SchoolGradeScreenViewModel {
 * Provider を介さずに ViewModel を new する。インスタンスは Provider のコールバック内でのみ作成する。
 * `_close()` を登録せずに `MutableStateStream` などリソースを保持したままにすること。メモリリークの原因となる。
 * ViewModel に `final` でないフィールドを持たせる。状態は `MutableStateStream` に集約し、ViewModel 自身を Stateful にしない（全属性 final の原則）。
+* ViewModel を `factory` / `ui` に part 分割する。`{viewmodel}.action.dart` 以外の part 分割は非推奨である。
+* `MutableStateStream` のフィールド名に `data` 等を使う。`state` 以外は非推奨である。
 * 複数画面で 1 つの ViewModel を共有する。スコープが「1 画面」と明確でない設計は避ける。

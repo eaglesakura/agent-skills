@@ -265,5 +265,3 @@ Future<void> onInitialize() async {
   await delegate.execute();
 }
 ```
-
-```
