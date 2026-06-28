@@ -50,5 +50,7 @@ metadata:
   * 例: Riverpodの利用（ref.watch/read、select、watchBy、Providerスコープ等）を行う場合
   * 例: ViewModelの初期化処理を記述する場合
   * 例: Dependency Injectionの注入を行う場合
+* [mvvm-widget](./references/mvvm-widget.md)
+  * 例: `{画面名}Screen` / `{画面名}ScreenImpl` の分割、ルート Widget の責務、Entity の watch 方針を設計する場合
 * [mvvm-viewmodel-test](./references/mvvm-viewmodel-test.md)
   * 例: ViewModelのUnitTestを行う場合
