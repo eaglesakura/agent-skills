@@ -210,6 +210,7 @@ test("入力テキストが更新される", () async {
 ### Delegate 間の共通処理
 
 * **DO**: Delegate 間で共通処理が必要な場合は、`@internal` 属性を付与した画面固有 Usecase として独立化する。`onXXXX()` 内で Usecase を生成し、各 Delegate のコンストラクタへ注入する。共通ロジックは Usecase 単体の Unit Test で検証する。
+* **DO NOT**: Delegate の `execute` 内で別の `OnXxxxxDelegate` を生成・委譲してはならない（**Delegate in Delegate 禁止**）。`onClearText` が `onInputText("")` と等価な場合も同様に、共通ロジックは Usecase に切り出す。
 * **DO NOT**: Delegate 間の共通処理をコールバック（関数型引数・クロージャ等）で共通化してはならない。コールバックはテスタビリティが低く、Mock 注入や Unit Test が困難になるため禁止する。共通処理は Usecase に切り出し、Usecase 単体テストで検証する。
 
 ```dart
@@ -256,3 +257,4 @@ Future<void> onTapSubmitButton() async {
 | ViewModel の provider で画面固有 Usecase を保持する | Delegate 未使用の Usecase が ViewModel に残る | `onXXXX()` 内で `new` し、Delegate に注入する |
 | Delegate のコンストラクタで `ref.watch` する | DI の責務が Delegate に漏れる | ViewModel が解決した依存を引数で渡す |
 | Delegate 間の共通処理をコールバックで共通化する | テスタビリティが低く、Mock 注入・Unit Test が困難 | `@internal` 画面固有 Usecase に切り出し、Usecase 単体テストで検証する |
+| Delegate in Delegate（`execute` 内で別 Delegate を `new` して委譲） | 共通ロジックが Delegate 層に閉じ、Mock 注入・単体テストが困難 | `@internal` 画面固有 Usecase に抽出し、各 Delegate は Usecase をコンストラクタ注入して `execute` |

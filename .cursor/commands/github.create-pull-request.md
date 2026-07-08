@@ -53,3 +53,15 @@
 
     gh pr edit https://github.com/OWNER/REPO/pull/123 --body-file path/to/body.md
     ```
+
+5. 作業レポートを出力する
+
+```markdown
+# {Pull Requestタイトル}
+
+{Pull Request Body内容}
+
+---
+Repository: {https://path/to/repository}
+Pull Request: [{#PR番号} {タイトル}]({PRへのリンク})
+```

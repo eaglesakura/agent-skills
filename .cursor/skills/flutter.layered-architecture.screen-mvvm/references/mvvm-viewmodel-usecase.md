@@ -183,6 +183,43 @@ SettingsScreenViewModel._({
 
 このパターンは ViewModel 初期化時のストリーム購読開始であり、**Delegate 経由のアクションとは別** である。Delegate 経由で画面固有 Usecase を使う場合は、パターン1に従い `onXXXX()` 内で `new` する。
 
+### パターン3: 複数 Delegate で共有する Usecase（Delegate in Delegate の代替）
+
+`onClearText` が `onInputText("")` と等価な場合のように、複数のアクションが同一フローを共有する場合は、**Delegate 内で別 Delegate を呼ばず**、共通ロジックを画面固有 Usecase に切り出す。各 Delegate は Usecase をコンストラクタ注入して `execute` する。
+
+```dart
+// screen_feature_kanji_practice2, usecase/process_input_text_usecase.dart
+@internal
+class ProcessInputTextUsecase {
+  const ProcessInputTextUsecase({
+    required this.state,
+    required this.passageParseUsecase,
+    required this.optimizePassageUsecase,
+  });
+
+  Future<void> execute(String newText) async {
+    // インクリメンタルパース本体
+  }
+}
+
+// screen_feature_kanji_practice2, kanji_practice_screen_view_model.action.dart
+Future<void> onInputText(String newText) async {
+  final processInputTextUsecase = ProcessInputTextUsecase(/* ... */);
+  final delegate = OnInputTextDelegate(
+    processInputTextUsecase: processInputTextUsecase,
+  );
+  await delegate.execute(newText);
+}
+
+Future<void> onClearText() async {
+  final processInputTextUsecase = ProcessInputTextUsecase(/* ... */);
+  final delegate = OnClearTextDelegate(
+    processInputTextUsecase: processInputTextUsecase,
+  );
+  await delegate.execute(); // 内部で usecase.execute("")
+}
+```
+
 ### ディレクトリ構成（ワークスペース）
 
 ```text
@@ -237,5 +274,7 @@ app_packages/screen/feature/settings2/lib/src/viewmodel/
   * 対応: `onXXXX()` 内で `new` し、Delegate のコンストラクタへ渡す。
 * **Delegate の `execute` 内で Usecase を `new` する**。
   * 対応: `onXXXX()` 内で事前にインスタンス化し、コンストラクタ引数で渡す。
+* **Delegate in Delegate**（`execute` 内で別の `OnXxxxxDelegate` を `new` して委譲する）。
+  * 対応: 共通ロジックを `@internal` 画面固有 Usecase に抽出し、各 Delegate は Usecase をコンストラクタ注入して `execute` する。
 * 外部レイヤーのインターフェースを直接 new せず、DI で受け取る。
   * 対応: プロジェクトのDI設計を遵守する
