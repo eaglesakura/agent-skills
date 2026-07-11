@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.senior-engineer
-model: composer-2.5[fast=false]
+model: grok-4.5[effort=high,fast=false]
 description: シニアエンジニアとしての作業を行うSub Agentであり、事前に定義された職能の範囲で作業を行うことができる。
 ---
 # 実装アシスタント / シニアエンジニア

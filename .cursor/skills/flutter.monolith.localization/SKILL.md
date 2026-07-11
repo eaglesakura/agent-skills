@@ -29,7 +29,7 @@ path/to/package
 
 ## 基本的な実行コマンド
 
-```dart
+```bash
 # localization関連ファイルを生成する
 dart run monolith_runner:localization
 ```
@@ -45,6 +45,75 @@ dart run monolith_runner:localization
 * [monolith_localization_runtime](https://pub.dev/packages/monolith_localization_runtime)
   * 個別のpackageに必要
 
+## Unit Test / Widget Preview / Golden Test 用 StringsTestHelper
+
+Unit Test・Widget Preview・Golden Test では、生成された ARB をファイル I/O なしで注入できる。
+
+### monolith.yaml の設定
+
+`localization.test_helper` は省略可能である。省略時はヘルパーを生成しない。
+
+```yaml
+localization:
+  languages:
+    - ja
+  # ...
+  # optional, default: omit
+  test_helper:
+    package_name: foundation_resources          # required: 出力先パッケージ
+    test_helper_class_name: StringsTestHelper   # optional, default: StringsTestHelper
+    test_helper_path: lib/gen/strings_test_helper.dart  # optional, default: lib/gen/strings_test_helper.dart
+```
+
+### 出力
+
+`dart run monolith_runner:localization` 実行時、ARB 生成後に次が出力される。
+
+```text
+${package_name}/${test_helper_path}
+# 例: foundation_resources/lib/gen/strings_test_helper.dart
+```
+
+* 言語コードごとに `static String get ${lang}` が生成される（例: `StringsTestHelper.ja`）
+* ARB 本文は Base64 埋め込みであり、getter 内で decode する
+* リリースモード（`dart.vm.product`）では getter 呼び出し時に `UnsupportedError` を投げる
+
+### 利用例
+
+Widget Preview や Golden Test では、`LocalizeStringDelegate.injectDelegateForTest` に `StringsTestHelper` の getter を渡すことで、本番相当の文言注入状態を再現できる。
+
+```dart
+// view_designkit, widget_preview_functions.dart
+LocalizeStringDelegate.injectDelegateForTest(
+  arbJson: StringsTestHelper.ja,
+);
+```
+
+```dart
+// testing_golden, golden_localization.dart
+Future<void> injectGoldenTestLocalization() async {
+  return LocalizeStringDelegate.injectDelegateForTest(
+    arbJson: StringsTestHelper.ja,
+  );
+}
+```
+
+```dart
+// Unit Test 例
+setUpAll(() async {
+  await LocalizeStringDelegate.injectDelegateForTest(
+    arbJson: StringsTestHelper.ja,
+  );
+});
+
+tearDownAll(() async {
+  await LocalizeStringDelegate.resetDelegateForTest();
+});
+```
+
+* 利用側パッケージは、生成先パッケージ（例: `foundation_resources`）と `monolith_localization_runtime` に依存する
+* 生成ファイルは `export` せず、`package:foundation_resources/gen/strings_test_helper.dart` を直接 import する
+
 ## 追加ドキュメント
 
 実装の詳細について、下記のドキュメントをロードする
@@ -58,3 +127,5 @@ dart run monolith_runner:localization
 * [ ] 文字列リソースへのアクセスは `lib/src/strings.dart` を作成し、生成された `L10nStringsMixin` を使用する
 * [ ] `strings.dart` は `export` せず、パッケージ内部 (`@internal`) で完結させる
 * [ ] 他パッケージのリソースが必要な場合は、該当パッケージの `L10nStringsMixin` を必要な数だけmixinして対応する
+* [ ] Unit Test / Widget Preview / Golden Test で文言が必要な場合は、`StringsTestHelper` + `LocalizeStringDelegate.injectDelegateForTest` を使用する
+* [ ] `StringsTestHelper` をリリースビルドから呼び出さない（リリースモードでは例外となる）

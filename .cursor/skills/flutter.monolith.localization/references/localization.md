@@ -100,3 +100,80 @@ final strings = _Strings();
 * 基本的に各packageには `monolith` `monolith_localization` 等の各ライブラリは不要であり、生成されるコードからは `monolith_localization_runtime` packageのみを必要としている
 * `dev_dependencies:` に追加するのは、dart workspaceの `ルートのpackageのみ` で良い
 * `strings.dart` はexportしてはならず、各packageごとで作成する
+
+## Unit Test / Widget Preview 用 StringsTestHelper
+
+### 概要
+
+`monolith.yaml` の `localization.test_helper` を設定すると、生成済み ARB を Base64 埋め込みした Dart ヘルパーが出力される。
+Unit Test・Widget Preview・Golden Test では、ファイル I/O なしに `LocalizeStringDelegate.injectDelegateForTest` へ渡せる。
+
+### monolith.yaml 設定
+
+`test_helper` は省略可能である。省略時はヘルパーを生成しない。
+
+```yaml
+localization:
+  languages:
+    - ja
+  # optional, default: omit
+  test_helper:
+    package_name: foundation_resources          # required
+    test_helper_class_name: StringsTestHelper   # optional, default: StringsTestHelper
+    test_helper_path: lib/gen/strings_test_helper.dart  # optional
+```
+
+### 生成と出力先
+
+`dart run monolith_runner:localization` 実行時、ARB 生成直後に次が出力される。
+
+```text
+app_packages/foundation/resources/lib/gen/strings_test_helper.dart
+```
+
+* `languages` の各言語について getter が生成される（例: `StringsTestHelper.ja`）
+* リリースモードでは getter 呼び出し時に `UnsupportedError` を投げる
+
+### 利用例
+
+Widget Preview:
+
+```dart
+// view_designkit, widget_preview_functions.dart
+LocalizeStringDelegate.injectDelegateForTest(
+  arbJson: StringsTestHelper.ja,
+);
+```
+
+Golden Test:
+
+```dart
+// testing_golden, golden_localization.dart
+Future<void> injectGoldenTestLocalization() async {
+  return LocalizeStringDelegate.injectDelegateForTest(
+    arbJson: StringsTestHelper.ja,
+  );
+}
+```
+
+## よくあるパターンとアンチパターン
+
+### 推奨されるパターン
+
+1. **CSV を単一の真実源とする**
+   * 文言変更は `res/strings.csv` のみで行い、生成物を手編集しない
+
+2. **Test / Preview では StringsTestHelper で注入する**
+   * `LocalizeStringDelegate.injectDelegateForTest(arbJson: StringsTestHelper.ja)` を使い、ARB ファイル直読みを避ける
+
+### 避けるべきパターン
+
+1. **生成された `strings.dart` / `strings_test_helper.dart` の手編集**
+   * localization 再実行で上書きされる
+
+2. **リリースコードからの StringsTestHelper 利用**
+   * テスト用途であり、リリースモードでは例外となる
+
+## 参考リンク
+
+* Flutter internationalization: <https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization>
