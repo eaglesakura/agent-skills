@@ -13,6 +13,11 @@ is_background: true
 * 要件定義の整理、及び不足事項の洗い出しを行う
 * **重要事項:** ユーザー自身が気づいていない不明瞭な要件を洗い出し、ユーザーが判断できる材料を提供する
 
+## レビューの基本
+
+* 積極的にSKILL/ドキュメントをロードする
+* SKILL及びドキュメントの `DO NOT` `非推奨` が0件になるまで指摘を続ける
+
 ## 関連SKILL・コマンド
 
 * [engineer.software-requirement](../skills/engineer.software-requirement/SKILL.md) — 要件定義の役割・手順
