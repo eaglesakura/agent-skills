@@ -36,7 +36,7 @@ ViewModel 文脈の **Usecase** は、**その画面固有のビジネスロジ�
 
 ## 実装例（ワークスペース）
 
-### パターン1: 値を返す Usecase（Delegate 経由で利用）
+### 値を返す Usecase（Delegate 経由）の実装例
 
 画面固有 Usecase は `onXXXX()` 内で生成し、Delegate にはコンストラクタ注入する。外部 Repository は ViewModel の provider で DI 済みのフィールドを参照する。
 
@@ -123,7 +123,7 @@ Future<void> onInitialize() async {
 
 同様に、`SchoolGradeSortSaveUsecase` は `onChangeSortType()` 内で生成し、`OnChangeSortTypeDelegate` に注入する。ViewModel は `preferencesRepository` を `ref.watch` で受け取り、画面固有 Usecase のコンストラクタへ渡す。
 
-### パターン2: StateStream を操作する Usecase（ViewModel ライフサイクルで開始）
+### StateStream を操作する Usecase の実装例
 
 認証状態や他リポジトリのストリームを購読し、ViewModel の `MutableStateStream` を更新する。Delegate 経由ではなく、**ViewModel のコンストラクタ内** で画面固有 Usecase を `new` し、`start()` 等で購読を開始する。外部 Repository は ViewModel の provider で `ref.watch` し、ViewModel のフィールドとして保持する。
 
@@ -183,7 +183,7 @@ SettingsScreenViewModel._({
 
 このパターンは ViewModel 初期化時のストリーム購読開始であり、**Delegate 経由のアクションとは別** である。Delegate 経由で画面固有 Usecase を使う場合は、パターン1に従い `onXXXX()` 内で `new` する。
 
-### パターン3: 複数 Delegate で共有する Usecase（Delegate in Delegate の代替）
+### 複数 Delegate で共有する Usecase の実装例
 
 `onClearText` が `onInputText("")` と等価な場合のように、複数のアクションが同一フローを共有する場合は、**Delegate 内で別 Delegate を呼ばず**、共通ロジックを画面固有 Usecase に切り出す。各 Delegate は Usecase をコンストラクタ注入して `execute` する。
 
@@ -220,7 +220,7 @@ Future<void> onClearText() async {
 }
 ```
 
-### ディレクトリ構成（ワークスペース）
+### ディレクトリ構成の実装例
 
 ```text
 app_packages/screen/feature/school_grade/lib/src/viewmodel/
@@ -254,27 +254,63 @@ app_packages/screen/feature/settings2/lib/src/viewmodel/
 * ViewModel の基本設計・構成は [mvvm-viewmodel-design.md](mvvm-viewmodel-design.md) を参照する。
 * Delegate の設計・配置は Delegate パターン（および [mvvm-viewmodel-entity.md](mvvm-viewmodel-entity.md) の StateToEntityDelegate）を参照する。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: 画面固有のビジネスロジックは Usecase に切り出す
 
-* 複雑なビジネスロジックは ViewModel に書かず、画面固有 Usecase に切り出す。
-* 複数の Delegate で同じロジックが必要な場合は、その部分を Usecase にまとめ、Delegate のコンストラクタで Usecase を受け取る。テストでは Mock と実物を切り替えやすくなる。
-* **Delegate 経由の画面固有 Usecase は `onXXXX()` 内で `new` する**。ViewModel の provider では生成しない。Delegate には生成済みインスタンスをコンストラクタ注入する。
-* **Delegate のコンストラクタで Usecase を渡す**: 本番では実装を、テストでは Mock を渡すことで、Delegate 単体のテストや ViewModel のテストのカバレッジを上げやすい。
-* **無駄なインスタンス化のコストは受け入れる**: あるアクションが一部の Usecase しか使わなくても、依存の明示とテスト容易性を優先し、事前生成した Usecase をすべて渡してよい。
+* 複雑な判断・計算・フローを ViewModel から分離し、1 クラス 1 機能とする。
+* `@internal` を付与し、パッケージ外に公開しない。
 
-### 避けるべきパターン
+### DO: Delegate 経由の画面固有 Usecase は onXXXX() 内で new する
 
-* 画面固有 Usecase をパッケージ外に公開する。
-  * 対応: `@internal` を付ける。
-* 1 クラスに複数の無関係な機能を持たせる。
-  * 対応: 1 クラス 1 機能を守る。
-* **ViewModel の provider で画面固有 Usecase をフィールドとして保持する**（Delegate 経由で使う場合）。
-  * 対応: `onXXXX()` 内で `new` し、Delegate のコンストラクタへ渡す。
-* **Delegate の `execute` 内で Usecase を `new` する**。
-  * 対応: `onXXXX()` 内で事前にインスタンス化し、コンストラクタ引数で渡す。
-* **Delegate in Delegate**（`execute` 内で別の `OnXxxxxDelegate` を `new` して委譲する）。
-  * 対応: 共通ロジックを `@internal` 画面固有 Usecase に抽出し、各 Delegate は Usecase をコンストラクタ注入して `execute` する。
-* 外部レイヤーのインターフェースを直接 new せず、DI で受け取る。
-  * 対応: プロジェクトのDI設計を遵守する
+* ViewModel の provider では生成せず、Delegate には生成済みインスタンスをコンストラクタ注入する。
+* 無駄なインスタンス化のコストは受け入れ、依存の明示とテスト容易性を優先する。
+
+```dart
+Future<void> onInitialize() async {
+  final schoolGradeSortLoadUsecase = SchoolGradeSortLoadUsecase(
+    preferencesRepository: preferencesRepository,
+  );
+  final delegate = OnInitializeDelegate(
+    state: state,
+    kanjiListBySchoolGradeUsecase: kanjiListBySchoolGradeUsecase,
+    schoolGradeSortLoadUsecase: schoolGradeSortLoadUsecase,
+  );
+  await delegate.execute();
+}
+```
+
+### DO: 外部レイヤーのインターフェースは ViewModel の provider で DI する
+
+* Repository・Usecase 層・Infra は `ref.watch` し、ViewModel のフィールドとして保持する。
+* 画面固有 Usecase のコンストラクタへ渡す。
+
+### DO NOT: Delegate の execute 内で Usecase を new する
+
+* 理由: 依存が隠蔽され、Mock 注入が困難になる
+* 理由: `onXXXX()` 内で事前にインスタンス化し、コンストラクタ引数で渡す
+
+```dart
+// 非推奨パターン
+// DO NOT: execute 内での Usecase new
+Future<void> execute() async {
+  final usecase = SchoolGradeSortLoadUsecase(...);
+}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: onXXXX() 内で事前生成しコンストラクタ注入する
+final usecase = SchoolGradeSortLoadUsecase(...);
+final delegate = OnInitializeDelegate(schoolGradeSortLoadUsecase: usecase);
+```
+
+### DO NOT: Delegate in Delegate を行う
+
+* 理由: 共通ロジックが Delegate 層に閉じ、Mock 注入・単体テストが困難になる
+* 理由: 共通ロジックを `@internal` 画面固有 Usecase に抽出し、各 Delegate は Usecase をコンストラクタ注入する
+
+### DO NOT: ViewModel の provider で画面固有 Usecase をフィールドとして保持する
+
+* 理由: Delegate 経由で使う場合、未使用の Usecase が ViewModel に残る
+* 理由: `onXXXX()` 内で `new` し、Delegate のコンストラクタへ渡す（ライフサイクル購読開始のパターン2は例外）

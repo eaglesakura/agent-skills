@@ -265,6 +265,7 @@ Union Type や sealed な型での分岐に `switch` を用いる例である。
 ### switch利用のアンチパターン
 
 `when` や `map` を使うことは推奨しない。
+新規の `@Freezed` 定義では `when: FreezedWhenOptions.none` と `map: FreezedMapOptions.none` を指定し、生成自体を抑止する。
 
 ```dart
 // アンチパターン: when を使用
@@ -305,38 +306,99 @@ API やストレージのキー名と Dart のプロパティ名を明示的に�
   }) = _EndUserLicenseAgreementDto;
 ```
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: 実装形式の選択基準に従う
 
-1. **実装形式の選択基準に従う**
-   * 単一プロパティなら extension type、センシティブなら通常クラス、複数プロパティや Union なら @freezed を選ぶ。
+* 単一プロパティなら extension type、センシティブなら通常クラス、複数プロパティや Union なら @freezed を選ぶ。
 
-2. **型分岐には switch を使う**
-   * freezed の when/map ではなく、Dart の switch で網羅性をコンパイル時に担保する。
+### DO: sealed classの型分岐には switch を使う
 
-3. **JSON DTO では @JsonKey を付与する**
-   * API やストレージのキー名を明示し、互換性とリファクタリングの安全性を保つ。
+* freezed の when/map ではなく、Dart の switch で網羅性をコンパイル時に担保する。
 
-4. **パッケージ内部専用には @internal を付与する**
-   * パッケージ外に公開しないデータオブジェクトには `@internal` を付ける。
+```dart
+// view_designkit, designkit_icon.dart
+    final data = icon.data;
+    return switch (data) {
+      DesignkitResourceDataCodePoint() => _buildCodePointIcon(context, data),
+      DesignkitResourceDataEmbedded() => _buildIconData(context, data),
+      DesignkitResourceDataImage() => _buildImageIcon(context, data),
+    };
+```
 
-5. **JSON シリアライゼーションが必要な場合は arch-freezed-json-data を使う**
-   * API 取得やローカルストレージ保存が必要な DTO は、該当スニペットで fromJson 対応を行う。
+### DO: Freezedのオプションでwhen/map生成を抑止する
 
-### 避けるべきパターン
+* `@Freezed` に `when: FreezedWhenOptions.none` と `map: FreezedMapOptions.none` を指定し、when/map 系メソッドを生成しない。
+* switch 利用を前提とし、誤って when/map に依存しないようにする。
+* プロジェクト全体で揃える場合は `build.yaml` の freezed options でも抑止できる。
 
-1. **データオブジェクトにビジネスロジックを載せる**
-   * データの保持・転送に専念し、振る舞いは別クラス（Usecase や Delegate など）に実装する。
+```dart
+@Freezed(
+  when: FreezedWhenOptions.none,
+  map: FreezedMapOptions.none,
+)
+sealed class ExampleResult with _$ExampleResult {
+  const factory ExampleResult.success({required String data}) =
+      ExampleResultSuccess;
+  const factory ExampleResult.failure({required Object error}) =
+      ExampleResultFailure;
+}
+```
 
-2. **mutable なプロパティを定義する**
-   * データオブジェクトは常に Immutable とし、変更時は `copyWith` で新しいインスタンスを生成する。
+### DO: JSON DTO では @JsonKey を付与する
 
-3. **freezed の when/map に依存する**
-   * 網羅性の担保と可読性のため、switch を優先する。
+* API やストレージのキー名を明示し、互換性とリファクタリングの安全性を保つ。
 
-4. **JSON DTO で @JsonKey を省略する**
-   * キー名の変更やリネーム時の不整合を防ぐため、必ずキー名を明示する。
+```dart
+// data_source_embedded_impl, end_user_license_agreement_dto.dart
+  const factory EndUserLicenseAgreementDto({
+    /// EULAの本文
+    // ignore: invalid_annotation_target
+    @JsonKey(name: "body") required String body,
+
+    /// EULAのバージョン
+    // ignore: invalid_annotation_target
+    @JsonKey(name: "version") required String version,
+  }) = _EndUserLicenseAgreementDto;
+```
+
+### DO: パッケージ内部専用には @internal を付与する
+
+* パッケージ外に公開しないデータオブジェクトには `@internal` を付ける。
+
+### DO NOT: データオブジェクトにビジネスロジックを載せる
+
+* 理由: データの保持・転送に専念し、振る舞いは別クラス（Usecase や Delegate など）に実装する。
+
+### DO NOT: mutable なプロパティを定義する
+
+* 理由: データオブジェクトは常に Immutable とし、変更時は `copyWith` で新しいインスタンスを生成する。
+
+### DO NOT: freezed の when/map に依存する
+
+* 理由: 網羅性の担保と可読性のため、switch を優先する。
+
+```dart
+// アンチパターン: when を使用
+result.when(
+  success: (data) => ...,
+  failure: (error) => ...,
+);
+```
+
+```dart
+// 推奨: switch を使用
+switch (result) {
+  case ResultSuccess(data: final data):
+    ...
+  case ResultFailure(error: final error):
+    ...
+}
+```
+
+### DO NOT: JSON DTO で @JsonKey を省略する
+
+* 理由: キー名の変更やリネーム時の不整合を防ぐため、必ずキー名を明示する。
 
 ## 参考リンク
 

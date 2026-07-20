@@ -17,7 +17,7 @@ Dart では例外は **`Error`** と **`Exception`** に分類される。
 
 `Error` を catch する、または型を指定しない `catch (e)` で握りつぶす場合は、**必ず理由をコメントで明記**する。
 
-## try-catch の補足
+### Error と Exception の区別の補足
 
 理由のコメントにより、意図的な例外処理であることが明確になり、コードレビュー時に「なぜ `Error` を catch しているか」「なぜ型指定なしで catch しているか」を判断しやすくなる。例外の隠蔽を避け、デバッグしやすいコードを維持する。
 
@@ -109,15 +109,83 @@ try {
 * ファイル編集後の確認ポイントとして、例外処理が本規約に沿っているかをプロジェクトの編集後チェックリストで確認する。
 * 外部ライブラリや Firebase 等の API が `Error` を throw する場合、暫定対応で `on Error` を使うときは、必ず理由と TODO をコメントに残す。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: 予期される例外は具体的な Exception 型で catch する
 
-1. **Exception の型指定**: 予期される例外は `on FormatException`、`on TimeoutException` など、具体的な型で catch する。
-2. **Error / 型なし catch には理由を書く**: `Error` を catch する場合、または `catch (e)` で握りつぶす場合は、必ず理由をコメントで追記する。
+* `on FormatException`、`on TimeoutException` など、型を指定して処理する。
 
-### 避けるべきパターン
+```dart
+try {
+  final value = int.parse(input);
+  return value;
+} on FormatException catch (e) {
+  // 数値形式が不正な場合の処理
+  return 0;
+}
+```
 
-1. **Error を catch しているが理由がコメントで明記されていない**: 意図が不明瞭になる。
-2. **型を指定せずに例外を握りつぶしているが理由が明記されていない**: 例外が隠蔽され、デバッグが困難になる。
-3. **Exception を catch すべき箇所で Error を catch する**: 適切な例外型で catch する。
+### DO: Error / 型なし catch には理由コメントを書く
+
+* `Error` を catch する場合、または `catch (e)` で握りつぶす場合は、必ず理由をコメントで追記する。
+
+```dart
+try {
+  await criticalOperation();
+} catch (e) {
+  // クリティカルな操作が失敗した場合でも、アプリを継続させる必要がある
+  // すべての例外を catch してログに記録し、デフォルト値を返す
+  logger.error('クリティカルな操作が失敗しました: $e');
+  return defaultValue;
+}
+```
+
+### DO NOT: 理由コメントなしで Error を catch する
+
+* 理由: 意図が不明瞭になり、レビュー・デバッグが困難になる。
+
+```dart
+// アンチパターン: Error を catch しているが理由が不明確
+try {
+  someOperation();
+} on Error catch (e) {
+  return defaultValue;  // 理由のコメントがない
+}
+```
+
+### DO NOT: 理由コメントなしで型指定なし catch により例外を握りつぶす
+
+* 理由: 例外が隠蔽され、デバッグが困難になる。
+
+```dart
+// アンチパターン: 型指定なし catch で理由が不明確
+try {
+  someOperation();
+} catch (e) {
+  // 理由が書かれていない → 例外が隠蔽され、デバッグが困難になる
+}
+```
+
+### DO NOT: Exception を catch すべき箇所で Error を catch する
+
+* 理由: 適切な例外型で catch する。例として `int.parse` は `FormatException` を throw する。
+
+```dart
+// アンチパターン: FormatException は Exception 型なので、Error で catch しない
+try {
+  final value = int.parse(input);
+  return value;
+} on Error catch (e) {
+  return 0;  // on FormatException を使うべき
+}
+```
+
+```dart
+try {
+  final value = int.parse(input);
+  return value;
+} on FormatException catch (e) {
+  // 数値形式が不正な場合の処理
+  return 0;
+}
+```

@@ -1,6 +1,12 @@
 # Flutter-Layered-Architecture / ディレクトリ構成
 
+## 概要
+
 `Flutter-Layered-Architecture` では、アプリを構築するディレクトリ構成のルールを定めている。
+
+* レイヤーごとに `app_packages/` 配下へパッケージを配置する
+* 機能単位でパッケージを細分化し、単一の巨大パッケージを避ける
+* 実装・テスト用パッケージはインターフェース直下の入れ子ディレクトリ（`_impl` 等）に配置する
 
 ## 基本的なレイアウト
 
@@ -154,3 +160,70 @@ app_packages/screen/navigation/
 * テスト時のみ、`_test` や `_testing` を参照し、Fake やテスト用 Injection を利用する
 
 詳細は [architecture-design.md](./architecture-design.md) の「testing レイヤー」「ディレクトリ配置」および [dependency-injection.md](./dependency-injection.md) の「package分離」を参照すること。
+
+## ナレッジベース
+
+### DO: 機能単位でパッケージを細分化する
+
+* 単一の巨大パッケージにせず、責務ごとにサブディレクトリ（＝パッケージ）を切る
+* レイヤー配下は `repository/${機能名}`、`school`、`feature/${画面名}` 等に分離する
+
+```text
+app_packages/usecase/
+├── school/
+├── japanese/
+└── injection/
+```
+
+### DO: 実装はインターフェース直下の入れ子パッケージに置く
+
+* `_impl` / `_testing` / `_test` / `_mobile` / `_go_router` 等のアンダースコア prefix ディレクトリを用いる
+* インターフェースはパッケージルートに置く
+
+```text
+app_packages/usecase/school/
+├── pubspec.yaml              # インターフェース
+├── _impl/                    # 本番実装
+└── _test/                    # テスト用スタブ
+```
+
+### DO: 本番コードは `_test`・`_testing` に依存しない
+
+* 本番はインターフェースと `_impl`（または `_mobile`、`_go_router`）のみに依存する
+* テスト時のみ `_test` / `_testing` を参照する
+
+### DO NOT: インターフェースと実装を同一パッケージに混在させる
+
+* 理由: テスト時の差し替えが困難になる
+* 理由: 依存の向きが曖昧になり、実装詳細が呼び出し側へ漏れる
+
+```text
+# DO NOT: 同一パッケージ内に interface と impl を同居させる
+app_packages/usecase/school/lib/src/
+├── kanji_search_usecase.dart
+└── kanji_search_usecase_impl.dart
+```
+
+```text
+# DO: 入れ子の _impl パッケージへ実装を分離する
+app_packages/usecase/school/
+├── lib/src/kanji_search_usecase.dart
+└── _impl/lib/src/.../kanji_search_usecase_impl.dart
+```
+
+### DO NOT: 本番パッケージから `_testing` を依存に含める
+
+* 理由: テスト用 Fake が本番バイナリへ混入する
+* 理由: 本番とテストの境界が崩れる
+
+```yaml
+# DO NOT: 本番用 pubspec.yaml に _testing を書く
+dependencies:
+  usecase_injection_testing: ...
+```
+
+```yaml
+# DO: テスト用依存はテスト側（または _test / テストパッケージ）に限定する
+dev_dependencies:
+  usecase_injection_testing: ...
+```

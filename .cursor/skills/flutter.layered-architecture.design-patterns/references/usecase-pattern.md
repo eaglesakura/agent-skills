@@ -1,15 +1,12 @@
 # ビジネスロジック(Usecase)
 
-* ビジネスロジックのインターフェースは `Usecase` というサフィックスを持つのが基本である
-  * `${機能名}Usecase` という名称が基本である.
-  * 一部のビジネスロジックは、特殊化されたサフィックスを持つ場合がある
-
 ## 概要
 
 Usecaseは、アプリケーションのビジネスロジックを実装するためのコンポーネントである。ViewModelや他のビジネスロジックから呼び出され、アプリケーション固有の処理を実行する。
 
-Usecaseは以下の特徴を持つ：
-
+* ビジネスロジックのインターフェースは `Usecase` というサフィックスを持つのが基本である
+  * `{動詞}{カテゴリ}Usecase` という名称に統一する（動詞が先、カテゴリを示す名詞が次）
+  * 一部のビジネスロジックは、特殊化されたサフィックスを持つ場合がある
 * **インターフェースと実装の分離**: すべてのUsecaseはインターフェースと実装を別パッケージに分離する
 * **ステートレス**: Usecase自体は状態を持たない
 * **依存注入**: RiverpodのProviderを使用して依存関係を管理する
@@ -25,11 +22,11 @@ Usecaseは以下の特徴を持つ：
 * Java/Kotlin等の言語機能におけるOverloadについては許容する
   * Dart言語ではオーバーロードをサポートしないため、引数をsealed classにすることで対応する
 
-#### 補足
+#### 1インターフェース１機能の補足
 
 この原則により、Usecaseの責任範囲が明確になり、テストや保守が容易になる。複数の機能が必要な場合は、複数のUsecaseインターフェースを作成する。
 
-#### 実装例
+#### 1インターフェース１機能の実装例
 
 良い例：1つの機能のみを提供するUsecase
 
@@ -48,6 +45,7 @@ abstract class KanjiSearchUsecase {
 ```
 
 `KanjiSearchUsecase` は「漢字を検索する」という1つの機能のみを提供し、メソッド名も `execute` に統一されている。
+なお Class 名の `KanjiSearch`（カテゴリ名詞先行）は古い命名である。新規は `{動詞}{カテゴリ}Usecase`（例: `SearchKanjiUsecase`）とする。詳細は「ナレッジベース」を参照する。
 
 #### 引数のsealed class化によるオーバーロード対応
 
@@ -1228,48 +1226,233 @@ Repositoryの例：
 * `PreferencesRepository` - 設定値の読み書き
 * `AuthenticationRepository` - 認証情報の読み書き
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: Usecase Class名は `{動詞}{カテゴリ}Usecase` に統一する
 
-1. **単一機能と execute() メソッド**
-   * 1つのUsecaseは1つの機能のみを提供し、メソッド名は `execute()` に統一する
+* 先頭に機能を示す動詞（`Search`、`Get`、`Query`、`Parse` 等）を置く
+* 続けてカテゴリを示す名詞（対象ドメイン・リソース等）を置く
+* 末尾は `Usecase` とする。実装クラスは `{動詞}{カテゴリ}UsecaseImpl` とする
+* 例: `SearchKanjiUsecase`、`ParsePassageUsecase`、`QueryErrorUsecase`
 
-2. **Request/Resultパターンの使用**
-   * メソッドの引数は `*Request` クラス、戻り値は `*Result` クラスを使用する
-   * `freezed` を使用した data class とし、 `abstract` や `sealed` を活用して柔軟に表現する
+```dart
+/// 漢字を検索するUsecase.
+abstract class SearchKanjiUsecase {
+  Future<SearchKanjiResult> execute(SearchKanjiRequest request);
+  const SearchKanjiUsecase._();
+}
 
-3. **依存関係の明示**
-   * Providerの `dependencies` パラメータに依存関係を明示する
-   * `ref.watch()` で依存関係を取得する
+class SearchKanjiUsecaseImpl implements SearchKanjiUsecase {
+  const SearchKanjiUsecaseImpl._({
+    required this.embeddedLocalDataSource,
+  });
+}
+```
 
-4. **keepAliveの使用**
-   * インスタンスを保持する必要がある場合は `ref.keepAlive()` を呼び出す
+### DO: 1 Usecase は 1 機能としメソッド名は execute() に統一する
 
-5. **プライベートコンストラクタ**
-   * インターフェースと実装の両方でプライベートコンストラクタを定義する
+* 新規作成時は原則として `execute()` を使用する
+* 複数機能が必要な場合は複数の Usecase インターフェースに分割する
 
-6. **ドキュメントコメント**
-   * すべての公開メソッドにドキュメントコメントを記述する
+```dart
+abstract class KanjiSearchUsecase {
+  Future<KanjiSearchResult> execute(KanjiSearchRequest request);
+  const KanjiSearchUsecase._();
+}
+```
 
-### 避けるべきパターン
+### DO: インターフェースと実装を別パッケージに分離する
 
-1. **状態の保持**
-   * Usecase自体に状態を持たせない
-   * 状態管理が必要な場合は、RepositoryやDatasourceを使用する
+* インターフェース側 Provider は `UnimplementedError` を投げる
+* 実装の結びつけは `UsecaseInjection` で行う
 
-2. **循環参照**
-   * Usecase間の循環参照を避ける
-   * 依存関係の方向を明確にする
+```dart
+builder.inject(
+  KanjiSearchUsecase.provider,
+  KanjiSearchUsecaseImpl.provider,
+);
+```
 
-3. **インターフェースと実装の混在**
-   * インターフェースと実装を同じパッケージに置かない
-   * インターフェースパッケージから実装パッケージを参照しない
+### DO: Usecase 自体はステートレスにし状態は Repository / Datasource に委ねる
 
-4. **直接的なインスタンス化**
-   * Usecaseを直接インスタンス化しない
-   * Providerを通じて取得する
+* Usecase はフィールドとして状態を保持しない
+* 状態が必要な場合は Repository から取得・更新する
 
-5. **過度な依存**
-   * 必要以上の依存関係を持たない
-   * 最小限の依存関係のみを持つ
+```dart
+class FirstLoginTutorialUsecaseImpl implements FirstLoginTutorialUsecase {
+  final PreferencesRepository preferencesRepository;
+  // 状態は Repository 経由で取得する
+}
+```
+
+### DO: Request/Result を freezed の data class で定義する
+
+* 引数は `*Request`、戻り値は `*Result` とする
+* 複数パターンがある場合は `sealed`、単一の場合は `abstract` を用いる
+
+```dart
+@freezed
+sealed class KanjiSearchRequest with _$KanjiSearchRequest {
+  const factory KanjiSearchRequest({
+    FutureContext? context,
+    required Kanji kanji,
+  }) = _KanjiSearchRequest;
+
+  const KanjiSearchRequest._();
+}
+```
+
+### DO: Provider の dependencies に依存関係を明示する
+
+* 依存は `ref.watch()` で取得する
+* `dependencies` パラメータに監視対象の Provider を列挙する
+
+```dart
+static final provider = Provider<KanjiSearchUsecase>(
+  (ref) {
+    ref.keepAlive();
+    final embeddedLocalDataSource = ref.watch(
+      EmbeddedLocalDataSource.provider,
+    );
+    return KanjiSearchUsecaseImpl._(
+      embeddedLocalDataSource: embeddedLocalDataSource,
+    );
+  },
+  dependencies: [
+    EmbeddedLocalDataSource.provider,
+  ],
+);
+```
+
+### DO: 必要に応じて ref.keepAlive() でインスタンスを保持する
+
+* ライフサイクルを Provider 管理下に置き、不要な再生成を防ぐ
+* クリーンアップが必要な場合は `ref.onDisposeAsync()` と併用する
+
+```dart
+static final provider = Provider<ErrorQueryUsecase>(
+  (ref) {
+    ref.keepAlive();
+    return ErrorQueryUsecaseImpl._();
+  },
+  dependencies: const [],
+);
+```
+
+### DO: インターフェースと実装でプライベートコンストラクタを定義する
+
+* 外部からの直接生成を防ぎ、Provider 経由の取得を強制する
+
+```dart
+abstract class KanjiSearchUsecase {
+  const KanjiSearchUsecase._();
+}
+
+class KanjiSearchUsecaseImpl implements KanjiSearchUsecase {
+  const KanjiSearchUsecaseImpl._({
+    required this.embeddedLocalDataSource,
+  });
+}
+```
+
+### DO: 公開メソッドにドキュメントコメントを記述する
+
+* インターフェースの公開 API には `///` コメントを付ける
+
+```dart
+/// 漢字を検索するUsecase.
+abstract class KanjiSearchUsecase {
+  /// 漢字を検索する.
+  Future<KanjiSearchResult> execute(KanjiSearchRequest request);
+}
+```
+
+### DO NOT: Usecase 自体に状態を保持する
+
+* 理由: 副作用とテスト困難の原因になる
+* 理由: ステートレス原則に反する
+
+```dart
+// DO NOT: Usecase 内に mutable な状態フィールドを持つ
+class ExampleUsecaseImpl implements ExampleUsecase {
+  String _cache = "";
+}
+```
+
+```dart
+// DO: 状態は Repository に委譲する
+class ExampleUsecaseImpl implements ExampleUsecase {
+  final PreferencesRepository preferencesRepository;
+}
+```
+
+### DO NOT: カテゴリ名詞を先頭にした Usecase Class名を使う
+
+* 理由: 動詞先行（`{動詞}{カテゴリ}Usecase`）に統一し、機能の読み取りを揃えるため
+
+```dart
+// 非推奨パターン（古い実装）
+// DO NOT: カテゴリ名詞が先、動詞が後
+abstract class KanjiSearchUsecase {}
+abstract class PassageParseUsecase {}
+abstract class ErrorQueryUsecase {}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: 動詞が先、カテゴリ名詞が次
+abstract class SearchKanjiUsecase {}
+abstract class ParsePassageUsecase {}
+abstract class QueryErrorUsecase {}
+```
+
+### DO NOT: インターフェースと実装を同一パッケージに混在させる
+
+* 理由: テスト時の差し替えが困難になる
+* 理由: インターフェースパッケージから実装詳細が漏れる
+
+```text
+# DO NOT
+app_packages/usecase/school/lib/src/
+├── kanji_search_usecase.dart
+└── kanji_search_usecase_impl.dart
+```
+
+```text
+# DO
+app_packages/usecase/school/
+├── lib/src/.../kanji_search_usecase.dart
+└── _impl/lib/src/.../kanji_search_usecase_impl.dart
+```
+
+### DO NOT: Usecase 間で循環参照する
+
+* 理由: 依存の向きが不明確になり保守性が低下する
+* 理由: 共通機能の切り出し機会を失う
+
+```dart
+// DO NOT: A → B かつ B → A
+// UsecaseA が UsecaseB に依存し、UsecaseB が UsecaseA に依存する
+```
+
+```dart
+// DO: 共通処理を別 Usecase または Repository に分離し一方向依存にする
+```
+
+### DO NOT: Usecase を直接インスタンス化する
+
+* 理由: 依存注入と差し替えが破綻する
+* Provider を通じて取得する
+
+```dart
+// DO NOT
+final usecase = KanjiSearchUsecaseImpl._(...);
+
+// DO
+final usecase = ref.watch(KanjiSearchUsecase.provider);
+```
+
+### DO NOT: 必要以上の依存関係を持つ
+
+* 理由: 結合度が上がり変更影響が広がる
+* 最小限の依存のみを持つ

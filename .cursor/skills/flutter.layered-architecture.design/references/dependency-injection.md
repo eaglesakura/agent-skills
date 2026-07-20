@@ -9,7 +9,7 @@
 * DIライブラリとして、RiverpodのProvider Containerを利用する
 * `DependencyBuilder`クラスを使用して、Providerのオーバーライドを管理する
 
-### 補足
+### ライブラリ選定の補足
 
 RiverpodのProvider Containerは、Flutterアプリケーションの状態管理とDIを統合的に提供する。`DependencyBuilder`を使用することで、インターフェースと実装の結びつけを一元管理できる。
 
@@ -158,7 +158,7 @@ Screenレイヤーでは、以下のような構成となる：
 * `feature`: 各画面の実装（`screen_feature_${画面名}2`形式）
 * `injection`: 画面レイヤーの依存注入
 
-#### 実装例
+#### Screenレイヤー構成の実装例
 
 ```text
 app_packages/screen/
@@ -204,7 +204,7 @@ app_packages/
 #### 実装例：テスト環境でのDI
 
 ```dart
-// infra_injection/_testing), testing_infra_injection.dart
+// infra_injection/_testing, testing_infra_injection.dart
 /// テスト環境向けのインフラ構築.
 final class TestingInfraInjection {
   const TestingInfraInjection._();
@@ -775,74 +775,156 @@ void main() {
 3. **グループ用のsetUp()**: グループ固有の初期化処理を行う
 4. **実行順序**: 最上位のsetUp() → グループ用のsetUp() → テスト本体の順に実行される
 
-### テストにおけるDB変更通知
+## ナレッジベース
 
-データベース操作後に状態を反映させるため、`testContext.notifyDB()` を使用する。
+### DO: レイヤーごとに Injection クラスを定義する
+
+* 命名規則は `${レイヤー名}Injection` とする
+* 1 レイヤーに 1 つの注入クラスを原則とする
 
 ```dart
-test("値を保存する", () async {
-  await repository.edit(PreferenceEditRequest.putPreference(pref));
-  await testContext.notifyDB();  // DB変更を通知
-  expect(repository.require(pref.key), pref);
+final class UsecaseInjection {
+  const UsecaseInjection._();
+
+  static Future<void> inject(DependencyBuilder builder) async {
+    await _injectSystem(builder);
+    await _injectSchool(builder);
+  }
+}
+```
+
+### DO: 機能ごとの注入を `_inject${機能名}` で分離する
+
+* `inject()` から機能単位のプライベートメソッドを呼び出す
+* 注入対象の追加・変更が局所化される
+
+```dart
+static Future<void> inject(DependencyBuilder builder) async {
+  await _injectKanjiPractice(builder);
+  await _injectSchool(builder);
+}
+
+static Future<void> _injectSchool(DependencyBuilder builder) async {
+  builder.inject(
+    KanjiSearchUsecase.provider,
+    KanjiSearchUsecaseImpl.provider,
+  );
+}
+```
+
+### DO: DependencyBuilder でインターフェースと実装を結びつける
+
+* 注入クラス以外から実装の Provider を直接参照しない
+* `builder.inject(インターフェース.provider, 実装.provider)` で一元管理する
+
+```dart
+builder.inject(
+  KanjiSearchUsecase.provider,
+  KanjiSearchUsecaseImpl.provider,
+);
+```
+
+### DO: 注入順序を Foundation → Infra → Data → Usecase → Screen に保つ
+
+* 下位レイヤーを先に注入し、上位が下位に依存できるようにする
+* テスト時は本番 Injection の後にテスト用 Injection で上書きする
+
+```dart
+await TestingInfraInjection.inject(refBuilder);
+await DataInjection.inject(refBuilder);
+await UsecaseInjection.inject(refBuilder);
+await TestingUsecaseInjection.inject(refBuilder);
+```
+
+### DO: 条件付き注入で環境に応じた実装を切り替える
+
+* テスト環境など、条件によって実装を切り替える場合に使用する
+* 条件分岐は必要最小限に留める
+
+```dart
+builder.inject(
+  authenticationRepository.provider,
+  () {
+    if (isFlutterTesting) {
+      return TestingAuthenticationRepository.provider;
+    } else {
+      return FirebaseAccountRepositoryImpl.provider;
+    }
+  }(),
+);
+```
+
+### DO: async は非同期処理が必要、もしくは予想される場合のみ使う
+
+* 注入処理自体が非同期の依存を含む場合に `async` を付与する
+* 同期で完結する注入には `async` を付けない
+
+```dart
+static Future<void> inject(DependencyBuilder builder) async {
+  builder.inject(
+    PreferencesRepository.provider,
+    PreferencesRepositoryImpl.provider,
+  );
+  await _injectAccount(builder);
+}
+```
+
+### DO: Unit Test では setUp() DI する
+
+* `testContext.injectForTesting()` または個別 Injection を `setUp()` で実行する
+* テスト本体では初期化済みの Provider を利用する
+* 各テストで同じ DI 処理を繰り返さない
+
+```dart
+setUp(() async {
+  await testContext.injectForTesting();
 });
 ```
 
-## よくあるパターンとアンチパターン
+### DO NOT: レイヤー間の循環参照を作る
 
-### 推奨されるパターン
+* 理由: 依存関係の方向が不明確になり、注入順序を決定できなくなる
+* 理由: ビルドやテスト時に解決不能な依存が発生する
 
-1. **レイヤーごとの注入クラス**
-   * 各レイヤーごとに注入クラスを作成する
-   * 命名規則は `${レイヤー名}Injection` とする
+### DO NOT: 同一レイヤーに複数の Injection クラスを作る
 
-2. **機能ごとの分離**
-   * 各機能の注入は、プライベートメソッドで分離する
-   * メソッド名は `_inject${機能名}` とする
+* 理由: 注入責務が分散し、呼び出し側が注入漏れを起こしやすくなる
+* 理由: 注入順序の管理が複雑になる
 
-3. **注入順序の明確化**
-   * 依存関係の順序に従って注入する
-   * Infra → Data → Usecase → Screen の順序を守る
+### DO NOT: 注入クラス以外から実装の Provider を直接参照する
 
-4. **条件付き注入**
-   * テスト環境など、条件によって実装を切り替える場合は、条件分岐を使用する
+* 理由: インターフェース契約が壊れ、差し替えが困難になる
+* 理由: テスト時の Fake 注入が分散する
 
-5. **非同期処理の適切な使用**
-   * 非同期処理が必要な場合のみ、`async` を使用する
+```dart
+// DO NOT: 実装 Provider を画面や Usecase から直接 watch する
+ref.watch(KanjiSearchUsecaseImpl.provider);
+```
 
-6. **Unit Testでの統合ヘルパーの活用**
-   * `testContext.injectForTesting()` を使用して、一行でDIを完了する
-   * グループごとに異なる初期化が必要な場合は、ネストされた `setUp()` を使用する
+```dart
+// DO: インターフェース Provider を参照する
+ref.watch(KanjiSearchUsecase.provider);
+```
 
-7. **configure()ヘルパー関数の活用**
-   * Providerの初期化を `configure()` ヘルパー関数に分離する
-   * テストごとに必要な初期化処理を明確にする
+### DO NOT: Unit Test で Injection の順序を無視する
 
-### 避けるべきパターン
+* 理由: 下位依存が未解決のまま上位を注入するとエラーになる
+* 理由: テスト用上書きが効かず本番実装のままになる場合がある
 
-1. **循環参照**
-   * レイヤー間の循環参照を避ける
-   * 依存関係の方向を明確にする
+```dart
+// DO NOT: Usecase を先に注入してから Infra を注入する
+await UsecaseInjection.inject(refBuilder);
+await TestingInfraInjection.inject(refBuilder);
+```
 
-2. **注入クラスの重複**
-   * 同じレイヤーに複数の注入クラスを作成しない
-   * 1つのレイヤーに1つの注入クラスを原則とする
+```dart
+// DO: Infra → Data → Usecase の順で注入する
+await TestingInfraInjection.inject(refBuilder);
+await DataInjection.inject(refBuilder);
+await UsecaseInjection.inject(refBuilder);
+```
 
-3. **直接的なProvider参照**
-   * 注入クラス以外から、実装のProviderを直接参照しない
-   * インターフェースのProviderを参照する
+### DO NOT: 注入クラス内で過度な条件分岐を行う
 
-4. **過度な条件分岐**
-   * 注入クラス内で過度な条件分岐を行わない
-   * 必要最小限の条件分岐のみを使用する
-
-5. **Unit Testでの注入順序の無視**
-   * `setUp()` 内でInjectionを呼び出す際、Infra → Data → Usecase の順序を守る
-   * 順序を無視すると、依存関係が解決されずエラーが発生する
-
-6. **テストごとのDI重複**
-   * 各テストで同じDI処理を繰り返さない
-   * `setUp()` で一度だけDIを行い、テストは初期化済みの状態を使用する
-
-7. **notifyDB()の呼び出し忘れ**
-   * データベース操作後は `testContext.notifyDB()` を呼び出す
-   * 呼び出しを忘れると、変更が反映されずテストが失敗する
+* 理由: 注入ロジックが複雑化し、テスト時の差し替えが困難になる
+* 理由: 環境ごとの実装切り替えが追いにくくなる

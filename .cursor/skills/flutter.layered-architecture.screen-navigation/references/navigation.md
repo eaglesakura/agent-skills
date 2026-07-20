@@ -116,7 +116,7 @@ screen_navigation/_impl/lib/
 
 `AppRouterFactory` は、アプリ全体のルーティングを管理するインターフェースである。`main()` 関数から呼び出され、`MaterialApp.router` 相当の Widget を構築する。
 
-### インターフェース定義
+### AppRouterFactoryのインターフェース定義
 
 ```dart
 /// アプリの画面遷移を管理するグラフ.
@@ -168,7 +168,7 @@ abstract class AppRouterRequest with _$AppRouterRequest {
 
 `${画面名}Factory` は、画面のWidgetを構築するインターフェースである。
 
-### インターフェース定義
+### ${画面名}Factoryのインターフェース定義
 
 ```dart
 /// ホーム画面へのルーティングを行うインターフェース.
@@ -197,12 +197,12 @@ abstract interface class HomeScreenFactory {
 
 ### 遷移メソッドの種類
 
-`${画面名}Launcher` は、画面遷移の方法に応じて以下のメソッドを持つ：
+`${画面名}Launcher` は、画面遷移の方法に応じて以下のメソッドを持つ。
 
-1. **`launch()`**: 画面スタックをリセットして宣言的遷移する
-    * 実装は `GoRouter.go()` 相当となる
-1. **`push()`**: 画面スタックに積んで遷移する
-    * 実装は `GoRouter.push()` 相当となる
+* **`launch()`**: 画面スタックをリセットして宣言的遷移する
+  * 実装は `GoRouter.go()` 相当となる
+* **`push()`**: 画面スタックに積んで遷移する
+  * 実装は `GoRouter.push()` 相当となる
 
 ### launch() メソッド
 
@@ -350,7 +350,7 @@ class LoginScreenLauncherImpl implements LoginScreenLauncher {
 
 `${画面名}Finisher` は、画面の終了と結果の返却を行うインターフェースである。画面側から遷移を完了させる必要がある場合に使用する。
 
-### インターフェース定義
+### ${画面名}Finisherのインターフェース定義
 
 ```dart
 /// ログイン画面の終了を行うインターフェース.
@@ -379,7 +379,7 @@ abstract interface class LoginScreenFinisher {
 * 結果の種類に応じて遷移先を分岐できる（例: 認証成功ならホームへ `go`、キャンセルなら `pop`）。
 * 全ての画面に必要なわけではなく、画面側から能動的に終了制御を行う必要がある場合にのみ定義する。
 
-### 実装例
+### ${画面名}Finisherの実装例
 
 ```dart
 @internal
@@ -425,7 +425,7 @@ class LoginScreenFinisherImpl implements LoginScreenFinisher {
 
 `push()` メソッドで画面遷移を行う場合、遷移結果を `${画面名}NavigationResult` として受け取る。
 
-### 実装例
+### NavigationResultの実装例
 
 ```dart
 /// ログイン画面の実行結果.
@@ -616,7 +616,7 @@ StatefulShellRoute.indexedStack(
 
 アプリ内の一般的なアラートダイアログの表示を行うインターフェースである。
 
-### インターフェース定義
+### AlertDialogLauncherのインターフェース定義
 
 ```dart
 abstract class AlertDialogLauncher {
@@ -748,52 +748,149 @@ class ScreenNavigationInjection {
 * Factory の注入は `screen_injection` パッケージ側で行われる（各画面パッケージが担当）。
 * Launcher / Finisher の注入は `ScreenNavigationInjection` が担当する。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: Factory と Launcher を分離する
 
-1. **FactoryとLauncherの分離**
-   * 画面の構築（Factory）と画面遷移（Launcher）を明確に分離する
-   * Factory は画面の Widget を構築する責務のみを持つ
-   * Launcher は画面遷移の実行のみを担当する
+* Factory は画面 Widget の構築のみを担当する
+* Launcher は画面遷移の実行のみを担当する
 
-2. **Finisher による画面終了制御**
-   * 画面側から遷移結果に応じた終了処理が必要な場合は `Finisher` を定義する
-   * 結果の種類に応じて遷移先を分岐させる
+```dart
+abstract interface class HomeScreenFactory {
+  Widget build(BuildContext context);
+}
 
-3. **Proxy による go_router と Factory の接続**
-   * `go_router` のルート定義では `Proxy` Widget を使用し、`Factory.provider` を `ref.watch` で取得する
-   * ルーティング名称は Proxy の `static const name` で管理する
+abstract class HomeScreenLauncher {
+  void launch(BuildContext context, {HomeScreenRequest? request});
+}
+```
 
-4. **NavigationResult の活用**
-   * `push()` メソッドでは `NavigationResult` を定義して遷移結果を受け取る
-   * 最低限 `canceled()` ファクトリを持つ
+### DO: 画面遷移は Safe Navigation メソッドを使う
 
-5. **Safe Navigation の使用**
-   * 画面遷移は必ず `safeGoNamed()` / `safePushNamed()` / `safePop()` を使用する
-   * ライフサイクルチェックにより、画面破棄後の不正な遷移を防ぐ
+* `safeGoNamed()` / `safePushNamed()` / `safePop()` を使用する
+* ライフサイクルチェックにより画面破棄後の不正遷移を防ぐ
 
-6. **依存注入の一元管理**
-   * すべての Launcher / Finisher は `screen_navigation_impl` の `ScreenNavigationInjection` で一元管理する
+```dart
+await context.safePushNamed(
+  LoginScreenLauncherImpl.name,
+  onNavigationFailed: (lifecycle) {
+    return const .canceled();
+  },
+);
+```
 
-### 避けるべきパターン
+### DO: 画面終了は Finisher で結果に応じた遷移を行う
 
-1. **直接的な Navigator / GoRouter 呼び出し**
-   * `Navigator.push()` や `context.push()` / `context.go()` を直接使用しない
-   * 必ず `Launcher` / `Finisher` インターフェース、または Safe Navigation メソッドを通じて遷移を行う
+* 画面側から能動的に終了制御が必要な場合に定義する
+* 結果の種類に応じて `go` や `pop` を分岐する
 
-2. **Factory と Launcher の混在**
-   * Factory 内で画面遷移ロジックを実装しない
-   * Launcher 内で画面構築ロジックを実装しない
+```dart
+void finish(
+  BuildContext context, {
+  required LoginScreenNavigationResult result,
+}) {
+  switch (result) {
+    case LoginScreenNavigationResultAuthenticated():
+      context.safeGoNamed(HomeScreenTab.kanjiPractice.name, ...);
+    case LoginScreenNavigationResultCanceled():
+      if (context.canPop()) {
+        context.safePop(result);
+      }
+  }
+}
+```
 
-3. **ハードコードされたルーティングパス**
-   * 画面遷移時にルーティングパスを直接文字列で指定しない
-   * Proxy の `name` や `HomeScreenTab.name` を使用してルーティング名称を参照する
+### DO: go_router のルート定義では Proxy 経由で Factory に接続する
 
-4. **Proxy を経由しない Factory 呼び出し**
-   * `go_router` のルート定義内で Factory を直接呼び出さない
-   * 必ず Proxy を経由して Factory と接続する
+* `Proxy` が `Factory.provider` を `ref.watch` で取得する
+* ルーティング名称は Proxy の `static const name` で管理する
 
-5. **ライフサイクルチェックの省略**
-   * `go_router` の `goNamed()` / `pushNamed()` / `pop()` を直接使用しない
-   * `safeGoNamed()` / `safePushNamed()` / `safePop()` を使用してライフサイクル安全な遷移を行う
+```dart
+GoRoute(
+  name: LoginScreenProxy.name,
+  path: "/${LoginScreenProxy.name}",
+  builder: (context, state) => const LoginScreenProxy(),
+),
+```
+
+### DO: Launcher / Finisher は ScreenNavigationInjection で一元管理する
+
+* Factory の注入は `screen_injection` パッケージが担当する
+* Launcher / Finisher の注入は `ScreenNavigationInjection` が担当する
+
+```dart
+builder.inject(LoginScreenLauncher.provider, LoginScreenLauncherImpl.provider);
+builder.inject(LoginScreenFinisher.provider, LoginScreenFinisherImpl.provider);
+builder.inject(AppRouterFactory.provider, AppRouterFactoryImpl.provider);
+```
+
+### DO: push() の結果は NavigationResult（最低限 canceled）で受け取る
+
+* `freezed sealed class` で型安全に表現する
+* ユーザーが画面を閉じた場合のデフォルトとして `canceled()` を持つ
+
+```dart
+const factory LoginScreenNavigationResult.canceled() =
+    LoginScreenNavigationResultCanceled;
+```
+
+### DO NOT: Navigator / GoRouter / goNamed / pushNamed / pop を直接呼び出す
+
+* 理由: ルーティングライブラリ詳細が feature に漏れる
+* 理由: ライフサイクル安全な遷移が保証されない
+
+```dart
+// DO NOT
+context.go("/login");
+context.goNamed("login");
+context.pushNamed("login");
+context.pop();
+Navigator.push(context, ...);
+```
+
+```dart
+// DO: Launcher / Finisher または Safe Navigation を経由する
+await context.safePushNamed(LoginScreenLauncherImpl.name, ...);
+```
+
+### DO NOT: Factory と Launcher の責務を混在させる
+
+* 理由: 画面構築と遷移ロジックが結合し、テストと再利用が困難になる
+* 理由: ルーティングライブラリ詳細が feature 層に漏れる
+
+```dart
+// DO NOT: Factory 内で画面遷移を行う
+class HomeScreenFactoryImpl {
+  Widget build(BuildContext context) {
+    context.go("/settings");
+  }
+}
+```
+
+### DO NOT: go_router のルート定義内で Factory を直接呼び出す
+
+* 理由: DI 接続点が分散し、ルーティング名称の管理が不統一になる
+* 理由: 画面パラメータの橋渡し（`HomeScreenInput` 等）が Proxy で行えなくなる
+
+```dart
+// DO NOT
+builder: (context, state) => ref.watch(LoginScreenFactory.provider).build(context),
+
+// DO: Proxy を経由する
+builder: (context, state) => const LoginScreenProxy(),
+```
+
+### DO NOT: ルーティングパスをハードコードする
+
+* 理由: パス変更時の修正漏れが起きやすい
+* 理由: Proxy の `name` や `HomeScreenTab.name` との一貫性が崩れる
+
+```dart
+// DO NOT
+context.safeGoNamed("home-kanji-practice");
+```
+
+```dart
+// DO
+context.safeGoNamed(HomeScreenTab.kanjiPractice.name);
+```

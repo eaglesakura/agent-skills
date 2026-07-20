@@ -51,10 +51,12 @@ void main() {
 
 ## Stream監視パターン（推奨）
 
-### 1. 監視対象の設定
+### Stream監視の設定の補足
 
 `configure` メソッドでViewModelの初期化とStreamの監視設定を行う。
 `nop()` を使用して、初期状態の反映完了を待機する。
+
+### Stream監視の設定の実装例
 
 ```dart
 Future<void> configure() async {
@@ -76,7 +78,7 @@ Future<void> configure() async {
 }
 ```
 
-### 2. イベント発火の検証
+### イベント発火の検証の実装例
 
 アクション実行後に、期待されるイベントが `debugEvents` リストに追加されていることを検証する。
 
@@ -96,7 +98,7 @@ test("操作によりイベントが発火する", () async {
 });
 ```
 
-### 3. Entity変更の検証
+### Entity変更の検証の実装例
 
 アクション実行後に、`debugEntities` リストの最新状態が期待通りであることを検証する。
 
@@ -111,7 +113,7 @@ test("タブを選択するとEntityが更新される", () async {
 });
 ```
 
-### 4. State遷移の検証
+### State遷移の検証の実装例
 
 `debugStates` リストを確認し、状態遷移の過程や最終状態を検証する。
 
@@ -194,7 +196,7 @@ void main() {
 
 ViewModel まわりの **Delegate**（StateToEntityDelegate およびアクション用 Delegate）は、ViewModel から切り出された単一責務のクラスである。単体テストで振る舞いを検証することで、ViewModel テストの負荷を下げたり、変換ロジック・アクションロジックの網羅率を上げたりできる。
 
-### StateToEntityDelegate のテスト
+### StateToEntityDelegate のテストの補足
 
 StateToEntityDelegate は `ScreenState` を引数に取り `ScreenEntity` を返す。依存は持たず、変換は冪等である。
 
@@ -202,6 +204,8 @@ StateToEntityDelegate は `ScreenState` を引数に取り `ScreenEntity` を返
 * **状態の組み立て**: テスト用の `ScreenState` を組み立てるヘルパー（例: `createState({ ... })`）を用意し、検証したいプロパティだけを差し替える。
 * **検証**: `delegate.execute(state)` または `delegate.mapStateToEntity(state)`（コードベースによる）を呼び、返却された Entity のプロパティを `expect` する。
 * **グループ化**: Entity のセクション単位（ResultSection, InputSection, UserActionSection など）で `group()` を分けると読みやすい。
+
+### StateToEntityDelegate のテストの実装例
 
 ```dart
 // screen_feature_kanji_kanamajiri, test/viewmodel/delegate/screen_state_to_entity_delegate_test.dart
@@ -235,7 +239,7 @@ void main() {
 }
 ```
 
-### アクション用 Delegate のテスト
+### アクション用 Delegate のテストの補足
 
 アクション用 Delegate は、コンストラクタで `MutableStateStream` や外部 Usecase などを受け取り、`execute()` で状態を更新したり副作用を行ったりする。
 
@@ -243,6 +247,8 @@ void main() {
 * **StateStream**: `MutableStateStream<ScreenState>` をテスト内で生成し、Delegate に渡す。`tearDown` で `stateStream.close()` を呼ぶ。
 * **検証**: アクション前に `stateStream.updateWithLock` で状態をセットし、`await delegate.execute()` の後に `stateStream.state` やモックの `verify` で結果を検証する。
 * **グループ化**: 「正常系」「エラーハンドリング」「多重実行防止」「キャンセル処理」などで `group()` を分けるとよい。
+
+### アクション用 Delegate のテストの実装例
 
 ```dart
 // screen_feature_kanji_kanamajiri, test/viewmodel/delegate/on_tap_convert_button_delegate_test.dart
@@ -314,7 +320,6 @@ void main() {
           value: SchoolGradeSortType.gradeAscending.prefValue,
         ),
       );
-      await testContext.notifyDB();
       final result = await usecase.execute();
       expect(result, SchoolGradeSortType.gradeAscending);
     });
@@ -326,7 +331,6 @@ void main() {
 // screen_feature_school_grade, test/school_grade_sort_save_usecase_test.dart
   test("Preferencesへの保存成功ケース（昇順）", () async {
     await usecase.execute(SchoolGradeSortType.gradeAscending);
-    await testContext.notifyDB();
     final preference = preferencesRepository.get(
       PreferenceKey.schoolGradeSortType,
       defaultValue: Preference.fromInt(...),
@@ -353,13 +357,54 @@ Providerが準備完了するまで待機し、インスタンスを取得する
 Streamの初期化や、非同期処理の完了を待つために使用する。
 内部的には `Future.delayed(Duration.zero)` と同等だが、意図を明確にするために使用する。
 
-## ベストプラクティス
+## ナレッジベース
 
-* **Stream監視パターンの活用**: `state`, `event`, `entity` のStreamをlistenしてリストに蓄積し、状態遷移を検証する。
-* **nothingイベントの除外**: eventストリーム監視時は `where((e) => e is! *EventNothing)` でノイズを除外する。
-* **`configure()` メソッドの分離**: ViewModelの初期化とStream監視設定を `configure()` メソッドに分離し、再利用性を高める。
-* **`nop()` による同期**: Stream監視設定後は `await nop()` で非同期処理の完了を待機する。
-* **テストグループの構造化**: 「初期化」「操作」などの機能単位で `group()` を分けて整理する。
-* **テストでの直接インスタンス化回避**: ViewModelを直接インスタンス化せず、`ref.testReady()` を使用してProviderから取得する。
-* **Delegate の単体テスト**: StateToEntityDelegate は状態ヘルパーで入力を組み立て、返却 Entity を検証する。アクション用 Delegate は依存を Mock し、`MutableStateStream` と `execute()` の前後で状態・verify を検証する。
-* **画面固有 Usecase の単体テスト**: `testContext.injectForTesting()` と `ref.testReady(Repository.provider)` で依存を取得し、Usecase を直接インスタンス化して `execute()` の戻り値や Repository の読み直しで検証する。
+### DO: Stream監視パターンで state / event / entity を検証する
+
+* `configure()` で ViewModel を `ref.testReady()` 取得し、各 Stream を listen してリストに蓄積する。
+* event 監視時は `where((e) => e is! *EventNothing)` でノイズを除外する。
+* Stream 監視設定後は `await nop()` で非同期処理の完了を待機する。
+
+```dart
+Future<void> configure() async {
+  viewModel = await ref.testReady(HomeScreenViewModel.provider);
+  viewModel.event
+      .where((e) => e is! HomeScreenEventNothing)
+      .listen(debugEvents.add);
+  viewModel.entity.stream.listen(debugEntities.add);
+  viewModel.state.stream.listen(debugStates.add);
+  await nop();
+}
+```
+
+### DO: Delegate と画面固有 Usecase を単体テストする
+
+* StateToEntityDelegate は状態ヘルパーで入力を組み立て、返却 Entity を検証する。
+* アクション用 Delegate は依存を Mock し、`MutableStateStream` と `execute()` の前後で状態・verify を検証する。
+* 画面固有 Usecase は `testContext.injectForTesting()` と `ref.testReady(Repository.provider)` で依存を取得し、直接インスタンス化して検証する。
+
+### DO: テストグループを機能単位で構造化する
+
+* 「初期化」「操作」などの機能単位で `group()` を分けて整理する。
+
+### DO NOT: テストで ViewModel を直接インスタンス化する
+
+* 理由: Provider による DI・ライフサイクルをバイパスし、本番と異なる経路になる
+* 理由: `ref.testReady()` を使用して Provider から取得する
+
+```dart
+// 非推奨パターン
+// DO NOT: ViewModel の直接 new
+final viewModel = HomeScreenViewModel._(...);
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Provider 経由で取得する
+viewModel = await ref.testReady(HomeScreenViewModel.provider);
+```
+
+### DO NOT: event ストリーム監視で nothing イベントを含めたまま検証する
+
+* 理由: nothing がノイズとなり、発火検証が不安定になる
+* 理由: `where((e) => e is! *EventNothing)` で除外する

@@ -5,6 +5,8 @@
 View レイヤーは、ViewModel から提供される状態（Entity）に基づいて UI を構築し、ユーザーからの操作を受け付けて ViewModel に伝達する役割を持つ。
 `UI=f(State)` の原則に従い、宣言的 UI として実装される。
 本ドキュメントでは、View の責務・構成に加え、View および Provider まわりで **Riverpod** を利用する際の原則（const・ref.watch/read・select・Provider スコープ・sealed class entity など）をまとめる。
+表示状態は `ref.watch`、ViewModel 操作はコールバック内の `ref.read` とし、Golden Test での依存解決コストを抑える。
+ルート Screen のライフサイクル管理は [mvvm-widget.md](./mvvm-widget.md) を参照する。
 
 ## 責務
 
@@ -17,12 +19,12 @@ View レイヤーは、ViewModel から提供される状態（Entity）に基�
 
 ### 1. Screen (`{画面名}Screen`)
 
-実際の画面 UI を構築する Widget。`HookConsumerWidget` を継承して実装する。
+画面のルート Widget。`HookConsumerWidget` を継承して実装する。
 
 * **配置場所**: `lib/src/view/{画面名}_screen.dart`
 * **特徴**:
-  * `ref.watch` で ViewModel を取得する。
-  * `useEffect` で画面表示時の初期化処理（必要な場合）を行う。
+  * ViewModel のライフサイクル管理・初期化・イベント購読を担う（詳細は [mvvm-widget.md](./mvvm-widget.md)）。
+  * 見た目の構築は `{画面名}ScreenImpl` 以下の子 Widget に委譲する。
 
 ### 2. ScreenProviders (`ScreenProviders`)
 
@@ -31,10 +33,11 @@ View レイヤーは、ViewModel から提供される状態（Entity）に基�
 * **配置場所**: `lib/src/view/{画面名}_screen_providers.dart`
 * **特徴**:
   * ViewModel の `entity` を `StateStreamProvider.autoDispose.stateBy` で公開する。
+  * UI 構築 Widget は原則としてこの Provider（または派生 Provider）を `ref.watch` する。
   * 必要に応じて、Entity から特定の値を切り出した `Provider` や、sealed な状態ごとの `Provider` を定義する。
   * `@internal` でパッケージ外への公開を抑える。
 
-#### 実装例（entity のみ）
+#### ScreenProviders（entity のみ）の実装例
 
 ViewModel の entity ストリームをそのまま公開する場合。
 
@@ -54,7 +57,7 @@ final class LoginScreenProviders {
 }
 ```
 
-#### 実装例（sealed class Entity の状態分割）
+#### ScreenProviders（sealed class Entity の状態分割）の実装例
 
 Entity が sealed class のとき、状態型ごとに Provider を分割すると、Widget 側で型安全に参照できる。
 
@@ -105,73 +108,51 @@ final class EulaScreenProviders {
 
 ## 実装パターン
 
-### 基本的な実装構造
+### UI 構築 Widget の基本実装構造
+
+見た目を構築する Widget（`ScreenImpl`・Body・子 Widget）は、**表示状態を `ref.watch` し、ViewModel は操作コールバック内で `ref.read` する**。
 
 ```dart
-@internal
-class KanjiPracticeScreen extends HookConsumerWidget {
-  const KanjiPracticeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(KanjiPracticeScreenViewModel.provider);
-
-    useEffect(() {
-      viewModel.onInitialize();
-      return null;
-    }, [viewModel]);
-
-    useEffect(() {
-      final subscription = viewModel.event.listen((event) {
-        _onEvent(context, event);
-      });
-      return subscription.cancel;
-    }, [viewModel]);
-
-    return const SafeArea(
-      child: Column(
-        children: [
-          Flexible(
-            fit: FlexFit.tight,
-            child: PassageView(),
+// screen_feature_login2, login_body.dart（抜粋）
+Widget _buildSkipButton(BuildContext context) {
+  final theme = Theme.of(context);
+  return Consumer(
+    builder: (context, ref, _) {
+      final isEnabled = ref.watch(
+        LoginScreenProviders.entity.select(
+          (value) => value.canClickSkipButton,
+        ),
+      );
+      return TextButton(
+        onPressed: isEnabled
+            ? () => ref.read(LoginScreenViewModel.provider).onSkipLogin()
+            : null,
+        child: Text(
+          strings.screen_feature_login2_skip_login,
+          style: DesignkitTextStyle.weakText(
+            theme.textTheme.bodyLarge,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-            child: PassageInputField(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _onEvent(
-    BuildContext context,
-    KanjiPracticeScreenEvent event,
-  ) async {
-    switch (event) {
-      case KanjiPracticeScreenEventNothing():
-        break;
-    }
-  }
+        ),
+      );
+    },
+  );
 }
 ```
 
+```dart
+// screen_feature_kanji_practice2, passage_input_field.dart（抜粋）
+onChanged: (newText) {
+  final viewModel = ref.read(KanjiPracticeScreenViewModel.provider);
+  viewModel.onInputText(newText);
+},
+```
+
+ルート Screen における ViewModel の `ref.watch`・初期化・イベント購読は、ライフサイクル管理のための例外であり、詳細は [mvvm-widget.md](./mvvm-widget.md) を参照する。
+
 ### イベント監視
 
-ViewModel から通知されるワンショットのイベント（画面遷移、エラーダイアログ、スナックバーなど）を処理するために、`useEffect` フックを使用する。
-`useEffect` は dispose 時に `StreamSubscription` をキャンセルするように実装する。
-
-```dart
-useEffect(() {
-  final subscription = viewModel.event.listen((event) {
-    _onEvent(context, event);
-  });
-  return subscription.cancel;
-}, [viewModel]);
-```
+ViewModel から通知されるワンショットのイベント（画面遷移、エラーダイアログ、スナックバーなど）の購読は、**ルート Screen** に集約する。
+`useEventStream()` または `useEffect` + `listen` を用い、dispose 時に購読を解除する。詳細は [mvvm-widget.md](./mvvm-widget.md) および [mvvm-viewmodel-event.md](./mvvm-viewmodel-event.md) を参照する。
 
 ## Widget の基本設計
 
@@ -208,20 +189,38 @@ children: [
 
 ### ref.watch() と ref.read()
 
-* **build() 内では ref.watch() を使用する**: Provider から取得する値は可能な限り `ref.watch()` とし、値の変更時に自動でリビルドされるようにする。
-* **build() 外では ref.read() を使用する**: コールバック内・イベントハンドラ内など、build() 以外のタイミングでのみ `ref.read()` を使う。build() 内で `ref.read()` を使うと、状態変更時にリビルドされず UI が古いままになる。
+#### ref.watch() と ref.read() の補足
+
+* **build() 内では表示状態を ref.watch() する**: `ScreenProviders.entity` や派生 Provider など、UI に反映する値は `ref.watch()` とし、変更時に自動でリビルドされるようにする。
+* **ViewModel はハンドリングコールバック内で ref.read() する**: タップ・入力・ページ切替などの操作時にのみ `ref.read(ViewModel.provider)` でインスタンスを取得し、`onXXXX()` を呼ぶ。
+* **build() 内で ViewModel を ref.watch() しない**: ViewModel への依存が `build()` に乗ると、Golden Test で ViewModel の依存解決が必要になり、見た目検証が困難になる。
+* **表示状態を build() 内で ref.read() しない**: Entity 等を `ref.read()` すると状態変更時にリビルドされず UI が古いままになる。
+
+ルート Screen のライフサイクル管理（ViewModel の生成・イベント購読）だけが例外であり、[mvvm-widget.md](./mvvm-widget.md) を参照する。
+
+#### ref.watch() と ref.read() の実装例
 
 ```dart
-Widget build(BuildContext context, WidgetRef ref) {
-  final viewModel = ref.watch(HomeScreenViewModel.provider);
-  // ...
-}
+// screen_feature_login2, login_body.dart（抜粋）
+// DO: build 相当の builder 内では Entity（表示状態）を watch する
+final isEnabled = ref.watch(
+  LoginScreenProviders.entity.select(
+    (value) => value.canClickSkipButton,
+  ),
+);
+
+// DO: ViewModel はハンドリングコールバック内で read する
+onPressed: isEnabled
+    ? () => ref.read(LoginScreenViewModel.provider).onSkipLogin()
+    : null,
 ```
 
 ```dart
-onPageChanged: (index) {
-  ref.read(KanjiPracticeScreenViewModel.provider).onPageChanged(index);
-}
+// screen_feature_kanji_practice2, passage_input_field.dart（抜粋）
+onChanged: (newText) {
+  final viewModel = ref.read(KanjiPracticeScreenViewModel.provider);
+  viewModel.onInputText(newText);
+},
 ```
 
 ### select と watchBy
@@ -236,9 +235,10 @@ final eulaAgreed = ref.watch(
 ```
 
 ```dart
-final selectableTabs = ref.watchBy(
-  HomeScreenProviders.entity,
-  (vp) => vp.selectableTabs,
+// screen_feature_kanji_practice2, passage_view.dart（抜粋）
+final tokens = ref.watchBy(
+  KanjiPracticeScreenProviders.entity,
+  (uiState) => uiState.tokens,
 );
 ```
 
@@ -298,41 +298,178 @@ final class EulaScreenProviders {
 ## テスタビリティ
 
 * **Widget（View）のテスト**: UI の複雑さや外部依存の多さからコストが高く、必須ではない。Widget はテストしづらいことを受け入れる。
+* **Golden Test**: `build()` で Entity のみを監視し ViewModel を watch しないことで、Entity を固定注入した見た目検証が可能になる。ViewModel の依存解決は見た目テストに持ち込まない。
 * **ViewModel / Model**: Provider で依存を注入するため、テスト時にモックを差し替えやすく、単体テストを重視する。ビジネスロジックは ViewModel・Usecase・StateModifier に分離し、Fake や Mock でテストする。
 
-## ベストプラクティス
+## ナレッジベース
 
-* **ロジックの排除**: `build` 内に複雑な条件分岐や計算ロジックを書かず、ViewModel の `entity` として事前に計算された値を使う。
-* **コンポーネント分割**: 画面が複雑な場合は `body/` 配下に部品 Widget を分割する。
-* **HookConsumerWidget の使用**: Riverpod と Flutter Hooks を組み合わせて、簡潔に実装する。Widget 構築には [flutter_riverpod](https://pub.dev/packages/flutter_riverpod) を推奨する。
-* **const Widget の活用**: 子 Widget を可能な限り `const` で配置し、不要なリビルドを防ぐ。
-* **select / watchBy の活用**: 監視する範囲を絞り、Collection は `ref.watchBy()` で Deep Equals 比較する。
-* **クラススコープの Provider**: Provider は関連クラスの `static final` で定義し、`dependencies` を明示する。
+### DO: build() 内では ref.watch() を使用する
 
-## よくあるパターンとアンチパターン
+* UI に反映する表示状態（`ScreenProviders.entity` や派生 Provider）は `ref.watch()` とし、状態変更時に UI を自動更新する。
+* 必要なプロパティのみを `select` で監視し、Collection は `ref.watchBy()` で Deep Equals 比較する。
+* ViewModel 自体は監視対象にしない（後述の DO / DO NOT を参照する）。
 
-### 推奨されるパターン
+```dart
+// screen_feature_login2, login_body.dart（抜粋）
+final isEnabled = ref.watch(
+  LoginScreenProviders.entity.select(
+    (value) => value.canClickSkipButton,
+  ),
+);
+```
 
-1. **const Widget**: Widget コンストラクタと子配置を可能な限り `const` にする。
-2. **ref.watch() の優先**: build() 内では Provider の取得に `ref.watch()` を使い、状態変更を監視する。
-3. **select によるスコープ限定**: 必要なプロパティのみを監視し、リビルドを最小限にする。
-4. **Collection には ref.watchBy()**: List/Set/Map を監視する場合は `ref.watchBy()` で Deep Equals を行う。
-5. **クラススコープの Provider**: `ExampleClass.provider` のように所有者を明確にし、`dependencies` を記述する。
-6. **sealed class Entity の状態分割**: 状態ごとに Provider を分割し、型安全にアクセスする。
-7. **ビジネスロジックの分離**: 複雑なロジックは ViewModel・Usecase・Delegate に寄せ、View は表示に専念する。
+```dart
+final eulaAgreed = ref.watch(
+  LoginScreenProviders.entity.select((value) => value.eulaAgreed),
+);
+```
 
-### 避けるべきパターン
+### DO: ViewModelインスタンスは、Widgetのハンドリングコールバック内でref.read()を使用する
 
-1. **Riverpod のコード生成（@riverpod 等）**: `@riverpod` や `@Riverpod(keepAlive: true)` 等のコード生成は非推奨。`static final provider = Provider.autoDispose<...>(...)` を明示的に定義する。
-2. **build() 内での ref.read()**: 状態変更時にリビルドされず、UI が古いままになる。
-3. **グローバルスコープの Provider**: トップレベルの `final` Provider は依存追跡とテスタビリティを損なう。
-4. **select なしの大きな状態監視**: 関係ないプロパティの変更でもリビルドが走り、パフォーマンスが落ちる。
-5. **Collection の select 使用**: 参照比較のため意図しないリビルドが起きる。`ref.watchBy()` を使う。
-6. **Widget 内のビジネスロジック**: 条件分岐・計算は ViewModel 側に寄せる。
-7. **dependencies の省略**: 依存関係が不明確になり、テストやリファクタリングで問題になりやすい。
+* タップ・入力・ページ切替などの操作コールバック内でのみ `ref.read(ViewModel.provider)` する。
+* Golden Test の際に、ViewModel の依存解決が必要になる問題を回避するためである。
+* Entity を固定注入した見た目検証と、操作の結合テストを分離できる。
+
+```dart
+// screen_feature_kanji_practice2, passage_input_field.dart（抜粋）
+onChanged: (newText) {
+  final viewModel = ref.read(KanjiPracticeScreenViewModel.provider);
+  viewModel.onInputText(newText);
+},
+```
+
+```dart
+// screen_feature_login2, login_body.dart（抜粋）
+onPressed: isEnabled
+    ? () => ref.read(LoginScreenViewModel.provider).onSkipLogin()
+    : null,
+```
+
+### DO: Provider をクラスの static final として定義し dependencies を明示する
+
+* グローバルなトップレベル Provider は使わず、所有者クラスの `static final` とする。
+* `dependencies` で依存 Provider を列挙する。
+
+```dart
+@internal
+final class KanjiPracticeScreenViewModel {
+  static final provider = Provider.autoDispose<KanjiPracticeScreenViewModel>(
+    (ref) {
+      // ...
+    },
+    dependencies: [PassageParseUsecase.provider],
+  );
+}
+```
+
+### DO: const Widget を活用し、ビジネスロジックは View に書かない
+
+* Widget コンストラクタと子配置を可能な限り `const` にする。
+* `build` 内の複雑な条件分岐・計算は ViewModel の `entity` に寄せ、View は表示に専念する。
+
+### DO NOT: ViewModelをbuild()内部でref.watch()する
+
+* 理由: Golden Test の際に、ViewModel の依存解決が必要になる問題を回避するためである
+* 理由: 表示状態は Entity 経由で監視し、操作時のみ `ref.read()` で ViewModel を取得する
+* 例外: ルート Screen のライフサイクル管理は [mvvm-widget.md](./mvvm-widget.md) を参照する
+
+```dart
+// 非推奨パターン
+// DO NOT: UI 構築 Widget の build() 内で ViewModel を watch する
+Widget build(BuildContext context, WidgetRef ref) {
+  final viewModel = ref.watch(LoginScreenViewModel.provider);
+  // ...
+}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Entity を watch し、ViewModel はコールバック内で read する
+// screen_feature_login2, login_body.dart（抜粋・構造）
+final isEnabled = ref.watch(
+  LoginScreenProviders.entity.select(
+    (value) => value.canClickSkipButton,
+  ),
+);
+return TextButton(
+  onPressed: isEnabled
+      ? () => ref.read(LoginScreenViewModel.provider).onSkipLogin()
+      : null,
+  child: Text(strings.screen_feature_login2_skip_login),
+);
+```
+
+### DO NOT: Riverpod のコード生成（@riverpod 等）を使用する
+
+* 理由: Provider の定義と依存が生成コードに隠れ、追跡とテストが困難になる
+* 理由: 互換性の問題発生リスクに対し、本アーキテクチャへの恩恵が希薄である
+
+```dart
+// 非推奨パターン
+// DO NOT: @riverpod / @Riverpod(keepAlive: true) によるコード生成
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: static final provider = Provider.autoDispose<...>(...) を明示定義する
+static final provider = Provider.autoDispose<ExampleViewModel>(
+  (ref) => ExampleViewModel._(...),
+  dependencies: [...],
+);
+```
+
+### DO NOT: build() 内で表示状態を ref.read() する
+
+* 理由: 状態変更時にリビルドされず、UI が古いままになる
+* 理由: 表示状態（Entity 等）は `ref.watch()`、ViewModel はコールバック内の `ref.read()` に限定する
+
+```dart
+// 非推奨パターン
+// DO NOT: build() 内で表示状態を ref.read() する
+Widget build(BuildContext context, WidgetRef ref) {
+  final entity = ref.read(LoginScreenProviders.entity);
+  // ...
+}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: 表示状態は watch、ViewModel はコールバック内で read
+Widget build(BuildContext context, WidgetRef ref) {
+  final isEnabled = ref.watch(
+    LoginScreenProviders.entity.select((value) => value.canClickSkipButton),
+  );
+  return TextButton(
+    onPressed: isEnabled
+        ? () => ref.read(LoginScreenViewModel.provider).onSkipLogin()
+        : null,
+    child: const Text("スキップ"),
+  );
+}
+```
+
+### DO NOT: グローバルスコープの Provider を定義する
+
+* 理由: 依存追跡とテスタビリティを損なう
+* 理由: 所有者クラスが不明確になり、`dependencies` の管理が難しくなる
+
+```dart
+// 非推奨パターン
+// DO NOT: トップレベルの final Provider
+final exampleProvider = Provider.autoDispose((ref) => ...);
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: 関連クラスの static final として定義する
+@internal
+final class ExampleScreenProviders {
+  static final entity = StateStreamProvider.autoDispose.stateBy(...);
+}
+```
 
 ## 参考リンク
 
-* [flutter_riverpod](https://pub.dev/packages/flutter_riverpod) - 状態管理
-* [flutter_riverpod_watch_plus](https://pub.dev/packages/flutter_riverpod_watch_plus) - Collection の Deep Equals 対応
-* [Riverpod 公式ドキュメント](https://riverpod.dev/)
+* flutter_riverpod（状態管理）: <https://pub.dev/packages/flutter_riverpod>
+* flutter_riverpod_watch_plus（Collection の Deep Equals 対応）: <https://pub.dev/packages/flutter_riverpod_watch_plus>
+* Riverpod 公式ドキュメント: <https://riverpod.dev/>

@@ -75,19 +75,42 @@ class InternalOnlyClassName {}
 * [delegate-pattern.md](delegate-pattern.md) では、Delegate はパッケージ内部でのみ使用するため `@internal` を付与する方針が述べられている。
 * [data_object.md](data_object.md) では、パッケージ内部専用のデータオブジェクトに `@internal` を付与するパターンが示されている。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: public 以外の型・メンバーに `@internal` または `private` を付与する
 
-1. **可視性の明確化**
-   * `public` 以外の型やメンバーには、`@internal` もしくは `private` を付与する。
-   * テスト用に公開する場合は、`@visibleForTesting` を使用する。
+* 可視性を明確化し、パッケージの公開 API と内部実装を分ける。
 
-2. **API 境界の明示**
-   * パッケージの公開 API と内部実装を、アノテーションと `private` で明確に分ける。
+```dart
+// screen_feature_home2, strings.dart
+/// 文字列リソースへのアクセスを提供するインスタンス
+@internal
+final strings = _Strings();
+```
 
-### 避けるべきパターン
+### DO: テスト用公開には `@visibleForTesting` を使用する
 
-1. **可視性の不明確化**
-   * `public` だが外部から使用すべきでないクラス・メンバーにアノテーションを付与しない。
-   * パッケージの API 境界が不明確になり、意図しない依存が発生する。
+* テストのために公開する型やメンバーに付与する。
+
+```dart
+// domain_preferences, preference_key.dart
+/// テスト用のキーを生成する
+@visibleForTesting
+factory PreferenceKey.test(String value) => PreferenceKey(value);
+```
+
+### DO NOT: 外部利用を想定しない public にアノテーションを付けないままにする
+
+* 理由: パッケージの API 境界が不明確になり、意図しない依存が発生する。
+
+```dart
+// アンチパターン: 外部から使用すべきでないクラスにアノテーションがない
+class InternalOnlyClassName {}
+```
+
+```dart
+// screen_feature_home2, strings.dart
+/// 文字列リソースへのアクセスを提供するインスタンス
+@internal
+final strings = _Strings();
+```

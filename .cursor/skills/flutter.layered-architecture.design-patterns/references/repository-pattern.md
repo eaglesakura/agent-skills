@@ -1,14 +1,11 @@
 # Data層 / Repository パターン
 
-* データ入出力を隠蔽・抽象化するインターフェースは、`Repository` というサフィックスを持つのが基本である
-* `${機能グループ名}Repository` という名称が基本である
-
 ## 概要
 
 Repository は、Data 層においてデータの永続化・取得・監視を抽象化するコンポーネントである。Usecase や ViewModel から呼び出され、Datasource や外部 API の差異を隠蔽する。
 
-Repository は以下の特徴を持つ。
-
+* データ入出力を隠蔽・抽象化するインターフェースは、`Repository` というサフィックスを持つのが基本である
+* `${機能グループ名}Repository` という名称が基本である
 * **インターフェースと実装の分離**: Usecase と同様に、インターフェースと実装を別パッケージに分離する
 * **複数機能の許容**: 1 つの Repository インターフェースは、同一機能グループに属する複数のデータ操作を提供してよい
 * **状態の保持と監視**: 内部状態を持ち、`watch()` 系メソッドや `Stream` で状態を監視することを許可する
@@ -454,18 +451,129 @@ builder.inject(
 * 複数パターンがある場合は sealed class、単一の場合は abstract class または factory 1 つの freezed class でよい
 * 戻り値が不要な操作（例: 一部の Write）では `Future<void>` と Request の組み合わせでもよい
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### よくあるパターン
+### DO: インターフェースと実装を別パッケージに分離する
 
-* **機能グループごとに 1 Repository**: 認証・設定・AI クォータなど、ドメイン的にまとまるデータ操作を 1 つの Repository に集約する
-* **状態は StateStream で保持し、getter と Stream で公開**: 初期化完了を待ってからストリームを流すなど、実装で制御する
-* **Delegate に処理を委譲**: 実装クラスが肥大化する場合は、操作ごとに Delegate を切り出し、Repository Impl は組み立てと委譲に専念する
-* **テスト用パッケージを `_testing` で分離**: 本番の依存関係にテスト用実装を含めず、テスト時のみ `data_repository_*_testing` を依存に含めて DI で差し替える
+* インターフェースに `static final provider` を持ち、実装は `_impl` 側で結びつける
+* 依存注入は `DataInjection` で一元管理する
 
-### アンチパターン
+```dart
+// data_repository_preferences, preferences_repository.dart
+abstract class PreferencesRepository {
+  static final provider = Provider<PreferencesRepository>(
+    (ref) =>
+        throw UnimplementedError("$PreferencesRepository is not implemented"),
+  );
+}
+```
 
-* **1 つの Impl で本番と Fake を両方担当する**: 条件分岐が増え、本番コードが読みにくくなる。Fake は別クラスに分ける
-* **Repository インターフェースを省略し、実装クラスのみ公開する**: テスト時の差し替えや、別実装の追加がしづらくなる
-* **Datasource の型をそのまま戻り値にする**: ドメインや Repository 専用の Request/Result で抽象化し、呼び出し側がインフラの詳細に依存しないようにする
-* **Repository 同士の循環参照**: 必要に応じて共通のデータを別 Repository や Datasource に切り出し、依存の向きを一方向に保つ
+### DO: 機能グループごとに 1 Repository を集約する
+
+* 認証・設定などドメイン的にまとまるデータ操作を 1 インターフェースにまとめる
+* Usecase の「1 インターフェース 1 機能」とは異なり、複数メソッドを許容する
+
+```dart
+// data_repository_authentication, authentication_repository.dart
+Future<AuthenticationResult> signIn(AuthenticationRequest request);
+Future<void> signOut();
+```
+
+### DO: 状態は StateStream で保持し getter と Stream で公開する
+
+* 初期化完了を待ってからストリームを流すなど、公開条件は実装側で制御する
+* 呼び出し側は getter（現在値）と Stream（変化）の両方を利用できる
+
+```dart
+// data_repository_preferences_impl, preferences_repository_impl.dart
+@override
+Preferences get preferences => stateStream.state.preferences;
+
+@override
+Stream<Preferences> get preferencesStream => stateStream.stream
+    .where((e) => e.initialized)
+    .map((e) => e.preferences)
+    .distinct();
+```
+
+### DO: 肥大化する場合は Delegate に処理を委譲する
+
+* 操作ごとに Delegate を切り出し、Repository Impl は組み立てと委譲に専念する
+
+```dart
+// data_repository_preferences_impl, preferences_repository_impl.dart
+final DatabaseSyncDelegate databaseSyncDelegate;
+final DatabaseEditDelegate databasePutDelegate;
+```
+
+### DO: テスト用実装は本番 Impl と別クラス・別パッケージ（`_testing`）に分離する
+
+* Fake / Testing 実装は `data_repository_*_testing` 等に置き、DI で差し替える
+* 本番パッケージの依存関係にテスト用実装を含めない
+
+```dart
+// data_injection, data_injection.dart
+if (isFlutterTesting) {
+  return TestingAuthenticationRepository.provider;
+} else {
+  return FirebaseAccountRepositoryImpl.provider;
+}
+```
+
+### DO NOT: 1 つの Impl で本番と Fake を兼務する
+
+* 理由: 条件分岐が増え、本番コードが読みにくくなる
+* 理由: テスト専用の分岐が本番実装に混入する
+
+```dart
+// DO NOT: 同一 Impl 内で本番とテストを分岐する
+if (isTest) {
+  // Fake 相当の処理
+} else {
+  // 本番処理
+}
+```
+
+```dart
+// DO: 本番 Impl と Testing 実装を別クラスにし DI で切り替える
+FirebaseAccountRepositoryImpl / TestingAuthenticationRepository
+```
+
+### DO NOT: Repository インターフェースを省略し実装クラスのみ公開する
+
+* 理由: テスト時の差し替えが困難になる
+* 理由: 別実装の追加がしづらくなる
+
+```dart
+// DO NOT: 実装クラスを直接公開し、呼び出し側が Impl に依存する
+class PreferencesRepositoryImpl {
+  static final provider = Provider<PreferencesRepositoryImpl>(...);
+}
+```
+
+```dart
+// DO: インターフェースを公開し、Impl は Injection で結びつける
+abstract class PreferencesRepository {
+  static final provider = Provider<PreferencesRepository>(...);
+}
+```
+
+### DO NOT: Datasource の型をそのまま戻り値にする
+
+* 理由: 呼び出し側がインフラ詳細に依存する
+* 理由: Repository 専用の Request/Result による抽象化が崩れる
+
+```dart
+// DO NOT: インフラ型をそのまま返す
+Future<FirestoreDocument> getDocument(...);
+```
+
+```dart
+// DO: Repository 専用の Result で返す
+Future<GetKanjiEntriesResult> getKanjiEntries(GetKanjiEntriesRequest request);
+```
+
+### DO NOT: Repository 同士で循環参照する
+
+* 理由: 依存の向きが不明確になり保守性が低下する
+* 共通データは別 Repository や Datasource に切り出し、一方向依存を保つ

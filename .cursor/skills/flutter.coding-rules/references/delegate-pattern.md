@@ -99,7 +99,7 @@ class ${処理名}Delegate {
 }
 ```
 
-### 基本構造の実装例
+### Delegateの基本構造の実装例
 
 呼び出し元（ViewModel）が保持する依存のサブセットを Delegate のコンストラクタに渡し、呼び出し元のメソッド引数はそのまま `execute` に渡す。
 
@@ -165,7 +165,11 @@ ${親クラスを格納するパッケージ}/
     └── ${別処理名}_delegate.dart
 ```
 
-### 配置の実装例
+### 配置規則の補足
+
+親クラスと同じパッケージ内の `delegate/` に置くことで、関連する処理を発見しやすくし、パッケージ外への露出を避けやすくする。
+
+### 配置規則の実装例
 
 ```text
 app_packages/screen/feature/kanji_kanamajiri/lib/src/viewmodel/
@@ -268,6 +272,10 @@ PreferencesRepositoryImpl._({
 
 Delegate クラス名は、`${処理内容}Delegate` の形式とする。処理内容は動詞句または名詞句で、責務が明確になるようにする。
 
+### 命名規則の補足
+
+処理内容から責務が読み取れる名前にすることで、親クラスのオーケストレーションが追いやすくなる。
+
 | パターン | 例 |
 | -- | -- |
 | ユーザーアクション | `OnTapConvertButtonDelegate`、`OnInitializeDelegate` |
@@ -277,41 +285,69 @@ Delegate クラス名は、`${処理内容}Delegate` の形式とする。処理
 
 Delegate はパッケージ内部でのみ使用するため、`@internal` アノテーションを付与する。テストで必要となるプロパティには `@visibleForTesting` を付与する。
 
-## よくあるパターンとアンチパターン
+### 可視性の補足
 
-### 推奨されるパターン
+Delegate は実装詳細であり、パッケージ外に公開すると依存境界が崩れる。`@internal` により API 境界を明示する。
 
-1. **1 Delegate = 1 `execute` メソッドとする**
-   * Delegate は単一の機能のみを提供し、public メソッドは `execute` の1つだけとする
+## ナレッジベース
 
-2. **コンストラクタは呼び出し元のプロパティのサブセットとする**
-   * 親クラスが保持する依存のうち、その Delegate が必要とするもののみをコンストラクタ引数にする
+### DO: 1 Delegate = 1 `execute` メソッドとする
 
-3. **`delegate/` ディレクトリに配置する**
-   * 親クラスと同じパッケージ内の `delegate/` に配置し、発見しやすくする
+* Delegate は単一の機能のみを提供し、public メソッドは `execute` の1つだけとする。
 
-4. **依存の渡し方を用途に合わせる**
-   * 呼び出しごとに変わる場合は都度生成、再利用する場合はフィールド保持
+### DO: コンストラクタは呼び出し元のプロパティのサブセットとする
 
-5. **Delegate を単体テストする**
-   * Delegate は独立してテスト可能であるため、親クラスより小さな単位でテストする
+* 親クラスが保持する依存のうち、その Delegate が必要とするもののみをコンストラクタ引数にする。
 
-6. **ステートレスを守る**
-   * フィールドは `final` の依存参照のみとし、`execute` をまたいで変化する mutable フィールドを持たない
+### DO: `delegate/` ディレクトリに配置する
 
-### 避けるべきパターン
+* 親クラスと同じパッケージ内の `delegate/` に配置し、発見しやすくする。
 
-1. **親クラスに処理を直書きする**
-   * 複雑な処理を親クラスに書くと、クラスが肥大化し、テストが困難になる
+### DO: ステートレスを守る
 
-2. **1つの Delegate に複数の public メソッドを持たせる**
-   * Delegate は `execute` のみを公開し、複数の機能を1つの Delegate に詰め込まない
+* フィールドは `final` の依存参照のみとし、`execute` をまたいで変化する mutable フィールドを持たない。
 
-3. **Delegate をパッケージ外に公開する**
-   * Delegate は実装詳細であり、`@internal` でパッケージ外への露出を防ぐ
+```dart
+// 良い例: フィールドは final の依存参照のみ
+@internal
+class OnInputTextChangedDelegate {
+  @internal
+  final MutableStateStream<KanjiKanamajiriScreenState> state;
 
-4. **Flutter の Delegate と混同する**
-   * `LocalizationsDelegate`、`SliverChildBuilderDelegate` 等は Flutter フレームワークの Delegate であり、本ドキュメントで扱うアプリ固有の Delegate パターンとは別物である
+  const OnInputTextChangedDelegate({required this.state});
 
-5. **Delegate をステートフルにする**
-   * `execute` 間で変化する mutable フィールドを持たせない。カウンタ、キャッシュ、前回結果の保持などは Delegate 内に置かず、StateStream や Repository へ委ねる
+  Future<void> execute(String text) async {
+    await state.updateWithLock((oldState, emitter) async {
+      return emitter.emit(oldState.copyWith(inputText: text));
+    });
+  }
+}
+```
+
+### DO NOT: 親クラスに複雑な処理を直書きする
+
+* 理由: クラスが肥大化し、テストが困難になる。
+
+### DO NOT: 1つの Delegate に複数の public メソッドを持たせる
+
+* 理由: Delegate は `execute` のみを公開し、複数の機能を1つの Delegate に詰め込まない。
+
+### DO NOT: Delegate をパッケージ外に公開する
+
+* 理由: Delegate は実装詳細であり、`@internal` でパッケージ外への露出を防ぐ。
+
+### DO NOT: Delegate をステートフルにする
+
+* 理由: `execute` 間で変化する mutable フィールドを持たせない。カウンタ、キャッシュ、前回結果の保持などは Delegate 内に置かず、StateStream や Repository へ委ねる。
+
+```dart
+// 悪い例: execute 間で変化する mutable フィールドを持つ
+@internal
+class BadDelegate {
+  int callCount = 0; // NG: Delegate 自身が状態を保持している
+
+  Future<void> execute() async {
+    callCount++; // NG: 呼び出しをまたいで内部状態が変化する
+  }
+}
+```

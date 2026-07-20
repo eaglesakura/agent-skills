@@ -28,10 +28,10 @@ ViewModelから**外部にイベントを伝えたい場合**に Event パター
 
 Event は「状態の一過性の変化」として検出する。
 
-1. 通常時: `ScreenState.event` は `ScreenEvent.nothing()`。
-2. イベント発火時: ViewModel（または Delegate）が `state.copyWith(event: ScreenEvent.xxx(...))` で一度だけ emit する。
-3. 直後に: 同じ state を `event: ScreenEvent.nothing()` に戻して再度 emit する。
-4. View 側: `state.stream.map((s) => s.event).distinct()` により、`nothing` 以外の値が流れたタイミングだけがストリームに乗り、ハンドラが呼ばれる。
+* 通常時: `ScreenState.event` は `ScreenEvent.nothing()`。
+* イベント発火時: ViewModel（または Delegate）が `state.copyWith(event: ScreenEvent.xxx(...))` で一度だけ emit する。
+* 直後に: 同じ state を `event: ScreenEvent.nothing()` に戻して再度 emit する。
+* View 側: `state.stream.map((s) => s.event).distinct()` により、`nothing` 以外の値が流れたタイミングだけがストリームに乗り、ハンドラが呼ばれる。
 
 この **nothing → イベント → nothing** のサイクルにより、同じイベントを「一度だけ」検知でき、状態にイベントが残り続けることを防ぐ。
 
@@ -94,16 +94,18 @@ class SettingsScreenState with _$SettingsScreenState {
 
 ### emitEvent の補足
 
-「指定イベントを一度 emit したあと、すぐに nothing に戻す」処理は、状態更新のたびに同じパターンになるため、**State の modifier 拡張**（`{画面名}_screen_state.modifier.dart`）に `emitEvent` として切り出す。これにより、ViewModel や Delegate から「イベントを発火する」意図が明確になり、nothing への戻し忘れを防げる。
+「指定イベントを一度 emit したあと、すぐに nothing に戻す」処理は、状態更新のたびに同じパターンになるため、**State の dart ファイルに直接定義する extension** に `emitEvent` として記載する。
+`*.modifier.dart` への分離は行わない。これにより、ViewModel や Delegate から「イベントを発火する」意図が明確になり、nothing への戻し忘れを防げる。
 
 ### emitEvent の実装例
 
 ```dart
-// screen_feature_settings2, settings_screen_state.modifier.dart
+// screen_feature_settings2, settings_screen_state.dart
+/// [SettingsScreenState]更新用Emitter拡張。
 @internal
 extension SettingsScreenStateMutableStateStreamEmitterExtensions
     on MutableStateStreamEmitter<SettingsScreenState> {
-  /// イベントを発火
+  /// [event]を発火し、直後に`SettingsScreenEventNothing`へリセットする。
   Future<SettingsScreenState> emitEvent(
     SettingsScreenState state, {
     required SettingsScreenEvent event,
@@ -124,26 +126,15 @@ extension SettingsScreenStateMutableStateStreamEmitterExtensions
 ```
 
 ```dart
-// screen_feature_login2, login_screen_state.modifier.dart
+// screen_feature_kanji_kanamajiri, kanji_kanamajiri_screen_state.dart（抜粋）
 @internal
-extension LoginScreenDataMutableStateStreamExtensions
-    on MutableStateStreamEmitter<LoginScreenState> {
-  /// イベントを発火
-  Future<LoginScreenState> emitEvent(
-    LoginScreenState state,
-    MutableStateStreamEmitter<LoginScreenState> emitter, {
-    required LoginScreenEvent event,
+extension KanjiKanamajiriScreenStateMutableStateStreamEmitterExtensions
+    on MutableStateStreamEmitter<KanjiKanamajiriScreenState> {
+  Future<KanjiKanamajiriScreenState> emitEvent(
+    KanjiKanamajiriScreenState state, {
+    required KanjiKanamajiriScreenEvent event,
   }) async {
-    var newEvent = await emitter.emit(
-      state.copyWith(
-        event: event,
-      ),
-    );
-    return emitter.emit(
-      newEvent.copyWith(
-        event: const LoginScreenEvent.nothing(),
-      ),
-    );
+    // event を emit した直後に nothing へ戻す
   }
 }
 ```
@@ -179,7 +170,7 @@ View（Screen）では、ViewModel の `event` ストリームを購読し、イ
 ### イベント監視の実装例
 
 ```dart
-// 一般的なパターン: useEffect で event を購読する
+// screen_feature_settings2, settings_screen.dart（抜粋・一般的なパターン）
 @override
 Widget build(BuildContext context, WidgetRef ref) {
   final viewModel = ref.watch(SettingsScreenViewModel.provider);
@@ -260,37 +251,87 @@ lib/src/viewmodel/
 ├── {画面名}_screen_view_model.dart      # event ゲッターを定義
 ├── {画面名}_screen_view_model.action.dart  # 必要に応じて emitEvent を呼ぶ
 ├── state/
-│   ├── {画面名}_screen_state.dart       # event フィールドを持つ
-│   ├── {画面名}_screen_state.modifier.dart  # emitEvent 拡張
+│   ├── {画面名}_screen_state.dart       # event フィールドと emitEvent extension
 │   └── {画面名}_screen_event.dart       # ScreenEvent sealed class
 └── delegate/                            # 必要に応じて Delegate から emitEvent
 lib/src/view/
 └── {画面名}_screen.dart                 # useEffect と _onEvent
 ```
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: イベントは nothing → バリアント → nothing の一過性に限定する
 
-1. **イベントは nothing → バリアント → nothing の一過性に限定する**
-   * 発火したら必ず modifier の `emitEvent` で nothing に戻す。状態にイベントが残ると、同じイベントが何度も検知される。
+* 発火したら必ず State の `emitEvent` extension で nothing に戻す。
+* 状態にイベントが残ると、同じイベントが何度も検知される。
 
-2. **emitEvent は State の modifier に集約する**
-   * 各画面の `*_screen_state.modifier.dart` に `emitEvent` を定義し、ViewModel/Delegate はそこだけを呼ぶ。戻し忘れや emit 順序のばらつきを防げる。
+### DO: emitEvent は State の dart ファイルに直接 extension で記載する
 
-3. **ScreenEvent は sealed class で .nothing を必ず持つ**
-   * freezed の sealed class で定義し、`.nothing()` を必ず含める。switch で網羅性チェックが効き、View 側のハンドリングが明確になる。
+* `{画面名}_screen_state.dart` に `emitEvent` extension を定義し、ViewModel/Delegate はそこだけを呼ぶ。
+* `*.modifier.dart` への分離は行わない。
+* 戻し忘れや emit 順序のばらつきを防げる。
 
-4. **View では useEffect で event を購読する**
-   * `viewModel.event.listen(...)` で購読し、useEffect の戻り値で `subscription.cancel` を返して dispose 時に解除する。BuildContext が必要な処理はすべて `_onEvent` のようなハンドラにまとめる。
+```dart
+// screen_feature_settings2, settings_screen_state.dart
+@internal
+extension SettingsScreenStateMutableStateStreamEmitterExtensions
+    on MutableStateStreamEmitter<SettingsScreenState> {
+  Future<SettingsScreenState> emitEvent(
+    SettingsScreenState state, {
+    required SettingsScreenEvent event,
+  }) async {
+    final newState = await emit(state.copyWith(event: event));
+    return emit(newState.copyWith(event: const SettingsScreenEvent.nothing()));
+  }
+}
+```
 
-### 避けるべきパターン
+### DO: ScreenEvent は sealed class で .nothing を必ず持つ
 
-1. **イベントを State に残したままにしない**
-   * 発火後に `event: ScreenEvent.nothing()` へ戻さないと、`distinct()` の後でも同じイベントが再度流れたとみなされず、再発火時に検知されない、あるいは逆に同じイベントが繰り返し検知されるなどの不整合の原因になる。
+* freezed の sealed class で定義し、`.nothing()` を必ず含める。
+* View では `useEffect` で `viewModel.event` を購読し、dispose 時に `subscription.cancel` する。
 
-2. **BuildContext を ViewModel に渡さない**
-   * 画面遷移や Snackbar は View（Widget）で行い、ViewModel は「いつ・どの種類のイベントを発火するか」だけを担当する。ViewModel に context を渡すとライフサイクルやテスト性が悪化する。
+### DO NOT: イベントを State に残したままにする
 
-3. **表示内容の切り替えに Event を使いすぎない**
-   * ローディング表示・エラーメッセージの表示・リストの出し分けなど、純粋に State/Entity の値で表現できるものは State で扱い、Event は「ワンショットで View に副作用を起こしたいとき」に限定する。
+* 理由: 発火後に `event: ScreenEvent.nothing()` へ戻さないと、再発火時の検知や重複検知で不整合が起きる
+* 理由: `emitEvent` 拡張で nothing への戻しを必須化する
+
+```dart
+// 非推奨パターン
+// DO NOT: イベントを残したままの emit
+await emitter.emit(state.copyWith(event: ScreenEvent.showSnackBar(...)));
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: emitEvent で nothing まで戻す
+await emitter.emitEvent(
+  state,
+  event: const ScreenEvent.showSnackBar(message: "..."),
+);
+```
+
+### DO NOT: emitEvent を *.modifier.dart に分離する
+
+* 理由: State 本体と extension が分断され、参照・保守が分散する
+* 理由: `{画面名}_screen_state.dart` に直接 extension を記載する
+
+```dart
+// 非推奨パターン
+// DO NOT: *_screen_state.modifier.dart への分離
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: *_screen_state.dart に extension を直接記載する
+```
+
+### DO NOT: BuildContext を ViewModel に渡す
+
+* 理由: 画面遷移や Snackbar は View（Widget）で行い、ViewModel は「いつ・どの種類のイベントを発火するか」だけを担当する
+* 理由: ViewModel に context を渡すとライフサイクルやテスト性が悪化する
+
+### DO NOT: 表示内容の切り替えに Event を使う
+
+* 理由: ローディング・エラーメッセージ・リストの出し分けなど、純粋に State/Entity の値で表現できるものは State で扱う
+* 理由: Event は「ワンショットで View に副作用を起こしたいとき」に限定する

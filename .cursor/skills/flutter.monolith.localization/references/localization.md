@@ -1,7 +1,12 @@
 # ローカライゼーション (Localization)
 
+## 概要
+
 `monolith` フレームワークを使用した、アプリケーションの多言語対応（ローカライゼーション）について解説する。
-内部的には Flutter 標準の `*.arb` ファイル生成を利用しているが、開発者は `strings.csv` を管理するだけでよい。
+
+* 内部的には Flutter 標準の `*.arb` ファイル生成を利用する
+* 開発者は `strings.csv` を管理するだけでよい
+* コード生成により型安全なアクセサ（`L10nStringsMixin`）が提供される
 
 ## 仕組み
 
@@ -103,7 +108,7 @@ final strings = _Strings();
 
 ## Unit Test / Widget Preview 用 StringsTestHelper
 
-### 概要
+### StringsTestHelperの概要
 
 `monolith.yaml` の `localization.test_helper` を設定すると、生成済み ARB を Base64 埋め込みした Dart ヘルパーが出力される。
 Unit Test・Widget Preview・Golden Test では、ファイル I/O なしに `LocalizeStringDelegate.injectDelegateForTest` へ渡せる。
@@ -156,23 +161,67 @@ Future<void> injectGoldenTestLocalization() async {
 }
 ```
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: 文言変更は res/strings.csv のみで行う
 
-1. **CSV を単一の真実源とする**
-   * 文言変更は `res/strings.csv` のみで行い、生成物を手編集しない
+* CSV を単一の真実源とし、生成物を手編集しない
+* 変更後は `dart run monolith_runner:localization` で再生成する
 
-2. **Test / Preview では StringsTestHelper で注入する**
-   * `LocalizeStringDelegate.injectDelegateForTest(arbJson: StringsTestHelper.ja)` を使い、ARB ファイル直読みを避ける
+```csv
+id,ja,description
+ok,OK,肯定的なアクション
+```
 
-### 避けるべきパターン
+### DO: Test / Preview では StringsTestHelper で注入する
 
-1. **生成された `strings.dart` / `strings_test_helper.dart` の手編集**
-   * localization 再実行で上書きされる
+* `LocalizeStringDelegate.injectDelegateForTest(arbJson: StringsTestHelper.ja)` を使う
+* ARB ファイルの直読みを避ける
 
-2. **リリースコードからの StringsTestHelper 利用**
-   * テスト用途であり、リリースモードでは例外となる
+```dart
+// testing_golden, golden_localization.dart
+LocalizeStringDelegate.injectDelegateForTest(
+  arbJson: StringsTestHelper.ja,
+);
+```
+
+### DO: strings.dart は各 package で作成し export しない
+
+* 生成された `L10nStringsMixin` を mixin した `@internal` な `strings` を置く
+* 共通リソースが必要な場合は複数 Mixin を適用する
+
+```dart
+@internal
+final strings = _Strings();
+```
+
+### DO NOT: 生成された strings.dart / strings_test_helper.dart を手編集する
+
+* 理由: localization 再実行で上書きされる
+* 理由: 手編集内容が失われ不整合の原因になる
+
+```dart
+// DO NOT: gen/strings.dart を直接編集する
+```
+
+```dart
+// DO: res/strings.csv を編集しコード生成を再実行する
+dart run monolith_runner:localization
+```
+
+### DO NOT: リリースコードから StringsTestHelper を利用する
+
+* 理由: テスト用途のヘルパーである
+* 理由: リリースモードでは `UnsupportedError` となる
+
+```dart
+// DO NOT: 本番画面から StringsTestHelper.ja を参照する
+```
+
+```dart
+// DO: 本番は L10nStringsMixin 経由の strings アクセサを使う
+print(strings.screen_feature_home2_tab_kanji_practice);
+```
 
 ## 参考リンク
 

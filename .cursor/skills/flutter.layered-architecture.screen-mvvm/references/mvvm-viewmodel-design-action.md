@@ -21,12 +21,14 @@ Delegate の基本構造（`execute` メソッド、コンストラクタ設計�
 | 5 | Delegate は **`execute` メソッドを 1 つ** 持ち、引数は対応する `onXXXX()` と **同一** とする | 呼び出し元メソッドと Delegate の対応を明確にする |
 | 6 | Delegate は `onXXXX()` 内で **都度生成し、使い捨てる** | Delegate がフィールドを保持して Stateful になることを防ぐ |
 
-### ルール 1: `onXXXX()` 拡張メソッド
+### onXXXX() 拡張メソッドの補足
 
 * アクションは ViewModel クラス本体に直接書かず、`part` ファイル内の **extension** に定義する。
 * extension 名は `{画面名}ScreenViewModelActions` とする（例: `KanjiKanamajiriScreenViewModelActions`）。
 * メソッド名は `on` + 動詞句（PascalCase）とする。例: `onInitialize`, `onInputTextChanged`, `onTapConvertButton`, `onChangeSortType`。
 * 初期化処理も `initialize()` ではなく **`onInitialize()`** とする。
+
+### onXXXX() 拡張メソッドの実装例
 
 ```dart
 // screen_feature_kanji_kanamajiri, kanji_kanamajiri_screen_view_model.action.dart
@@ -51,20 +53,28 @@ useEffect(() {
 }, [viewModel]);
 ```
 
-### ルール 2: `part` ファイルへの分離
+### part ファイルへの分離の補足
 
 * ViewModel 本体（`{画面名}_screen_view_model.dart`）に `part "{画面名}_screen_view_model.action.dart";` を宣言する。
 * アクションファイル先頭は `part of "{画面名}_screen_view_model.dart";` とする。
 * アクションファイル内では ViewModel の `@visibleForTesting` フィールド（`state`, Usecase 等）にアクセスできる。
+
+### part ファイルへの分離の実装例
 
 ```dart
 // screen_feature_kanji_kanamajiri, kanji_kanamajiri_screen_view_model.dart
 part "kanji_kanamajiri_screen_view_model.action.dart";
 ```
 
-### ルール 3〜6: Delegate 分離と使い捨てインスタンス
+### Delegate 分離と使い捨てインスタンスの補足
 
 各 `onXXXX()` は **オーケストレーションのみ** を担当する。処理本体は対応する `OnXxxxxDelegate` に委譲する。
+
+* Delegate クラスは `lib/src/viewmodel/delegate/on_{動詞句}_delegate.dart` に配置する。
+* クラス名は `On` + 動詞句（PascalCase）+ `Delegate` とする。例: `OnTapConvertButtonDelegate`, `OnInitializeDelegate`。
+* `onXXXX()` 内で `final delegate = OnXxxxxDelegate(...)` として生成し、`delegate.execute(...)` を呼ぶ。**ViewModel のフィールドとして Delegate を保持しない。**
+
+### Delegate 分離と使い捨てインスタンスの実装例
 
 ```dart
 // screen_feature_kanji_kanamajiri, kanji_kanamajiri_screen_view_model.action.dart
@@ -78,10 +88,6 @@ Future<void> onTapConvertButton(FutureContext cancelContext) async {
   await delegate.execute(cancelContext: cancelContext);
 }
 ```
-
-* Delegate クラスは `lib/src/viewmodel/delegate/on_{動詞句}_delegate.dart` に配置する。
-* クラス名は `On` + 動詞句（PascalCase）+ `Delegate` とする。例: `OnTapConvertButtonDelegate`, `OnInitializeDelegate`。
-* `onXXXX()` 内で `final delegate = OnXxxxxDelegate(...)` として生成し、`delegate.execute(...)` を呼ぶ。**ViewModel のフィールドとして Delegate を保持しない。**
 
 ## 処理フロー
 
@@ -115,7 +121,7 @@ lib/src/viewmodel/
 
 ## Delegate クラスの実装
 
-### 基本構造
+### Delegate クラスの基本構造の実装例
 
 ```dart
 // screen_feature_kanji_kanamajiri, delegate/on_input_text_changed_delegate.dart
@@ -136,7 +142,7 @@ class OnInputTextChangedDelegate {
 }
 ```
 
-### 依存が多いアクション
+### 依存が多いアクションの実装例
 
 ViewModel が `ref.watch` で保持する外部依存は、`onXXXX()` から Delegate のコンストラクタへ渡す。
 
@@ -169,7 +175,7 @@ class OnTapConvertButtonDelegate {
 * コンストラクタ引数は、その Delegate が **実際に使用する** 依存のサブセットとする。画面固有 Usecase も含め、すべて **`onXXXX()` 内で事前にインスタンス化したもの** を渡す。
 * Delegate の `execute` 内で `Usecase(...)` を `new` してはならない（ViewModel 文脈の Usecase 設計に従う）。
 
-### `execute` の戻り値
+### execute の戻り値の補足
 
 * 原則として `onXXXX()` と `execute` の戻り値型は同一とする。
 * `Future<void>` が一般的だが、処理の成否を呼び出し元に返す必要がある場合は `Future<bool>` 等もよい（例: `OnTapConvertButtonDelegate.execute`）。
@@ -198,20 +204,75 @@ test("入力テキストが更新される", () async {
 * テスト配置は `test/viewmodel/delegate/{delegate名}_test.dart` を推奨する。
 * 詳細は ViewModel レイヤーの Unit Test 設計に従う。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: Widget 呼び出し口を onXXXX() 拡張メソッドに統一する
 
-* すべての Widget 呼び出し口を `onXXXX()` に統一する。
+* すべてのアクションは `{画面名}_screen_view_model.action.dart` の extension に定義する。
 * `onXXXX()` は Delegate の生成と `execute` 呼び出しのみに留める。
-* 複数 Delegate で共有するロジックは、`@internal` 属性の画面固有 Usecase として独立化する（ViewModel 文脈の Usecase 設計に従う）。
-* `@internal` を ViewModel・extension・Delegate に付与し、パッケージ外に露出しない。
 
-### Delegate 間の共通処理
+### DO: Delegate は都度生成する
 
-* **DO**: Delegate 間で共通処理が必要な場合は、`@internal` 属性を付与した画面固有 Usecase として独立化する。`onXXXX()` 内で Usecase を生成し、各 Delegate のコンストラクタへ注入する。共通ロジックは Usecase 単体の Unit Test で検証する。
-* **DO NOT**: Delegate の `execute` 内で別の `OnXxxxxDelegate` を生成・委譲してはならない（**Delegate in Delegate 禁止**）。`onClearText` が `onInputText("")` と等価な場合も同様に、共通ロジックは Usecase に切り出す。
-* **DO NOT**: Delegate 間の共通処理をコールバック（関数型引数・クロージャ等）で共通化してはならない。コールバックはテスタビリティが低く、Mock 注入や Unit Test が困難になるため禁止する。共通処理は Usecase に切り出し、Usecase 単体テストで検証する。
+* `OnXxxxxDelegate` は `onXXXX()` 内で生成・使い捨てる。
+* DelegateがStatefulになることを抑止する。
+* ViewModel のフィールドとして Delegate を保持しない。
+
+```dart
+Future<void> onTapConvertButton(FutureContext cancelContext) async {
+  final delegate = OnTapConvertButtonDelegate(
+    state: state,
+    extractAllowedKanjiUsecase: extractAllowedKanjiUsecase,
+    translateKanjiKanamajiriUsecase: translateKanjiKanamajiriUsecase,
+    queryErrorUsecase: queryErrorUsecase,
+  );
+  await delegate.execute(cancelContext: cancelContext);
+}
+```
+
+### DO: Delegateの依存はコンストラクタ注入する
+
+* State・Usecase・Repository など、Delegate が必要とする依存はコンストラクタ引数で受け取る。
+* Delegate / Usecase のテスタビリティ向上を担う。必要に応じて Mock を注入しやすくする。
+* `execute` 内で依存を `new` しない。
+
+```dart
+// screen_feature_kanji_kanamajiri, delegate/on_tap_convert_button_delegate.dart
+const OnTapConvertButtonDelegate({
+  required this.extractAllowedKanjiUsecase,
+  required this.translateKanjiKanamajiriUsecase,
+  required this.queryErrorUsecase,
+  required this.state,
+});
+```
+
+### DO: internal Usecaseの依存はコンストラクタ注入する
+
+* 画面固有の `@internal` Usecase が必要とする依存も、コンストラクタ引数で受け取る。
+* Delegate / Usecase のテスタビリティ向上を担う。必要に応じて Mock を注入しやすくする。
+* Usecase 内部で外部依存を直接解決せず、呼び出し元（`onXXXX()`）またはテストから注入する。
+
+```dart
+// screen_feature_kanji_practice2, usecase/process_input_text_usecase.dart
+const ProcessInputTextUsecase({
+  required this.state,
+  required this.passageParseUsecase,
+  required this.optimizePassageUsecase,
+  required this.cancelParseUsecase,
+  required this.applyInputTextStateUsecase,
+});
+```
+
+```dart
+// screen_feature_school_grade, usecase/school_grade_sort_load_usecase.dart
+const SchoolGradeSortLoadUsecase({
+  required this.preferencesRepository,
+});
+```
+
+### DO: Delegate 間の共通処理は画面固有 internal Usecase に切り出す
+
+* 複数 Delegate で共有するロジックは `@internal` の画面固有 Usecase とする。
+* `onXXXX()` 内で Usecase を生成し、各 Delegate のコンストラクタへ注入する。
 
 ```dart
 // screen_feature_example, usecase/validate_input_usecase.dart
@@ -244,17 +305,49 @@ Future<void> onTapSubmitButton() async {
 }
 ```
 
-### 避けるべきパターン
+### DO NOT: Delegate を ViewModel のフィールドとして保持する
 
-| アンチパターン | 問題 | 正しい対応 |
-| -- | -- | -- |
-| ViewModel 本体にアクションメソッドを直接書く | 本体が肥大化し、責務が混在する | `part .action.dart` の extension に移す |
-| `initialize()` 等、`on` 接頭辞のないメソッド名 | View 層の呼び出し口が不統一 | `onInitialize()` 等にリネーム |
-| `.action.dart` 内にビジネスロジックを直書き | Delegate 分離の目的が達成できない | `OnXxxxxDelegate` に移す |
-| Delegate を ViewModel のフィールドとして保持 | Delegate が状態を持ち、テスト・再利用が困難になる | `onXXXX()` 内で都度生成する |
-| 1 つの Delegate に複数の public メソッド | 単一責務に反する | アクションごとに Delegate を分割 |
-| Delegate の `execute` 内で Usecase を `new` する | 依存が隠蔽され、Mock 注入が困難になる | `onXXXX()` 内で事前生成し、コンストラクタ注入する |
-| ViewModel の provider で画面固有 Usecase を保持する | Delegate 未使用の Usecase が ViewModel に残る | `onXXXX()` 内で `new` し、Delegate に注入する |
-| Delegate のコンストラクタで `ref.watch` する | DI の責務が Delegate に漏れる | ViewModel が解決した依存を引数で渡す |
-| Delegate 間の共通処理をコールバックで共通化する | テスタビリティが低く、Mock 注入・Unit Test が困難 | `@internal` 画面固有 Usecase に切り出し、Usecase 単体テストで検証する |
-| Delegate in Delegate（`execute` 内で別 Delegate を `new` して委譲） | 共通ロジックが Delegate 層に閉じ、Mock 注入・単体テストが困難 | `@internal` 画面固有 Usecase に抽出し、各 Delegate は Usecase をコンストラクタ注入して `execute` |
+* 理由: Delegate が状態を持ち、テスト・再利用が困難になる
+* 理由: Stateful な Delegate は単一責務と使い捨て原則に反する
+
+```dart
+// 非推奨パターン
+// DO NOT: ViewModel フィールドとしての Delegate 保持
+final OnTapConvertButtonDelegate tapConvertButtonDelegate;
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: onXXXX() 内で都度生成する
+Future<void> onTapConvertButton(...) async {
+  final delegate = OnTapConvertButtonDelegate(...);
+  await delegate.execute(...);
+}
+```
+
+### DO NOT: Delegate の execute 内で Usecase を new する
+
+* 理由: 依存が隠蔽され、Mock 注入が困難になる
+* 理由: 画面固有 Usecase は `onXXXX()` 内で事前生成し、コンストラクタ注入する
+
+```dart
+// 非推奨パターン
+// DO NOT: execute 内での Usecase new
+Future<void> execute() async {
+  final usecase = SomeUsecase(...);
+}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: onXXXX() 内で事前生成しコンストラクタ注入する
+final usecase = SomeUsecase(...);
+final delegate = OnXxxxxDelegate(usecase: usecase);
+await delegate.execute();
+```
+
+### DO NOT: Delegate in Delegate およびコールバックによる共通化を行う
+
+* 理由: 共通ロジックが Delegate 層に閉じ、Mock 注入・単体テストが困難になる
+* 理由: コールバック（関数型引数・クロージャ）はテスタビリティが低い
+* 対応: `@internal` 画面固有 Usecase に抽出し、各 Delegate は Usecase をコンストラクタ注入する

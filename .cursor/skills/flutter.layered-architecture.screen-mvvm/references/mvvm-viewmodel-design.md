@@ -47,7 +47,6 @@ lib/src/viewmodel/
 │   └── {画面名}_screen_entity.dart
 ├── state/
 │   ├── {画面名}_screen_state.dart
-│   ├── {画面名}_screen_state.modifier.dart   # 必要に応じて
 │   └── {画面名}_screen_event.dart            # イベントがある場合
 ├── usecase/                                  # 画面固有 Usecase（Optional）
 │   └── {ユースケース名}_usecase.dart
@@ -55,7 +54,7 @@ lib/src/viewmodel/
     └── {型名}.dart
 ```
 
-ViewModel 本体の part 分割は **`{画面名}_screen_view_model.action.dart` のみ** を推奨する。provider・entity・event・`_close` 等は ViewModel 本体に置く。上記以外の part 分割・フィールド命名・配置は非推奨とする（詳細は「よくあるパターンとアンチパターン」参照）。
+ViewModel 本体の part 分割は **`{画面名}_screen_view_model.action.dart` のみ** を推奨する。provider・entity・event・`_close` 等は ViewModel 本体に置く。上記以外の part 分割・フィールド命名・配置は非推奨とする（詳細は「ナレッジベース」参照）。
 
 ### ファイルレイアウトの実装例
 
@@ -71,7 +70,7 @@ app_packages/screen/feature/{画面名}/lib/src/viewmodel/
 └── usecase/
 ```
 
-### 実装例（ViewModel 本体の骨格）
+### ViewModel 本体の実装例
 
 ```dart
 /// 学年ごとの習う漢字画面のViewModel.
@@ -131,23 +130,77 @@ final class SchoolGradeScreenViewModel {
 * [mvvm-viewmodel-event.md](./mvvm-viewmodel-event.md): ScreenEvent と event ストリーム
 * [mvvm-viewmodel-usecase.md](./mvvm-viewmodel-usecase.md): 画面固有 Usecase
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: 1 画面 1 ViewModel とし、フィールドはすべて final にする
 
-* 1 画面 1 ViewModel を守り、スコープが重ならないようにする。タブなどで親子がある場合は、それぞれ専用 ViewModel を用意するか、スコープを明示する。
-* `ref.onDisposeAsync(result._close)` で必ず解放コールバックを登録する。
-* 外部依存は `ref.watch` で取得し、`dependencies` に列挙する。画面内の Delegate は const または通常コンストラクタで直接生成してよい。
-* 状態のプロパティ名は `state` とする（`MutableStateStream<ScreenState> state`）。
-* ViewModel のフィールドはすべて `final` とし、状態変化は `MutableStateStream` に集約する（全属性 final の原則）。
-* ViewModel の part 分割は `{viewmodel}.action.dart` のみとする。provider・entity・event は ViewModel 本体に置く。
+* 画面ごとに専用 ViewModel を持ち、スコープが重ならないようにする。
+* 状態変化は `MutableStateStream<ScreenState> state` に集約し、ViewModel 自身を Stateful にしない。
 
-### 避けるべきパターン
+### DO: Provider.autoDispose と ref.onDisposeAsync でライフサイクルを管理する
 
-* ViewModel をパッケージ外に公開する。`@internal` を付与する。
-* Provider を介さずに ViewModel を new する。インスタンスは Provider のコールバック内でのみ作成する。
-* `_close()` を登録せずに `MutableStateStream` などリソースを保持したままにすること。メモリリークの原因となる。
-* ViewModel に `final` でないフィールドを持たせる。状態は `MutableStateStream` に集約し、ViewModel 自身を Stateful にしない（全属性 final の原則）。
-* ViewModel を `factory` / `ui` に part 分割する。`{viewmodel}.action.dart` 以外の part 分割は非推奨である。
-* `MutableStateStream` のフィールド名に `data` 等を使う。`state` 以外は非推奨である。
-* 複数画面で 1 つの ViewModel を共有する。スコープが「1 画面」と明確でない設計は避ける。
+* `@riverpod` は用いず、`static final provider = Provider.autoDispose<...>(...)` を定義する。
+* 外部依存は `ref.watch` で取得し、`dependencies` に列挙する。
+* `_close()` を `ref.onDisposeAsync(result._close)` で登録する。
+
+```dart
+static final provider = Provider.autoDispose<SchoolGradeScreenViewModel>(
+  (ref) {
+    final result = SchoolGradeScreenViewModel._(...);
+    ref.onDisposeAsync(result._close);
+    return result;
+  },
+  dependencies: [KanjiListBySchoolGradeUsecase.provider],
+);
+```
+
+### DO: ViewModel の part 分割は action.dart のみとする
+
+* provider・entity・event・`_close` は ViewModel 本体に置く。
+* アクションは `{画面名}_screen_view_model.action.dart` に part で分離する。
+
+### DO NOT: Provider を介さずに ViewModel を new する
+
+* 理由: ライフサイクルと DI が Provider 外に漏れ、テスト・解放が困難になる
+* 理由: `@internal` と private コンストラクタで、インスタンス生成経路を Provider に限定する
+
+```dart
+// 非推奨パターン
+// DO NOT: Provider 外での ViewModel 生成
+final vm = SchoolGradeScreenViewModel._(...);
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Provider コールバック内でのみ生成する
+static final provider = Provider.autoDispose<SchoolGradeScreenViewModel>(
+  (ref) => SchoolGradeScreenViewModel._(...),
+);
+```
+
+### DO: 推奨するプロパティ名 state, entity, eventを使用する
+
+* 状態ストリームは `MutableStateStream<ScreenState> state` とする。
+* 表示状態は `StateStream<ScreenEntity> get entity` で公開する。
+* イベントは `Stream<ScreenEvent> get event` で公開する（必要な場合）。
+* `data` 等の別名は使わず、設計文書・テストの参照を統一する。
+
+```dart
+// screen_feature_school_grade, school_grade_screen_view_model.dart（抜粋）
+@visibleForTesting
+final MutableStateStream<SchoolGradeScreenState> state;
+
+StateStream<SchoolGradeScreenEntity> get entity =>
+    state.map(schoolGradeScreenStateToEntityDelegate.execute);
+```
+
+```dart
+// イベントがある場合の公開例
+Stream<SettingsScreenEvent> get event =>
+    state.stream.map((e) => e.event).distinct();
+```
+
+### DO NOT: ViewModel を factory / ui に part 分割する
+
+* 理由: part 分割が散漫になり、責務境界が不明確になる
+* 理由: `{viewmodel}.action.dart` 以外の part 分割は非推奨である

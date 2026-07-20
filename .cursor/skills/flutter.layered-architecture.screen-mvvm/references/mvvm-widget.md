@@ -202,6 +202,7 @@ useEventStream(() => viewModel.event, (event) async {
 ## Golden Test 向けの `ref.read()` 原則
 
 子 Widget の `build()` では **Entity のみ** を `ref.watch` する。ViewModel や Launcher 等は `build()` 時に watch しない。
+一般的な `ref.watch` / `ref.read` の原則は [mvvm-view-design.md](./mvvm-view-design.md) を参照する。
 
 | タイミング | 操作 | 用途 |
 | -- | -- | -- |
@@ -210,24 +211,77 @@ useEventStream(() => viewModel.event, (event) async {
 | `onTap()` / `onPressed()` 等 | `ref.read(Launcher.provider)` 等 | 画面遷移・ダイアログ表示 |
 
 これにより、Entity を固定注入した Golden Test で見た目を検証しやすくなる。操作の結合テストは Widget Test または統合テストで行う。
+ViewModel の依存解決を `build()` に乗せる問題を避けるためである。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: ルート Widget を public の Screen とし、見た目は ScreenImpl に分離する
 
-* `{画面名}Screen` を public とし、Factory から `const {画面名}Screen()` を返す。
-* ルート Widget で `ref.watch(ViewModel.provider)` する。
-* 見た目は `{画面名}ScreenImpl` と子 Widget に分離する（1クラス1ファイル）。
-* 子 Widget は `ScreenProviders.entity` のみ watch する。
-* ユーザー操作は `onTap()` 内で `ref.read()` してから `viewModel.onXXXX()` を呼ぶ。
+* `{画面名}Screen` で `ref.watch(ViewModel.provider)` と初期化・イベント購読を担う。
+* Scaffold 等の UI 構築は `@internal` の `{画面名}ScreenImpl` に委譲する。
 
-### 避けるべきパターン
+```dart
+// screen_feature_settings2, settings_screen.dart
+class SettingsScreen extends HookConsumerWidget {
+  const SettingsScreen({super.key});
 
-| アンチパターン | 問題 | 正しい対応 |
-| -- | -- | -- |
-| `{画面名}Screen` に `@internal` を付与する | 画面入口が不明確になる | public とする |
-| `{画面名}Screen` で Scaffold 等の UI を直接構築する | ルートが肥大化し、テストが困難になる | `{画面名}ScreenImpl` に分離する |
-| 子 Widget の `build()` で `ref.watch(ViewModel.provider)` する | Entity 以外への依存が増え、Golden Test が困難になる | Entity のみ watch し、操作時は `ref.read()` |
-| 子 Widget の `build()` で `viewModel.onXXXX()` を直接呼ぶ | build 副作用となり、再描画で意図しない呼び出しが起きうる | `onTap()` 等のコールバック内で呼ぶ |
-| イベント購読を Body 等の子 Widget で行う | 購読のライフサイクルが分散する | `{画面名}Screen` で購読する |
-| `initialize()` 等、`on` 接頭辞のないアクションを呼ぶ | ViewModel アクションの命名が不統一 | `onInitialize()` 等を呼ぶ |
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(SettingsScreenViewModel.provider);
+    useEventStream(() => viewModel.event, (event) async {
+      await _onEvent(context, ref, event);
+    });
+    return const SettingsScreenImpl();
+  }
+}
+```
+
+### DO: 子 Widget は Entity のみ watch し、操作時は ref.read() する
+
+* `build()` では `ref.watch(ScreenProviders.entity)` のみとする。
+* タップ等のコールバック内で `ref.read(ViewModel.provider)` して `onXXXX()` を呼ぶ。
+
+```dart
+final entity = ref.watch(SettingsScreenProviders.entity);
+
+onPressed: (context) async {
+  final viewModel = ref.read(SettingsScreenViewModel.provider);
+  await viewModel.onRequestLogout();
+},
+```
+
+### DO: イベント購読と onInitialize はルート Screen に集約する
+
+* `useEventStream()` または `useEffect` + `listen` で購読し、Body 等の子に分散させない。
+* 非同期初期化は `useEffect` 内で `viewModel.onInitialize()` を呼ぶ。
+
+### DO NOT: 子 Widget の build() で ViewModel を watch する
+
+* 理由: Golden Test の際に、ViewModel の依存解決が必要になる問題を回避するためである
+* 理由: Entity のみ watch し、操作時は `ref.read()` する
+* 一般原則は [mvvm-view-design.md](./mvvm-view-design.md) のナレッジベースを参照する
+
+```dart
+// 非推奨パターン
+// DO NOT: 子 Widget build 内での ViewModel watch
+final viewModel = ref.watch(SettingsScreenViewModel.provider);
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Entity のみ watch、操作時に read
+final entity = ref.watch(SettingsScreenProviders.entity);
+onPressed: () {
+  ref.read(SettingsScreenViewModel.provider).onSomeAction();
+};
+```
+
+### DO NOT: Screen に @internal を付与する
+
+* 理由: 画面 Factory やナビゲーションからの入口が不明確になる
+* 理由: `{画面名}Screen` は public、`ScreenImpl` / `ScreenProviders` / 子 Widget は `@internal` とする
+
+### DO NOT: 子 Widget の build() で viewModel.onXXXX() を直接呼ぶ
+
+* 理由: build 副作用となり、再描画で意図しない呼び出しが起きうる
+* 理由: `onTap()` 等のコールバック内で呼ぶ

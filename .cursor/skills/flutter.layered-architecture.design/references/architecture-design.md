@@ -417,13 +417,6 @@ import "package:screen_feature_home2/src/viewmodel/state/home_screen_state.dart"
 import "package:screen_feature_home2/src/viewmodel/usecase/data_sync_usecase.dart";
 ```
 
-### アンチパターン
-
-以下のような実装は避けるべきである：
-
-* **下位レイヤーが上位レイヤーに依存する**: domainレイヤーがusecaseレイヤーに依存する
-* **循環参照**: usecaseレイヤーAがusecaseレイヤーBに依存し、usecaseレイヤーBがusecaseレイヤーAに依存する
-
 ## ディレクトリ配置
 
 * `app_packages/{レイヤー名}/` の配下に、基本的なpackageが存在する
@@ -472,7 +465,7 @@ app_packages/
 
 workspace内部のパッケージには、**パッケージ名と同一のライブラリファイル名を配置する**ことを原則とする。
 
-### 補足
+### ライブラリファイル名の命名規則の補足
 
 この規則により、パッケージ名とインポートライブラリの関係が明確になり、可読性と保守性が向上する。
 
@@ -621,32 +614,88 @@ newProviderContainer: () async {
 },
 ```
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: レイヤーごとに package を分離する
 
-1. **レイヤーごとのpackage分離**
-   * 各レイヤーごとにpackageを分離する
-   * package名は`${レイヤー名}_${機能名}`の形式とする
+* 各レイヤーごとに package を分離する
+* package 名は `${レイヤー名}_${機能名}` の形式とする
 
-2. **インターフェースと実装の分離**
-   * 各レイヤーでインターフェースと実装を分離する
-   * 実装は`_impl`サブディレクトリに配置する
+```text
+app_packages/usecase/school/     # usecase_school
+app_packages/data/repository/preferences/  # data_repository_preferences
+```
 
-3. **下位レイヤーへの依存**
-   * 上位レイヤーは下位レイヤーのインターフェースに依存する
-   * 下位レイヤーの実装に直接依存しない
+### DO: 上位レイヤーは下位レイヤーのインターフェースに依存する
 
-### 避けるべきパターン
+* 下位レイヤーの変更が上位へ波及しにくくなり、テスタビリティが向上する
+* 下位レイヤーの実装に直接依存しない
 
-1. **上位レイヤーへの依存**
-   * 下位レイヤーが上位レイヤーに依存しない
-   * 例：domainレイヤーがusecaseレイヤーに依存する
+```dart
+// usecase が data のインターフェースに依存する例
+import "package:data_source_embedded/embedded.dart";
+```
 
-2. **循環参照**
-   * レイヤー間の循環参照を避ける
-   * 同一レイヤー内での循環参照も避ける
+### DO: インターフェースと実装を package 分離し `_impl` に実装を置く
 
-3. **実装への直接依存**
-   * 上位レイヤーは下位レイヤーの実装に直接依存しない
-   * インターフェースに依存する
+* 各レイヤーでインターフェースと実装を分離する
+* 実装は `_impl` サブディレクトリ（入れ子パッケージ）に配置する
+
+```text
+app_packages/usecase/school/
+├── lib/                 # インターフェース
+└── _impl/               # 実装
+```
+
+### DO: 依存注入は下位レイヤーから順に行う
+
+* foundation → infra → data → usecase → screen の順で注入する
+
+```dart
+await MobileInfraInjection.inject(builder);
+await DataInjection.inject(builder);
+await UsecaseInjection.inject(builder);
+```
+
+### DO NOT: 下位レイヤーが上位レイヤーに依存する
+
+* 理由: 依存の向きが逆転し、基盤の独立性が崩れる
+* 理由: 循環参照やテスト困難の原因になる
+
+```dart
+// DO NOT: domain が usecase を import する
+import "package:usecase_school/usecase_school.dart";
+```
+
+```dart
+// DO: domain は他レイヤーに依存しない
+// domain_school 内では Flutter 標準ライブラリのみを利用する
+```
+
+### DO NOT: レイヤー間または同一レイヤー内で循環参照する
+
+* 理由: 依存の向きが不明確になり保守性が低下する
+* 理由: 共通機能の切り出し機会を失う
+
+```dart
+// DO NOT: usecase A → usecase B かつ usecase B → usecase A
+```
+
+```dart
+// DO: 共通処理を別 Usecase または下位レイヤーに分離し一方向依存にする
+```
+
+### DO NOT: 上位レイヤーが下位レイヤーの実装 package に直接依存する
+
+* 理由: 実装差し替えやテスト時の Fake 注入が困難になる
+* 理由: インターフェース契約が曖昧になる
+
+```dart
+// DO NOT: 実装 package を直接参照する
+import "package:usecase_school_impl/usecase_school_impl.dart";
+```
+
+```dart
+// DO: インターフェース package を参照し、実装は Injection で結びつける
+import "package:usecase_school/usecase_school.dart";
+```

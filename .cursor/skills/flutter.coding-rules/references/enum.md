@@ -176,7 +176,7 @@ String handleResult(Result<int> result) {
 }
 ```
 
-### switch のアンチパターン
+### switch 網羅性のアンチパターン
 
 * **enum の switch で `default` を使用する**: すべての enum ケースを明示的に列挙する。
 * **enum の switch 式で `_` を使用する**: `_ => 'other'` のようなフォールバックは書かず、全ケースを列挙する。
@@ -202,14 +202,48 @@ String result = switch (exampleEnum) {
 * ワークスペースの Dart SDK は **`>=3.11.0 <4.0.0`** である。dot-shorthands（Dart 3.10 導入）および網羅的 switch はいずれも利用可能である。
 * 実際の enum 利用例は `screen_feature_home2` の `HomeScreenTab` などで参照できる。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: コンテキスト型が明確なときは dot-shorthands を使う
 
-1. **dot-shorthands の利用**: コンテキスト型が明確なときは、enum 値・static メンバーに `.value` 形式を可能な限り使う。
-2. **switch での全ケース列挙**: enum や sealed class の switch では、`_` や `default` を使わず、すべてのケースを明示的に列挙する。コンパイラレベルで型安全性を確保できる。
+* enum 値・static メンバーに `.value` 形式を可能な限り使う。
 
-### 避けるべきパターン
+```dart
+// screen_feature_home2, home_content.dart
+Widget _buildTabContent(HomeScreenTab tab) {
+  return switch (tab) {
+    .kanjiPractice => const KanjiPracticeOutletProxy(),
+    .schoolGrade => const SchoolGradeOutletProxy(),
+    .ganbariStamp => const GanbariStampOutletProxy(),
+    .kanjiKanamajiri => throw UnimplementedError(),
+    .loginHelp => throw UnimplementedError(),
+  };
+}
+```
 
-1. **switch でのデフォルト分岐**: enum や sealed class の switch で `_` や `default` を使用する。新しいケース追加時にコンパイラが未処理を検出できなくなる。
-2. **コンテキストのない dot-shorthands**: 型が推論できない箇所で `.foo` を使う。明示的な型付きで利用する。
+### DO: switch で全ケースを明示的に列挙する
+
+* enum や sealed class の switch では、`_` や `default` を使わず、すべてのケースを明示的に列挙する。
+
+### DO NOT: switch で `_` や `default` によるデフォルト分岐を使う
+
+* 理由: 新しいケース追加時にコンパイラが未処理を検出できなくなる。
+
+```dart
+// アンチパターン: default / _ の使用
+switch (exampleEnum) {
+  case ExampleEnum.foo:
+    break;
+  default:  // NG
+    break;
+}
+
+String result = switch (exampleEnum) {
+  ExampleEnum.foo => 'foo',
+  _ => 'other',  // NG
+};
+```
+
+### DO NOT: コンテキスト型がない箇所で dot-shorthands を使う
+
+* 理由: 型が推論できない箇所で `.foo` を使うとエラーになり得る。明示的な型付きで利用する。

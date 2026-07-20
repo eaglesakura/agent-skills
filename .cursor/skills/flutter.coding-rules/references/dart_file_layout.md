@@ -55,7 +55,7 @@ class ClassB {}
 
 ### library ファイルの補足
 
-パッケージ名と同一のファイル名にすることで、`import "package:パッケージ名/パッケージ名.dart"` が `import "package:パッケージ名/パッケージ名.dart"` の形で統一され、インポートパスとパッケージの対応が明確になる。`lib/` 直下に置くため、`import "package:usecase_school/usecase_school.dart"` のように参照する。
+パッケージ名と同一のファイル名にすることで、`import "package:パッケージ名/パッケージ名.dart"` が統一され、インポートパスとパッケージの対応が明確になる。`lib/` 直下に置くため、`import "package:usecase_school/usecase_school.dart"` のように参照する。
 
 ### library ファイルの実装例
 
@@ -115,28 +115,38 @@ app_packages/usecase/school/
 * `pubspec.yaml` の `name` と、library ファイルのベース名（拡張子を除く）は一致させる。例：`name: usecase_school` → `lib/usecase_school.dart`。
 * 実装やテスト用のサブパッケージ（`_impl`、`_test`、`_testing`、`_mobile` 等）も同様に、それぞれのパッケージ名と同一の library ファイル名を用いる。
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: 1クラス1ファイルとし、ファイル名はクラス名の snake_case にする
 
-1. **1クラス1ファイルの原則**
-   * クラスを記述する場合、1ファイルに1クラスを原則とする。
-   * ファイル名はクラス名を `snake_case` に変換したものとする。
+* クラスを記述する場合、1ファイルに1クラスを原則とする。
+* ファイル名はクラス名を `snake_case` に変換したものとする。
 
-2. **library ファイルの命名規則**
-   * パッケージ名と同一のファイル名を `lib/` 直下に置く。
-   * 例：パッケージ名 `usecase_school` → ファイル名 `lib/usecase_school.dart`。
+### DO: library ファイル名をパッケージ名と同一にする
 
-3. **ファイル名の統一**
-   * すべての Dart ソースファイルに `snake_case.dart` を適用する。
+* パッケージ名と同一のファイル名を `lib/` 直下に置く。
+* 例：パッケージ名 `usecase_school` → ファイル名 `lib/usecase_school.dart`。
 
-### 避けるべきパターン
+### DO: すべての Dart ソースファイルに `snake_case.dart` を適用する
 
-1. **1ファイルに複数の public クラス**
-   * 責務が分散し、可読性が下がる。1クラス1ファイルを守る。
+* ファイル名を統一し、検索・リファクタリングを容易にする。
 
-2. **library ファイル名の不一致**
-   * パッケージ名と異なる library ファイル名（例：`lib/school.dart`）を使用しない。インポートパスが不明確になる。
+### DO NOT: 1ファイルに複数の public クラスを定義する
 
-3. **ファイル名の snake_case 違反**
-   * `PascalCase.dart` や `camelCase.dart` は使用しない。
+* 理由: 責務が分散し、可読性が下がる。
+
+```dart
+// アンチパターン: 1ファイルに複数の public クラス
+class ClassA {}
+
+class ClassB {}
+```
+
+### DO NOT: library ファイル名をパッケージ名と不一致にする
+
+* 理由: インポートパスが不明確になる。
+* 例：パッケージ名 `usecase_school` なのに `lib/school.dart` とするのは誤りである。
+
+### DO NOT: `PascalCase.dart` や `camelCase.dart` を使用する
+
+* 理由: Dart のスタイルガイドおよび本規約の `snake_case.dart` に反する。

@@ -265,55 +265,60 @@ State および画面固有の型は、次のような配置とする。
 ```text
 lib/src/viewmodel/
 ├── state/
-│   ├── {画面名}_screen_state.dart       # ScreenState（abstract / sealed）
-│   ├── {画面名}_screen_state.modifier.dart  # 必要に応じて（emitEvent 等）
+│   ├── {画面名}_screen_state.dart       # ScreenState（abstract / sealed）と emitEvent extension
 │   ├── {画面名}_screen_event.dart       # Event を使う場合
 │   └── {画面名}_xxx_state.dart          # 画面固有の状態クラス（任意）
 └── model/
     └── {画面名}_xxx_type.dart           # 画面固有の enum / 型（任意）
 ```
 
-## よくあるパターンとアンチパターン
+## ナレッジベース
 
-### 推奨されるパターン
+### DO: 状態の形に応じて abstract class と sealed class を使い分ける
 
-1. **状態の形に応じて abstract class と sealed class を使い分ける**
-   * プロパティの組み合わせで表現するなら abstract class、ローディング/ loaded/ error などのバリアントで分岐するなら sealed class とする。
+* プロパティの組み合わせで表現するなら abstract class とする。
+* ローディング / loaded / error などのバリアントで分岐するなら sealed class とする。
+* いずれも全プロパティに `required` を付け、`const {型名}._();` を定義する。`@Default` は使わない。
 
-2. **State には重複・冪等計算可能な情報を持たせない**
-   * グルーピングヘッダやソート済みリストなどは StateToEntityDelegate で State から Entity へ変換する段階で生成し、State のリスト要素として持たない。
+### DO: State には重複・冪等計算可能な情報を持たせない
 
-3. **ViewModel は単一の `MutableStateStream<ScreenState>` のみ持つ**
-   * 画面の状態は 1 つの ScreenState 型に集約し、すべての更新をその Stream に emit する。
+* グルーピングヘッダやソート済みリストなどは StateToEntityDelegate で State から Entity へ変換する段階で生成する。
+* State は単一の情報源（Single Source of Truth）とする。
 
-4. **Repository / Usecase は ViewModel の依存として注入し、State に含めない**
-   * 動的に切り替えない限り、State のフィールドにしない。ViewModel のコンストラクタや ref で保持する。
+### DO: ViewModel は単一の MutableStateStream のみ持ち、初期状態は provider 内で構築する
 
-5. **画面固有の識別子やオプションは enum / Model で型付けする**
-   * タブ、ソート種別、画面内のサブ状態などは、必要に応じて画面の model/ state 配下に型を定義する。
+* 画面の状態は 1 つの ScreenState 型に集約し、すべての更新をその Stream に emit する。
+* Repository / Usecase は ViewModel の依存として注入し、State に含めない。
+* State に `.initial()` factory は持たせず、ViewModel.provider 内で初期値を明示する。
 
-6. **全プロパティに required を付け、const プライベートコンストラクタを定義する**
-   * `@Default` は使わず、nullable を含めすべて required にする。abstract / sealed いずれも `const {型名}._();` を定義する。
+### DO NOT: リスト表示用のヘッダを State のリスト要素として持つ
 
-### 避けるべきパターン
+* 理由: State に「ヘッダ＋データ」を混在させると、重複と不整合の原因になる
+* 理由: ヘッダは State の生データから StateToEntityDelegate で導出する
 
-1. **リスト表示用のヘッダを State のリスト要素として持つ**
-   * ヘッダは State の生データから StateToEntityDelegate で導出する。State に「ヘッダ＋データ」を混在させると、重複と不整合の原因になる。
+### DO NOT: ViewModel で複数の独立した State Stream を持つ
 
-2. **ViewModel で複数の独立した State Stream を持つ**
-   * 画面状態は 1 つの ScreenState にまとめ、単一ステートの原則に従う。
+* 理由: 画面状態の遷移が追いづらく、テストやデバッグが困難になる
+* 理由: 単一ステートの原則に従い、1 つの ScreenState にまとめる
 
-3. **Repository や Usecase を ScreenState のプロパティにする**
-   * 処理の入り口は ViewModel の依存として扱い、State は「表示に必要なデータ」と「イベント」に限定する。
+### DO NOT: @Default や @riverpod を ScreenState / ViewModel 提供に使う
 
-4. **状態の形がバリアントで明確なのに abstract class で null だらけにする**
-   * ローディング/ loaded/ error のように分岐がはっきりしている場合は、sealed class でバリアントにすると switch で網羅でき、可読性が上がる。
+* 理由: `@Default` は設定ミス・設定忘れを招くため、すべて required とし初期値は ViewModel 初期化時に渡す
+* 理由: `@riverpod` はこのアーキテクチャでは非推奨であり、`static final provider = Provider.autoDispose<...>(...)` で提供する
 
-5. **@Default でプロパティの初期値を省略する**
-   * 設定ミス・設定忘れを招くため、ScreenState では `@Default` を使わず、すべて required とする。初期値は ViewModel の初期化時（概ね Provider の内部）で明示的に渡す。
+```dart
+// 非推奨パターン
+// DO NOT: @Default による初期値省略、@riverpod による ViewModel 提供
+```
 
-6. **State に .initial() などの初期状態用 factory を定義する**
-   * 初期状態は ViewModel.provider の内部で構築するのがベストプラクティスである。State は「形」だけを定義し、最初の値を誰がどう作るかは ViewModel に委ねる。
+```dart
+// 推奨される書き換えパターン
+// DO: required と Provider.autoDispose を明示する
+const factory SettingsScreenState({
+  required SettingsScreenEvent event,
+  required PkAccount? account,
+  // ...
+}) = _SettingsScreenState;
 
-7. **@riverpod で ViewModel を提供する**
-   * このアーキテクチャでは `@riverpod` は非推奨である。ViewModel は `static final provider = Provider.autoDispose<...>(...)` で提供する（[mvvm-viewmodel-design.md](./mvvm-viewmodel-design.md) 参照）。
+static final provider = Provider.autoDispose<SettingsScreenViewModel>(...);
+```
