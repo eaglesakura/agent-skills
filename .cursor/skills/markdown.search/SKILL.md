@@ -1,6 +1,6 @@
 ---
 name: markdown.search
-description: ワークスペース内のドキュメント内容を検索・把握するSKILL。ワークスペース内のMarkdownドキュメント検索に特化している。
+description: ワークスペース内のドキュメント内容を検索・把握するSKILL。ワークスペース内のドキュメント検索に特化している。コード提案、レビュー等、積極的にこのSKILLを使用し、ナレッジを把握する。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -16,7 +16,7 @@ metadata:
 
 * `docs/`
 * `README.md`
-* `.cursor/`
+* `.cursor/skills/`
 * `.ai-agent/memory/`
 
 ## ドキュメント把握手順
@@ -25,24 +25,39 @@ metadata:
     * レベル2以上のヘッダを確認することで、ドキュメント全体の大まかな内容と関連性を把握する
 
     ```bash
-    grep -H -E '^(# |## |### |#### )' path/to/directory/**/*.md
+    grep -rH -E '^(# |## |### |#### )' --include='*.md' path/to/directory
+
+    # 実行例
+    grep -rH -E '^(# |## |### |#### )' --include='*.md' .cursor/skills
+    grep -rH -E '^(# |## |### |#### )' --include='*.md' docs
     ```
 
 2. 実際のドキュメントを読み込み、詳細内容を把握
     * 詳細はドキュメントを直接読み込む
     * ヘッダは関連性の推測に使用し、内容は直接ドキュメントを参照する
 
-## ドキュメントリストの返却
+3. `.cursor/skills/` 配下のドキュメントは、ファイルパスからSKILL名が抽出できる。関連性が高いドキュメントに一致するSKILLは、必要に応じて追加ロードを行う。
+    * `.cursor/skills/{SKILL名}/SKILL.md`
+    * `.cursor/skills/{SKILL名}/**/*.md`
 
-* ドキュメントのサマリを提供する場合、下記のフォーマットを使用し、見出しごとに箇条書きで単純に返却する
-* レベル4見出しまで提供する
+## ナレッジベース把握
 
-```markdown
-* [{レベル1見出し}]({path/to/markdown.md})
-    * {レベル2見出し}
-        * {レベル3見出し}
-            * {レベル4見出し}
-    * {レベル2見出し}
-        * {レベル3見出し}
-            * {レベル4見出し}
+* コーディングや設計を行う際は、 `### DO:` で始まるヘッダを検索し、積極的に従う
+* レビューを行う際は、 `### DO NOT:` で始まるヘッダを検索し、積極的に指摘する
+
+```bash
+# DO（コーディング・設計時）
+grep -rH -E '^### DO:' --include='*.md' path/to/directory
+
+# DO NOT（レビュー時）
+grep -rH -E '^### DO NOT:' --include='*.md' path/to/directory
+
+# 実行例
+grep -rH -E '^### DO:' --include='*.md' .cursor/skills
+grep -rH -E '^### DO NOT:' --include='*.md' .cursor/skills
+grep -rH -E '^### DO:' --include='*.md' docs
+grep -rH -E '^### DO NOT:' --include='*.md' docs
+
+# DO / DO NOT をまとめて抽出する場合
+grep -rH -E '^### DO( NOT)?:' --include='*.md' path/to/directory
 ```
