@@ -1,0 +1,39 @@
+{
+  "skill_name": "agent.temporary",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。依存ライブラリ一覧を出す使い捨て Python スクリプトを1つ書いて実行準備までしてください。プロダクションコードや docs には置かないでください。",
+      "expected_output": ".ai-agent/tmp/ 配下にスクリプトが作成され、.ai-agents 等の誤パスを使っていない",
+      "files": [],
+      "expectations": [
+        "Created file under .ai-agent/tmp/ (singular), not .ai-agents or repo root",
+        "Did not place the disposable script under docs/ or production source paths",
+        "Report or transcript states the final script path"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。.ai-agent ディレクトリが未作成です。Agent 用の一時領域を新規に用意し、実行計画メモ plan/sample-feature.md と、調査下書き用の空に近いメモを適切な場所に置いてください。",
+      "expected_output": "assets 相当の構成（tmp/plan/memory と gitignore）で .ai-agent が作成され、計画は plan/、下書きの扱いは用途に応じて tmp または memory",
+      "files": [],
+      "expectations": [
+        "Created .ai-agent/ with tmp, plan, and memory directories",
+        "Includes a root .gitignore under .ai-agent/",
+        "Active plan markdown is under .ai-agent/plan/",
+        "Directory name is .ai-agent (singular)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。認証リファクタの実装計画を Markdown で残したいです。ファイル名は auth-refactor-design.md で、完了済みではなく進行中の計画として保存してください。",
+      "expected_output": ".ai-agent/plan/auth-refactor-design.md が作成され、tmp やリポジトリ直下に置かれない",
+      "files": [],
+      "expectations": [
+        "Plan file exists at .ai-agent/plan/auth-refactor-design.md",
+        "Plan was not placed under .ai-agent/tmp/ or .ai-agent/plan/done/",
+        "Directory name is .ai-agent (singular)"
+      ]
+    }
+  ]
+}
