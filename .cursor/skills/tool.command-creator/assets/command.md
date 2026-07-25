@@ -1,7 +1,7 @@
 ---
 license: {Optional, ライセンス}
 metadata:
-    author: "@eaglesakura"
+    author: {Optional, 作成者}
     references:
         - {関連するコマンド}
         - {関連するSKILL}

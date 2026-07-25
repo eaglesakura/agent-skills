@@ -93,7 +93,7 @@ frontmatter の `metadata` で、実行に必要な契約を先に固定する�
 
 | フィールド | 役割 |
 | --- | --- |
-| `author` | 作成者（既定: `"@eaglesakura"`） |
+| `author` | 作成者（**Optional**。ユーザーが指定したときだけ書く。既定値で埋めない） |
 | `references` | 関連コマンド・関連 SKILL・関連ドキュメントへの参照 |
 | `help` | 使い方の短い説明（チャットで `/command` した後に何を渡せばよいか） |
 | `input` | 入力の一覧。各要素は `{Required \| Optional}: {ラベル}` |
@@ -235,6 +235,7 @@ flowchart TD
 ### ステップ2: metadata の下書き
 
 `input` / `output` / `references` / `help` / `example` を先に書き、契約を固定する。
+`author` は **Optional**。ユーザーが指定したときだけ含め、こちらから埋め込まない。
 関連コマンドがある場合は、呼び出し順や前提関係が `help` か `概要` から分かるようにする。
 `example` には利用者が打つ `/コマンド名 ...` の具体例を最低1件入れる。
 

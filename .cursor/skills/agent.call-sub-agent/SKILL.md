@@ -29,9 +29,10 @@ Sub Agent はクリーンコンテキストで起動し、親の Skills カタ�
 次の2系統を必ず見る。
 
 1. **親の利用可能 SKILL**（`available_skills` 等に提示されている一覧）
-2. **起動先 Sub Agent 定義に書かれた関連 SKILL**
-   * `.cursor/agents/{name}.md` の「関連SKILL」等のリンク・列挙
-   * 定義に記載があるものは **必須**（description 照合の結果によらず必ず含める）
+2. **起動先 Sub Agent 定義の必須 SKILL**
+   * 第一ソース: `.cursor/agents/{name}.md` の `metadata.required_skills`（SKILL の `name` 一覧）
+   * 後方互換: 本文の「関連SKILL」等のリンク・列挙（`required_skills` が無い古い定義向け）
+   * これらに記載があるものは **必須**（description 照合の結果によらず必ず含める）
 
 本 SKILL（`agent.call-sub-agent`）自身は子へ渡さない。親専用である。
 
