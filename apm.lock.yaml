@@ -1,11 +1,122 @@
 lockfile_version: '1'
-generated_at: '2026-07-25T12:28:16.343959+00:00'
+generated_at: '2026-07-25T12:46:56.712412+00:00'
 apm_version: 0.26.0
 dependencies:
 - repo_url: _local/armyknife
   name: armyknife
   version: 0.1.0
   package_type: apm_package
+  deployed_files:
+  - .agents/skills/agent-call-sub-agent
+  - .agents/skills/agent-call-sub-agent/SKILL.md
+  - .agents/skills/agent-call-sub-agent/evals/evals.json
+  - .agents/skills/github-actions-workflow-build
+  - .agents/skills/github-actions-workflow-build/SKILL.md
+  - .agents/skills/maintenance-measure-cache-size
+  - .agents/skills/maintenance-measure-cache-size/SKILL.md
+  - .agents/skills/markdown-documentation
+  - .agents/skills/markdown-documentation/SKILL.md
+  - .agents/skills/markdown-documentation/assets/template.md
+  - .agents/skills/markdown-documentation/evals/evals.json
+  - .agents/skills/markdown-documentation/references/code-blocks.md
+  - .agents/skills/markdown-documentation/references/diagrams-and-paths.md
+  - .agents/skills/markdown-documentation/references/lint-and-validation.md
+  - .agents/skills/markdown-fix
+  - .agents/skills/markdown-fix/SKILL.md
+  - .agents/skills/markdown-fix/evals/evals.json
+  - .agents/skills/markdown-search
+  - .agents/skills/markdown-search/SKILL.md
+  - .agents/skills/markdown-search/evals/evals.json
+  - .agents/skills/markdown-search/references/context-loading.md
+  - .agents/skills/markdown-search/scripts/md_section.py
+  - .agents/skills/tool-command-creator
+  - .agents/skills/tool-command-creator/SKILL.md
+  - .agents/skills/tool-command-creator/assets/command.md
+  - .agents/skills/tool-command-creator/evals/evals.json
+  - .agents/skills/tool-command-creator/evals/files/coding.comment.md
+  - .agents/skills/tool-command-creator/evals/files/coding.format-plan.md
+  - .agents/skills/tool-skill-creator-extension
+  - .agents/skills/tool-skill-creator-extension/SKILL.md
+  - .agents/skills/tool-sub-agent-creator
+  - .agents/skills/tool-sub-agent-creator/SKILL.md
+  - .agents/skills/tool-sub-agent-creator/assets/subagent.md
+  - .agents/skills/tool-sub-agent-creator/evals/evals.json
+  - .agents/skills/workspace-agent-memory-save
+  - .agents/skills/workspace-agent-memory-save/SKILL.md
+  - .agents/skills/workspace-agent-memory-save/assets/template.md
+  - .agents/skills/workspace-agent-memory-save/evals/evals.json
+  - .agents/skills/workspace-agent-memory-save/evals/files/login-flow-notes.md
+  - .agents/skills/workspace-agent-memory-save/evals/login-flow-notes.md
+  - .agents/skills/workspace-agent-temporary
+  - .agents/skills/workspace-agent-temporary/SKILL.md
+  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/.gitignore
+  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/.gitkeep
+  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/done/.gitkeep
+  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/.gitkeep
+  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/done/.gitkeep
+  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/tmp/.gitignore
+  - .agents/skills/workspace-agent-temporary/evals/evals.json
+  - .agents/skills/workspace-count-tokens
+  - .agents/skills/workspace-count-tokens/SKILL.md
+  - .agents/skills/workspace-count-tokens/assets/report.md
+  - .agents/skills/workspace-count-tokens/scripts/count_workspace_tokens.py
+  - .agents/skills/workspace-git-branch-rule
+  - .agents/skills/workspace-git-branch-rule/SKILL.md
+  - .agents/skills/workspace-resolve-file-path
+  - .agents/skills/workspace-resolve-file-path/SKILL.md
+  - .agents/skills/workspace-resolve-file-path/evals/evals.json
+  - .agents/skills/workspace-resolve-url-metadata
+  - .agents/skills/workspace-resolve-url-metadata/SKILL.md
+  - .agents/skills/workspace-resolve-url-metadata/evals/evals.json
+  - .cursor/commands/github.create-pull-request.md
+  deployed_file_hashes:
+    .agents/skills/agent-call-sub-agent/SKILL.md: sha256:0588e51737d2ffcb0a6ba9df9fde5f1c92d0093f220a443e16a942673272b6d9
+    .agents/skills/agent-call-sub-agent/evals/evals.json: sha256:23b95072a8d17a58dd754eb475419d9216610ec0e96ababe626eebe07f8ad4f4
+    .agents/skills/github-actions-workflow-build/SKILL.md: sha256:f68a5695a9f96b37dd340a870d2e3c7c7c3fd87818917e3b6f4cbb6580669d26
+    .agents/skills/maintenance-measure-cache-size/SKILL.md: sha256:aac07c2be7d085eaf55e89bd2490b54517a3c077bad69fee979cec94519bbdee
+    .agents/skills/markdown-documentation/SKILL.md: sha256:0b013385eade9fd915d05beb58a8093cb174944e91380a5bf1afa0960414e706
+    .agents/skills/markdown-documentation/assets/template.md: sha256:9a8c12cc025d576f7103f2e9fd5a362c0315fd7a7d063e117293b71e293c98ab
+    .agents/skills/markdown-documentation/evals/evals.json: sha256:9cfd8a6f3936645a31f454875f03259e5aa0d3955097704be4eb3f15aa9f9b2f
+    .agents/skills/markdown-documentation/references/code-blocks.md: sha256:c6edb9779a9508fdadc33c0190f49266e6e6fd482b8212e1cfce5fd9b1039ceb
+    .agents/skills/markdown-documentation/references/diagrams-and-paths.md: sha256:a42b56aecd3b3bd2aa634e3ce603f3580c7ef65e651a2ed92b0d87bdb61b3715
+    .agents/skills/markdown-documentation/references/lint-and-validation.md: sha256:5454b967e4d31eeca56871d012c23414b2baf3d484a624bcf8bcd4eb31df6114
+    .agents/skills/markdown-fix/SKILL.md: sha256:b7c5d0dbb79137713dee4c1a0d1e6c447a60fc692a23bf56c908ed99223f97e6
+    .agents/skills/markdown-fix/evals/evals.json: sha256:3615d5902d94835eaff0542b4a744565f787b858cf129f995e3467b3cfebf307
+    .agents/skills/markdown-search/SKILL.md: sha256:27040c176df843812d71b49063b1216bbe5da46b457c2bbe5eb0df14a9431d76
+    .agents/skills/markdown-search/evals/evals.json: sha256:d02cbc721ffe5bed0fa115247d389d09af891880d8b86639b60c31bc09d6a491
+    .agents/skills/markdown-search/references/context-loading.md: sha256:afb999105426efdf78606b5c87ab978ab3ffb75dd004d5f4f76109cd7f4493c8
+    .agents/skills/markdown-search/scripts/md_section.py: sha256:b9e741319e95cf2e1468cae1adad67b36529178cc2b11eab1797dbd15791dd9d
+    .agents/skills/tool-command-creator/SKILL.md: sha256:670e29751b7a437fa9f621b9e309829bd7e748149b3c136840d70f1c6bd79eff
+    .agents/skills/tool-command-creator/assets/command.md: sha256:d3ec134924da78fa4bcb071f67d4ac51446ae19248ea802d37927e523eba3cb3
+    .agents/skills/tool-command-creator/evals/evals.json: sha256:88ced2577e5f5a3f04b48d25f2e8faa5e18163b427596e072bdac1e0a5a3c5c2
+    .agents/skills/tool-command-creator/evals/files/coding.comment.md: sha256:03f18b6557d3dd51d17171f56049e8dbe3dfeea19ed58f3b7da81abecb7d373a
+    .agents/skills/tool-command-creator/evals/files/coding.format-plan.md: sha256:ff027da049158ad7dc58a5f5ba1a216cb1a5a86e8ebf84a6148cfd5b328d4bfa
+    .agents/skills/tool-skill-creator-extension/SKILL.md: sha256:f1c08e75a79511a642ed409a0edd4480e9fe1a3b45bd7ea9a729970520611735
+    .agents/skills/tool-sub-agent-creator/SKILL.md: sha256:d86596a660327076ba770941847197d4e21aba20e80b0494a107d9f6b4f0660c
+    .agents/skills/tool-sub-agent-creator/assets/subagent.md: sha256:898456d2f6267ea678bdbc531796858f1e1466b24e12eaa9f8f5d05cf0c0c887
+    .agents/skills/tool-sub-agent-creator/evals/evals.json: sha256:e42406253ca5e5297a62d34f975c78c6d5e5d14858134e2d157667c00ea9e612
+    .agents/skills/workspace-agent-memory-save/SKILL.md: sha256:a4306c5973889ac0024b3c628a108f22fc59cfcb3b33ec65ebcf5b45e6679427
+    .agents/skills/workspace-agent-memory-save/assets/template.md: sha256:5015f184578613db993245e80b210d73b1e33d38f6a7aea056bfbcdb5c558b8c
+    .agents/skills/workspace-agent-memory-save/evals/evals.json: sha256:56700dcd2c118ce3978ab1f9794410e59c294d891cf6505f06ad3dd150ba582b
+    .agents/skills/workspace-agent-memory-save/evals/files/login-flow-notes.md: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
+    .agents/skills/workspace-agent-memory-save/evals/login-flow-notes.md: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
+    .agents/skills/workspace-agent-temporary/SKILL.md: sha256:97a12d839be112efeb9956fc0941dc5028eef941cb6f1b50f17df7d52174a38f
+    .agents/skills/workspace-agent-temporary/assets/.ai-agent/.gitignore: sha256:c6dd25d2fa2c4061b004f38518d9f0f35b6c03aed559f34d7a4e0087bb5aafbc
+    .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/done/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/done/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    .agents/skills/workspace-agent-temporary/assets/.ai-agent/tmp/.gitignore: sha256:240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d
+    .agents/skills/workspace-agent-temporary/evals/evals.json: sha256:f1986aaf06f7b7b96a1f13c257682cd3594bf0bf8a3c5bd0e814d87e19419a80
+    .agents/skills/workspace-count-tokens/SKILL.md: sha256:697d1157ed002c98a44c259d96186eaf8b977026321ad1bd1a1f1d25f4e37b0e
+    .agents/skills/workspace-count-tokens/assets/report.md: sha256:054eafdc630a956147ae67847701cf4f0d6cccc707bcda9f7baac91ca9c1587b
+    .agents/skills/workspace-count-tokens/scripts/count_workspace_tokens.py: sha256:d6fb680221be9d241d96d86cdea7c2675747cc65891164d55cfc2e09e4d4b9aa
+    .agents/skills/workspace-git-branch-rule/SKILL.md: sha256:2623ccaed5212ee6c1ae86e887974126921b08c2e358b8133e224bae04e6de88
+    .agents/skills/workspace-resolve-file-path/SKILL.md: sha256:fb3cb5b213ffd00d66bb8d913abfc2e57a95a892e1b66aded76dfbddf16e90fe
+    .agents/skills/workspace-resolve-file-path/evals/evals.json: sha256:87f5a9e19c7609b176eaa1dd8a4f460b2672c974fb40627ba2566d4d4919b0e0
+    .agents/skills/workspace-resolve-url-metadata/SKILL.md: sha256:c7f2e9a67a1595b7480c8a5b478bbc1d5cef65a5e1fd348dc39f9eed25ed1be0
+    .agents/skills/workspace-resolve-url-metadata/evals/evals.json: sha256:0a12519ec59f71fcac6966aad5dd18a8b52f16b11c2634d50539ab6c68cd9ec0
+    .cursor/commands/github.create-pull-request.md: sha256:fd5203c41969ce7fdedebc66e7221623ffcbb61ac467cc441aa71e9016a0f8f4
   source: local
   local_path: ./packages/armyknife
   declared_license: MIT
@@ -47,6 +158,12 @@ dependencies:
   - .cursor/agents/coding-assistant.senior-engineer.md
   - .cursor/agents/coding-assistant.software-design-audit.md
   - .cursor/agents/coding-assistant.software-design-reviewer.md
+  - .cursor/commands/coding.comment.md
+  - .cursor/commands/coding.design.md
+  - .cursor/commands/coding.execute.md
+  - .cursor/commands/coding.format-plan.md
+  - .cursor/commands/coding.requirement.md
+  - .cursor/commands/plan.init.md
   deployed_file_hashes:
     .agents/skills/agent-job-description/SKILL.md: sha256:f6514e6b2b991956019e7c1128649238b15a3c41dd907335cc31170c7208ecf8
     .agents/skills/agent-job-description/evals/evals.json: sha256:796b39d47531780c7ed24c0bb7817e9d50bea8c5ae926e37a31d6e29677ac284
@@ -60,6 +177,12 @@ dependencies:
     .cursor/agents/coding-assistant.senior-engineer.md: sha256:9134cd2287dc07ea055aaa82971990d00f59d9ced9db073c0905f52f27762d52
     .cursor/agents/coding-assistant.software-design-audit.md: sha256:f10f657cef3859ab411d49db5957bb93d2ddff82c035472cf73af64e5e47250a
     .cursor/agents/coding-assistant.software-design-reviewer.md: sha256:430d2b8eb34684356089f3e30cc89d628c40a0ea707d0a500c7ca6786d57a397
+    .cursor/commands/coding.comment.md: sha256:7a32ca477dcd2f181c7cfce70aa301d44c26f3fda374c9b1f56a183133b8b797
+    .cursor/commands/coding.design.md: sha256:d3379348b80571e3969e6e11b640ce34b020eb84de823a7775ffae10fe2aef22
+    .cursor/commands/coding.execute.md: sha256:76d1200c2f4be5de78847c8e0503e6bb13dd1ecdec2e4e75e42bd0a2c832242c
+    .cursor/commands/coding.format-plan.md: sha256:e27a7314bd8dcd9c8ad7ee919cfa66d72d57e6773dd4ab947c52a2c86c756c4c
+    .cursor/commands/coding.requirement.md: sha256:197fb77459f210823c460db316fb00d9a6614d211a90c2030cbaee0bc13d75db
+    .cursor/commands/plan.init.md: sha256:d98d91c5cdc092c992fbbeb3e0435e4fa47cc0527911eacfef113783a0be81e2
   source: local
   local_path: ./packages/coding-xm3
   declared_license: MIT
@@ -964,126 +1087,6 @@ dependencies:
     .agents/skills/golang-uber-fx/references/testing.md: sha256:0a70f7b53419acff239d2d4ec1a4a27d1611a8f218f67d6226d1b6481b447fa3
   content_hash: sha256:ece26b0cffcd12bc19192564cb68d1d7aa62214c4bda110864f713512448f5c9
   declared_license: MIT
-- repo_url: _local/armyknife
-  name: armyknife
-  version: 0.1.0
-  depth: 2
-  resolved_by: _local/coding-xm3
-  package_type: apm_package
-  deployed_files:
-  - .agents/skills/agent-call-sub-agent
-  - .agents/skills/agent-call-sub-agent/SKILL.md
-  - .agents/skills/agent-call-sub-agent/evals/evals.json
-  - .agents/skills/github-actions-workflow-build
-  - .agents/skills/github-actions-workflow-build/SKILL.md
-  - .agents/skills/maintenance-measure-cache-size
-  - .agents/skills/maintenance-measure-cache-size/SKILL.md
-  - .agents/skills/markdown-documentation
-  - .agents/skills/markdown-documentation/SKILL.md
-  - .agents/skills/markdown-documentation/assets/template.md
-  - .agents/skills/markdown-documentation/evals/evals.json
-  - .agents/skills/markdown-documentation/references/code-blocks.md
-  - .agents/skills/markdown-documentation/references/diagrams-and-paths.md
-  - .agents/skills/markdown-documentation/references/lint-and-validation.md
-  - .agents/skills/markdown-fix
-  - .agents/skills/markdown-fix/SKILL.md
-  - .agents/skills/markdown-fix/evals/evals.json
-  - .agents/skills/markdown-search
-  - .agents/skills/markdown-search/SKILL.md
-  - .agents/skills/markdown-search/evals/evals.json
-  - .agents/skills/markdown-search/references/context-loading.md
-  - .agents/skills/markdown-search/scripts/md_section.py
-  - .agents/skills/tool-command-creator
-  - .agents/skills/tool-command-creator/SKILL.md
-  - .agents/skills/tool-command-creator/assets/command.md
-  - .agents/skills/tool-command-creator/evals/evals.json
-  - .agents/skills/tool-command-creator/evals/files/coding.comment.md
-  - .agents/skills/tool-command-creator/evals/files/coding.format-plan.md
-  - .agents/skills/tool-skill-creator-extension
-  - .agents/skills/tool-skill-creator-extension/SKILL.md
-  - .agents/skills/tool-sub-agent-creator
-  - .agents/skills/tool-sub-agent-creator/SKILL.md
-  - .agents/skills/tool-sub-agent-creator/assets/subagent.md
-  - .agents/skills/tool-sub-agent-creator/evals/evals.json
-  - .agents/skills/workspace-agent-memory-save
-  - .agents/skills/workspace-agent-memory-save/SKILL.md
-  - .agents/skills/workspace-agent-memory-save/assets/template.md
-  - .agents/skills/workspace-agent-memory-save/evals/evals.json
-  - .agents/skills/workspace-agent-memory-save/evals/files/login-flow-notes.md
-  - .agents/skills/workspace-agent-memory-save/evals/login-flow-notes.md
-  - .agents/skills/workspace-agent-temporary
-  - .agents/skills/workspace-agent-temporary/SKILL.md
-  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/.gitignore
-  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/.gitkeep
-  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/done/.gitkeep
-  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/.gitkeep
-  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/done/.gitkeep
-  - .agents/skills/workspace-agent-temporary/assets/.ai-agent/tmp/.gitignore
-  - .agents/skills/workspace-agent-temporary/evals/evals.json
-  - .agents/skills/workspace-count-tokens
-  - .agents/skills/workspace-count-tokens/SKILL.md
-  - .agents/skills/workspace-count-tokens/assets/report.md
-  - .agents/skills/workspace-count-tokens/scripts/count_workspace_tokens.py
-  - .agents/skills/workspace-git-branch-rule
-  - .agents/skills/workspace-git-branch-rule/SKILL.md
-  - .agents/skills/workspace-resolve-file-path
-  - .agents/skills/workspace-resolve-file-path/SKILL.md
-  - .agents/skills/workspace-resolve-file-path/evals/evals.json
-  - .agents/skills/workspace-resolve-url-metadata
-  - .agents/skills/workspace-resolve-url-metadata/SKILL.md
-  - .agents/skills/workspace-resolve-url-metadata/evals/evals.json
-  deployed_file_hashes:
-    .agents/skills/agent-call-sub-agent/SKILL.md: sha256:0588e51737d2ffcb0a6ba9df9fde5f1c92d0093f220a443e16a942673272b6d9
-    .agents/skills/agent-call-sub-agent/evals/evals.json: sha256:23b95072a8d17a58dd754eb475419d9216610ec0e96ababe626eebe07f8ad4f4
-    .agents/skills/github-actions-workflow-build/SKILL.md: sha256:f68a5695a9f96b37dd340a870d2e3c7c7c3fd87818917e3b6f4cbb6580669d26
-    .agents/skills/maintenance-measure-cache-size/SKILL.md: sha256:aac07c2be7d085eaf55e89bd2490b54517a3c077bad69fee979cec94519bbdee
-    .agents/skills/markdown-documentation/SKILL.md: sha256:0b013385eade9fd915d05beb58a8093cb174944e91380a5bf1afa0960414e706
-    .agents/skills/markdown-documentation/assets/template.md: sha256:9a8c12cc025d576f7103f2e9fd5a362c0315fd7a7d063e117293b71e293c98ab
-    .agents/skills/markdown-documentation/evals/evals.json: sha256:9cfd8a6f3936645a31f454875f03259e5aa0d3955097704be4eb3f15aa9f9b2f
-    .agents/skills/markdown-documentation/references/code-blocks.md: sha256:c6edb9779a9508fdadc33c0190f49266e6e6fd482b8212e1cfce5fd9b1039ceb
-    .agents/skills/markdown-documentation/references/diagrams-and-paths.md: sha256:a42b56aecd3b3bd2aa634e3ce603f3580c7ef65e651a2ed92b0d87bdb61b3715
-    .agents/skills/markdown-documentation/references/lint-and-validation.md: sha256:5454b967e4d31eeca56871d012c23414b2baf3d484a624bcf8bcd4eb31df6114
-    .agents/skills/markdown-fix/SKILL.md: sha256:b7c5d0dbb79137713dee4c1a0d1e6c447a60fc692a23bf56c908ed99223f97e6
-    .agents/skills/markdown-fix/evals/evals.json: sha256:3615d5902d94835eaff0542b4a744565f787b858cf129f995e3467b3cfebf307
-    .agents/skills/markdown-search/SKILL.md: sha256:27040c176df843812d71b49063b1216bbe5da46b457c2bbe5eb0df14a9431d76
-    .agents/skills/markdown-search/evals/evals.json: sha256:d02cbc721ffe5bed0fa115247d389d09af891880d8b86639b60c31bc09d6a491
-    .agents/skills/markdown-search/references/context-loading.md: sha256:afb999105426efdf78606b5c87ab978ab3ffb75dd004d5f4f76109cd7f4493c8
-    .agents/skills/markdown-search/scripts/md_section.py: sha256:b9e741319e95cf2e1468cae1adad67b36529178cc2b11eab1797dbd15791dd9d
-    .agents/skills/tool-command-creator/SKILL.md: sha256:670e29751b7a437fa9f621b9e309829bd7e748149b3c136840d70f1c6bd79eff
-    .agents/skills/tool-command-creator/assets/command.md: sha256:d3ec134924da78fa4bcb071f67d4ac51446ae19248ea802d37927e523eba3cb3
-    .agents/skills/tool-command-creator/evals/evals.json: sha256:88ced2577e5f5a3f04b48d25f2e8faa5e18163b427596e072bdac1e0a5a3c5c2
-    .agents/skills/tool-command-creator/evals/files/coding.comment.md: sha256:03f18b6557d3dd51d17171f56049e8dbe3dfeea19ed58f3b7da81abecb7d373a
-    .agents/skills/tool-command-creator/evals/files/coding.format-plan.md: sha256:ff027da049158ad7dc58a5f5ba1a216cb1a5a86e8ebf84a6148cfd5b328d4bfa
-    .agents/skills/tool-skill-creator-extension/SKILL.md: sha256:f1c08e75a79511a642ed409a0edd4480e9fe1a3b45bd7ea9a729970520611735
-    .agents/skills/tool-sub-agent-creator/SKILL.md: sha256:d86596a660327076ba770941847197d4e21aba20e80b0494a107d9f6b4f0660c
-    .agents/skills/tool-sub-agent-creator/assets/subagent.md: sha256:898456d2f6267ea678bdbc531796858f1e1466b24e12eaa9f8f5d05cf0c0c887
-    .agents/skills/tool-sub-agent-creator/evals/evals.json: sha256:e42406253ca5e5297a62d34f975c78c6d5e5d14858134e2d157667c00ea9e612
-    .agents/skills/workspace-agent-memory-save/SKILL.md: sha256:a4306c5973889ac0024b3c628a108f22fc59cfcb3b33ec65ebcf5b45e6679427
-    .agents/skills/workspace-agent-memory-save/assets/template.md: sha256:5015f184578613db993245e80b210d73b1e33d38f6a7aea056bfbcdb5c558b8c
-    .agents/skills/workspace-agent-memory-save/evals/evals.json: sha256:56700dcd2c118ce3978ab1f9794410e59c294d891cf6505f06ad3dd150ba582b
-    .agents/skills/workspace-agent-memory-save/evals/files/login-flow-notes.md: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
-    .agents/skills/workspace-agent-memory-save/evals/login-flow-notes.md: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
-    .agents/skills/workspace-agent-temporary/SKILL.md: sha256:97a12d839be112efeb9956fc0941dc5028eef941cb6f1b50f17df7d52174a38f
-    .agents/skills/workspace-agent-temporary/assets/.ai-agent/.gitignore: sha256:c6dd25d2fa2c4061b004f38518d9f0f35b6c03aed559f34d7a4e0087bb5aafbc
-    .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-    .agents/skills/workspace-agent-temporary/assets/.ai-agent/memory/done/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-    .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-    .agents/skills/workspace-agent-temporary/assets/.ai-agent/plan/done/.gitkeep: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-    .agents/skills/workspace-agent-temporary/assets/.ai-agent/tmp/.gitignore: sha256:240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d
-    .agents/skills/workspace-agent-temporary/evals/evals.json: sha256:f1986aaf06f7b7b96a1f13c257682cd3594bf0bf8a3c5bd0e814d87e19419a80
-    .agents/skills/workspace-count-tokens/SKILL.md: sha256:697d1157ed002c98a44c259d96186eaf8b977026321ad1bd1a1f1d25f4e37b0e
-    .agents/skills/workspace-count-tokens/assets/report.md: sha256:054eafdc630a956147ae67847701cf4f0d6cccc707bcda9f7baac91ca9c1587b
-    .agents/skills/workspace-count-tokens/scripts/count_workspace_tokens.py: sha256:d6fb680221be9d241d96d86cdea7c2675747cc65891164d55cfc2e09e4d4b9aa
-    .agents/skills/workspace-git-branch-rule/SKILL.md: sha256:2623ccaed5212ee6c1ae86e887974126921b08c2e358b8133e224bae04e6de88
-    .agents/skills/workspace-resolve-file-path/SKILL.md: sha256:fb3cb5b213ffd00d66bb8d913abfc2e57a95a892e1b66aded76dfbddf16e90fe
-    .agents/skills/workspace-resolve-file-path/evals/evals.json: sha256:87f5a9e19c7609b176eaa1dd8a4f460b2672c974fb40627ba2566d4d4919b0e0
-    .agents/skills/workspace-resolve-url-metadata/SKILL.md: sha256:c7f2e9a67a1595b7480c8a5b478bbc1d5cef65a5e1fd348dc39f9eed25ed1be0
-    .agents/skills/workspace-resolve-url-metadata/evals/evals.json: sha256:0a12519ec59f71fcac6966aad5dd18a8b52f16b11c2634d50539ab6c68cd9ec0
-  source: local
-  local_path: ../armyknife
-  declaring_parent: ./packages/coding-xm3
-  anchored_local_path: packages/armyknife
-  declared_license: MIT
 deployments:
 - kind: project-relative
   target: cursor
@@ -1091,8 +1094,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -1100,8 +1103,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:0588e51737d2ffcb0a6ba9df9fde5f1c92d0093f220a443e16a942673272b6d9
 - kind: project-relative
   target: cursor
@@ -1109,8 +1112,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:23b95072a8d17a58dd754eb475419d9216610ec0e96ababe626eebe07f8ad4f4
 - kind: project-relative
   target: cursor
@@ -2036,8 +2039,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -2045,8 +2048,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:f68a5695a9f96b37dd340a870d2e3c7c7c3fd87818917e3b6f4cbb6580669d26
 - kind: project-relative
   target: cursor
@@ -5177,8 +5180,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5186,8 +5189,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:aac07c2be7d085eaf55e89bd2490b54517a3c077bad69fee979cec94519bbdee
 - kind: project-relative
   target: cursor
@@ -5195,8 +5198,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5204,8 +5207,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:0b013385eade9fd915d05beb58a8093cb174944e91380a5bf1afa0960414e706
 - kind: project-relative
   target: cursor
@@ -5213,8 +5216,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:9a8c12cc025d576f7103f2e9fd5a362c0315fd7a7d063e117293b71e293c98ab
 - kind: project-relative
   target: cursor
@@ -5222,8 +5225,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:9cfd8a6f3936645a31f454875f03259e5aa0d3955097704be4eb3f15aa9f9b2f
 - kind: project-relative
   target: cursor
@@ -5231,8 +5234,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:c6edb9779a9508fdadc33c0190f49266e6e6fd482b8212e1cfce5fd9b1039ceb
 - kind: project-relative
   target: cursor
@@ -5240,8 +5243,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:a42b56aecd3b3bd2aa634e3ce603f3580c7ef65e651a2ed92b0d87bdb61b3715
 - kind: project-relative
   target: cursor
@@ -5249,8 +5252,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:5454b967e4d31eeca56871d012c23414b2baf3d484a624bcf8bcd4eb31df6114
 - kind: project-relative
   target: cursor
@@ -5258,8 +5261,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5267,8 +5270,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:b7c5d0dbb79137713dee4c1a0d1e6c447a60fc692a23bf56c908ed99223f97e6
 - kind: project-relative
   target: cursor
@@ -5276,8 +5279,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:3615d5902d94835eaff0542b4a744565f787b858cf129f995e3467b3cfebf307
 - kind: project-relative
   target: cursor
@@ -5285,8 +5288,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5294,8 +5297,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:27040c176df843812d71b49063b1216bbe5da46b457c2bbe5eb0df14a9431d76
 - kind: project-relative
   target: cursor
@@ -5303,8 +5306,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:d02cbc721ffe5bed0fa115247d389d09af891880d8b86639b60c31bc09d6a491
 - kind: project-relative
   target: cursor
@@ -5312,8 +5315,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:afb999105426efdf78606b5c87ab978ab3ffb75dd004d5f4f76109cd7f4493c8
 - kind: project-relative
   target: cursor
@@ -5321,8 +5324,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:b9e741319e95cf2e1468cae1adad67b36529178cc2b11eab1797dbd15791dd9d
 - kind: project-relative
   target: cursor
@@ -5501,8 +5504,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5510,8 +5513,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:670e29751b7a437fa9f621b9e309829bd7e748149b3c136840d70f1c6bd79eff
 - kind: project-relative
   target: cursor
@@ -5519,8 +5522,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:d3ec134924da78fa4bcb071f67d4ac51446ae19248ea802d37927e523eba3cb3
 - kind: project-relative
   target: cursor
@@ -5528,8 +5531,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:88ced2577e5f5a3f04b48d25f2e8faa5e18163b427596e072bdac1e0a5a3c5c2
 - kind: project-relative
   target: cursor
@@ -5537,8 +5540,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:03f18b6557d3dd51d17171f56049e8dbe3dfeea19ed58f3b7da81abecb7d373a
 - kind: project-relative
   target: cursor
@@ -5546,8 +5549,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:ff027da049158ad7dc58a5f5ba1a216cb1a5a86e8ebf84a6148cfd5b328d4bfa
 - kind: project-relative
   target: cursor
@@ -5555,8 +5558,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5564,8 +5567,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:f1c08e75a79511a642ed409a0edd4480e9fe1a3b45bd7ea9a729970520611735
 - kind: project-relative
   target: cursor
@@ -5573,8 +5576,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5582,8 +5585,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:d86596a660327076ba770941847197d4e21aba20e80b0494a107d9f6b4f0660c
 - kind: project-relative
   target: cursor
@@ -5591,8 +5594,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:898456d2f6267ea678bdbc531796858f1e1466b24e12eaa9f8f5d05cf0c0c887
 - kind: project-relative
   target: cursor
@@ -5600,8 +5603,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:e42406253ca5e5297a62d34f975c78c6d5e5d14858134e2d157667c00ea9e612
 - kind: project-relative
   target: cursor
@@ -5609,8 +5612,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5618,8 +5621,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:a4306c5973889ac0024b3c628a108f22fc59cfcb3b33ec65ebcf5b45e6679427
 - kind: project-relative
   target: cursor
@@ -5627,8 +5630,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:5015f184578613db993245e80b210d73b1e33d38f6a7aea056bfbcdb5c558b8c
 - kind: project-relative
   target: cursor
@@ -5636,8 +5639,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:56700dcd2c118ce3978ab1f9794410e59c294d891cf6505f06ad3dd150ba582b
 - kind: project-relative
   target: cursor
@@ -5645,8 +5648,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
 - kind: project-relative
   target: cursor
@@ -5654,8 +5657,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
 - kind: project-relative
   target: cursor
@@ -5663,8 +5666,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5672,8 +5675,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:97a12d839be112efeb9956fc0941dc5028eef941cb6f1b50f17df7d52174a38f
 - kind: project-relative
   target: cursor
@@ -5681,8 +5684,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:c6dd25d2fa2c4061b004f38518d9f0f35b6c03aed559f34d7a4e0087bb5aafbc
 - kind: project-relative
   target: cursor
@@ -5690,8 +5693,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5699,8 +5702,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5708,8 +5711,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5717,8 +5720,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5726,8 +5729,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d
 - kind: project-relative
   target: cursor
@@ -5735,8 +5738,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:f1986aaf06f7b7b96a1f13c257682cd3594bf0bf8a3c5bd0e814d87e19419a80
 - kind: project-relative
   target: cursor
@@ -5744,8 +5747,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5753,8 +5756,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:697d1157ed002c98a44c259d96186eaf8b977026321ad1bd1a1f1d25f4e37b0e
 - kind: project-relative
   target: cursor
@@ -5762,8 +5765,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:054eafdc630a956147ae67847701cf4f0d6cccc707bcda9f7baac91ca9c1587b
 - kind: project-relative
   target: cursor
@@ -5771,8 +5774,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:d6fb680221be9d241d96d86cdea7c2675747cc65891164d55cfc2e09e4d4b9aa
 - kind: project-relative
   target: cursor
@@ -5780,8 +5783,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5789,8 +5792,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:2623ccaed5212ee6c1ae86e887974126921b08c2e358b8133e224bae04e6de88
 - kind: project-relative
   target: cursor
@@ -5798,8 +5801,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5807,8 +5810,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:fb3cb5b213ffd00d66bb8d913abfc2e57a95a892e1b66aded76dfbddf16e90fe
 - kind: project-relative
   target: cursor
@@ -5816,8 +5819,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:87f5a9e19c7609b176eaa1dd8a4f460b2672c974fb40627ba2566d4d4919b0e0
 - kind: project-relative
   target: cursor
@@ -5825,8 +5828,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5834,8 +5837,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:c7f2e9a67a1595b7480c8a5b478bbc1d5cef65a5e1fd348dc39f9eed25ed1be0
 - kind: project-relative
   target: cursor
@@ -5843,8 +5846,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - local:packages/armyknife
-  active_owner: local:packages/armyknife
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
   content_hash: sha256:0a12519ec59f71fcac6966aad5dd18a8b52f16b11c2634d50539ab6c68cd9ec0
 - kind: project-relative
   target: cursor
@@ -5909,3 +5912,66 @@ deployments:
   - ./packages/coding-xm3
   active_owner: ./packages/coding-xm3
   content_hash: sha256:430d2b8eb34684356089f3e30cc89d628c40a0ea707d0a500c7ca6786d57a397
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/coding.comment.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/coding-xm3
+  active_owner: ./packages/coding-xm3
+  content_hash: sha256:7a32ca477dcd2f181c7cfce70aa301d44c26f3fda374c9b1f56a183133b8b797
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/coding.design.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/coding-xm3
+  active_owner: ./packages/coding-xm3
+  content_hash: sha256:d3379348b80571e3969e6e11b640ce34b020eb84de823a7775ffae10fe2aef22
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/coding.execute.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/coding-xm3
+  active_owner: ./packages/coding-xm3
+  content_hash: sha256:76d1200c2f4be5de78847c8e0503e6bb13dd1ecdec2e4e75e42bd0a2c832242c
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/coding.format-plan.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/coding-xm3
+  active_owner: ./packages/coding-xm3
+  content_hash: sha256:e27a7314bd8dcd9c8ad7ee919cfa66d72d57e6773dd4ab947c52a2c86c756c4c
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/coding.requirement.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/coding-xm3
+  active_owner: ./packages/coding-xm3
+  content_hash: sha256:197fb77459f210823c460db316fb00d9a6614d211a90c2030cbaee0bc13d75db
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/github.create-pull-request.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:fd5203c41969ce7fdedebc66e7221623ffcbb61ac467cc441aa71e9016a0f8f4
+- kind: project-relative
+  target: cursor
+  value: .cursor/commands/plan.init.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/coding-xm3
+  active_owner: ./packages/coding-xm3
+  content_hash: sha256:d98d91c5cdc092c992fbbeb3e0435e4fa47cc0527911eacfef113783a0be81e2
