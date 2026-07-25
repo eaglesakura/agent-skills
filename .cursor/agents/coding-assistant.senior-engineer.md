@@ -27,7 +27,9 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-* 計画の読み方・詳細設計前提: [engineer.software-design](../skills/engineer.software-design/SKILL.md)
+  * 必須ロード: [agent.job-description](../skills/agent.job-description/SKILL.md)
+  * 必須ロード: [engineer.software-design](../skills/engineer.software-design/SKILL.md)
+  * 必須ロード: [markdown.search](../skills/markdown.search/SKILL.md)
 * 計画ファイルの期待フォーマット: [詳細設計テンプレート](../extra/coding/design.md)
 
 ## 実施タスク

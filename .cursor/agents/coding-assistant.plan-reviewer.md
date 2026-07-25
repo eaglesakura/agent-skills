@@ -26,8 +26,8 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-* 職能定義: [agent.job-description](../skills/agent.job-description/SKILL.md)
-* 詳細設計前提: [engineer.software-design](../skills/engineer.software-design/SKILL.md)
+  * 必須ロード: 職能定義: [agent.job-description](../skills/agent.job-description/SKILL.md)
+  * 必須ロード: 詳細設計前提: [engineer.software-design](../skills/engineer.software-design/SKILL.md)
 * 計画ファイルの期待フォーマット: [詳細設計テンプレート](../extra/coding/design.md)
 
 ## 実施タスク
@@ -35,7 +35,7 @@ metadata:
 ### レビューの基本
 
 * 積極的にSKILL/ドキュメントをロードする
-* SKILL及びドキュメントの `DO NOT` / `非推奨` に抵触する場合は、指摘する
+* ジュニアエンジニアの職能として、実施可能であるか・不可能であるかのみを判定する
 
 ### ステップ1. 計画確認
 
@@ -55,11 +55,6 @@ metadata:
 - [ ] すべての十分な差分が記載されており、作業を行える
 - [ ] 「実装時に詳細を確認」のように、計画の方向性が不定な内容が残されていない
 - [ ] コメント量が十分であり、ロジックと突合ができる
-
-## 関連ドキュメント
-
-* [{ファイル名}](`path/to/file`)
-  * 範囲: {範囲指定がある場合は行数を指定}
 
 ## 不足している情報
 
