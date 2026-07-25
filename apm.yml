@@ -1,0 +1,20 @@
+name: eaglesakura/agent-skills
+version: 0.1.0
+description: |
+  github.com/eaglesakura/agent-skills の Agent Packages.
+  このapm.ymlは、参考かつ、Agent開発用のローカルpathで記載する
+
+targets:
+  - cursor
+
+dependencies:
+  apm:
+    - microsoft/apm/packages/apm-guide#v0.26.0
+    - samber/cc-skills-golang#v1.9.0
+    - dart-lang/skills#main
+    - anthropics/skills/skills/skill-creator#main
+    - path: ./packages/armyknife
+    - path: ./packages/armyknife-cursor
+    - path: ./packages/coding-xm3
+    - path: ./packages/flutter
+    - path: ./packages/golang

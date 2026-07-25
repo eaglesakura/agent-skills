@@ -1,7 +1,3 @@
-*.git/
-.DS_Store
-__pycache__/
-*.py[cod]
 # skill-creator 評価ワークスペース（sandbox / snapshot / grading / timing）
 *-workspace/
 
@@ -13,12 +9,3 @@ agent-skills-eval-review/
 *eval-run-map*.json
 feedback.json
 **/feedback.json
-
-
-# APM dependencies
-apm_modules/
-.agents/
-.claude/
-.cursor/
-.github/agents/
-.github/prompts/

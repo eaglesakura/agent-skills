@@ -1,0 +1,13 @@
+name: golang
+version: 0.1.0
+description: |
+  Go 向け SKILL 集。
+  コーディング規約と、fmt / lint / test などの品質担保手順をまとめる。
+author: "@eaglesakura"
+license: MIT
+type: skill
+includes: auto
+targets:
+  - cursor
+  - claude
+  - copilot

@@ -1,0 +1,51 @@
+{
+  "skill_name": "workspace-resolve-file-path",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "ドキュメントにクォートで `docs/guide.md` と書いてある。実ファイルを開くとき、どの基準でパスを解決すべき？コマンド例を1つ示して。",
+      "expected_output": "git リポジトリルート相対。git rev-parse --show-toplevel を使う例",
+      "files": [],
+      "assertions": [
+        "Says to resolve relative to the git repository root",
+        "Mentions git rev-parse --show-toplevel (or equivalent root resolution)",
+        "Shows an example path joining root with docs/guide.md"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "`example/markdown/file.md` に `[example](../doc.txt)` というリンクがある。`doc.txt` の実パスはどう組み立てる？ルート相対と混同しないよう短く説明して。",
+      "expected_output": "リンク元ファイルの dirname からの相対",
+      "files": [],
+      "assertions": [
+        "Says Markdown link paths are relative to the source markdown file (not repo root)",
+        "Shows resolving via dirname of example/markdown/file.md plus ../doc.txt (or equivalent)",
+        "Explicitly warns against treating it as repo-root-relative"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "AI Agent の一時ファイルを `.ai-agent/` に置きたい。候補ディレクトリの優先順と、採用ルールを短く教えて。",
+      "expected_output": "headquarters/.ai-agent が先、次にルート .ai-agent。存在する最初を採用",
+      "files": [],
+      "assertions": [
+        "Lists headquarters/.ai-agent before root .ai-agent",
+        "Says to use the first candidate directory that exists",
+        "Mentions git rev-parse --show-toplevel or repository root as the base"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "コマンド本文に `{assets}/template.md` とあり、frontmatter は次のとおり。実ファイル候補をどう列挙し、どれを採用する？短く手順で答えて。\n\n```yaml\nmetadata:\n  assets:\n    - \"[github.create-pull-request/](../assets/github.create-pull-request/)\"\n    - apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/\n```\n\n基準ファイル: `packages/armyknife/.apm/prompts/github.create-pull-request.prompt.md`",
+      "expected_output": "metadata.assets の各DIRについて文書相対とルート相対を試し、ヒットを列挙。1件なら採用、複数なら列挙順の先勝ち（非対話）",
+      "files": [],
+      "assertions": [
+        "Mentions reading metadata.assets and treating {assets}/ as a metavariable (not a literal folder)",
+        "Tries both document-relative and workspace/repo-root-relative bases for each assets candidate",
+        "Includes a candidate path under .apm/assets/github.create-pull-request/template.md (via ../assets from prompts/)",
+        "Includes a candidate under apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/...",
+        "Explains hit handling: list hits; if one use it; if multiple show them / first-hit for non-interactive"
+      ]
+    }
+  ]
+}

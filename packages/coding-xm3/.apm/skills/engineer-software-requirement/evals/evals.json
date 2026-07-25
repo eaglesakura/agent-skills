@@ -1,0 +1,43 @@
+{
+  "skill_name": "engineer-software-requirement",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。プロダクションコードは変更しない。依頼: 設定画面にアプリの Git リビジョンを表示したい。取れないときはプレースホルダ。要件定義ドキュメントを .ai-agent/plan/settings-git-revision-requirements.md に書いて。",
+      "expected_output": "requirements テンプレ相当（カテゴリ/暗黙/テスト）で計画ファイルに出力。具体コード差分は書かない。",
+      "files": [],
+      "expectations": [
+        "Wrote .ai-agent/plan/settings-git-revision-requirements.md",
+        "Includes a 要件 section with categorized requirements",
+        "Includes 暗黙的な要件 or explicit なし",
+        "Includes テスト要件 with normal/error style cases",
+        "Does not include concrete production code diffs as the main deliverable",
+        "Did not modify production source files outside .ai-agent/"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。依頼は『ログインをいい感じにして』だけ。要件定義スキルとして、不足・不明点を先に列挙し、確定できない事項を未決のままにした要件ドラフトを .ai-agent/plan/login-improve-requirements.md に出力せよ。プロダクションコードは変更しない。",
+      "expected_output": "不明点の明示と未決付き要件ドラフト。推測で完成形にしない。",
+      "files": [],
+      "expectations": [
+        "Surfaces unanswered questions or 未決 items",
+        "Wrote a requirements draft under .ai-agent/plan/",
+        "Does not invent a full concrete UI/API design as settled fact",
+        "Did not modify production source files outside .ai-agent/"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。.ai-agent/plan/eula-gate-requirements.md が既にある。『EULA 同意後のみ Home へ進む』を満たすよう要件セクションを更新せよ。実装差分やファイルツリーは書かない。プロダクションコードは変更しない。",
+      "expected_output": "既存計画の要件を更新。設計セクションを新設しない。",
+      "files": [],
+      "expectations": [
+        "Updated existing .ai-agent/plan/eula-gate-requirements.md",
+        "Mentions EULA agreement gate before Home",
+        "Does not add a detailed implementation file tree as the main change",
+        "Did not modify production source files outside .ai-agent/"
+      ]
+    }
+  ]
+}
