@@ -6,7 +6,7 @@ description: >-
   「docs を調べて」「見出しだけ先に」「この節だけ読んで」「関連ドキュメントを把握してから実装／レビュー」、
   コーディング・設計・レビュー前のナレッジ収集時は積極的に使う。
   文書の新規作成は markdown.documentation、lint 修正は markdown.fix、
-  Memory 保存は agent.memory.save。
+  Memory 保存は workspace.agent-memory-save。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -32,7 +32,7 @@ metadata:
 * `docs/`
 * `README.md`
 * `.cursor/skills/`
-* `.ai-agent/memory/`（場所は `agent.temporary` に従う）
+* `.ai-agent/memory/`（場所は `workspace.agent-temporary` に従う）
 
 ## 同梱スクリプト
 

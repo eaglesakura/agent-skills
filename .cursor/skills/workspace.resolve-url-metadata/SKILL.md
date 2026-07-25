@@ -1,17 +1,17 @@
 ---
-name: parse.url-to-metadata
+name: workspace.resolve-url-metadata
 description: >-
   タスク／チケット／ページ等を指す URL からメタデータ（タスクID・タイトル等）を取り出す
   SKILL。ホストやサービス（GitHub、Notion 等）ごとに取得手段は違うが、まず URL 種別を
   判別し、実データで ID／タイトルを正規化する。「この URL の ID/タイトル」
   「URL からメタデータ」「チケット URL をパース」「タスクID を URL から」では必ず使う。
-  feature ブランチ名から Issue を推測するだけは git.branch-rule、ローカルパス解決は
-  resolve-file-path、実装そのものでは使わない。
+  feature ブランチ名から Issue を推測するだけは workspace.git-branch-rule、ローカルパス解決は
+  workspace.resolve-file-path、実装そのものでは使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
-# メタデータ取得 / URL
+# Workspace / Resolve URL Metadata
 
 タスクやチケット、ページを指す **URL** から、後続作業で使うメタデータ（主にタスクID・タイトル）を取得する。
 推測で埋めず、可能な限り各サービスの API / CLI 等で実データを取る。
@@ -25,9 +25,9 @@ metadata:
 
 ## いつ使わないか
 
-* ブランチ名 `feature/id/{n}/...` から Issue を辿るだけ → `git.branch-rule`（必要なら本 SKILL と併用可）
+* ブランチ名 `feature/id/{n}/...` から Issue を辿るだけ → `workspace.git-branch-rule`（必要なら本 SKILL と併用可）
 * PR レビュー・CI 失敗調査そのもの（URL パースが必要なら入口だけ本 SKILL）
-* ローカルファイルパスの解決 → `resolve-file-path`
+* ローカルファイルパスの解決 → `workspace.resolve-file-path`
 
 ## メタデータ一覧
 
@@ -80,4 +80,4 @@ GitHub では owner/repo を `--repo` で明示する（カレントのデフォ
 
 ### DO NOT: ブランチ命名ルールの説明だけでチケット中身の取得を済ませようとする
 
-* ブランチ解釈は `git.branch-rule`、URL→メタデータは本 SKILL
+* ブランチ解釈は `workspace.git-branch-rule`、URL→メタデータは本 SKILL

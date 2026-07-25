@@ -1,5 +1,5 @@
 ---
-name: git.branch-rule
+name: workspace.git-branch-rule
 description: >-
   リポジトリの Git ブランチ命名・役割ルール用 SKILL。`main`・
   `feature/id/{Issue番号}/{名称}`・`release/{バージョン}/main` の意味を解釈し、
@@ -11,7 +11,7 @@ license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
-# Git / ブランチ運用ルール
+# Workspace / Git Branch Rule
 
 ブランチ名から役割を読み取り、新規ブランチをこの慣習に合わせて付ける。
 名前から作業内容を追うときは、feature の Issue 番号を手がかりに `gh` で Issue を取る。

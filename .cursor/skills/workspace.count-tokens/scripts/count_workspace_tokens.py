@@ -398,7 +398,7 @@ def build_report(
     report.display_limit = top_skills if top_skills > 0 else 0
 
     report.suggested_commands.append(
-        "python3 .cursor/skills/agent.count-workspace-tokens/scripts/count_workspace_tokens.py"
+        "python3 .cursor/skills/workspace.count-tokens/scripts/count_workspace_tokens.py"
     )
     report.suggested_commands.append(
         "python3 .../count_workspace_tokens.py --root /path/to/repo --json"

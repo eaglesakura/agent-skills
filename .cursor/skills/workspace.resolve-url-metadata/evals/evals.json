@@ -1,5 +1,5 @@
 {
-  "skill_name": "parse.url-to-metadata",
+  "skill_name": "workspace.resolve-url-metadata",
   "evals": [
     {
       "id": 1,

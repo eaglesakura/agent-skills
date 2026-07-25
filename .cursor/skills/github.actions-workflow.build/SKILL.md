@@ -6,7 +6,7 @@ description: >-
   `gh` での tag→SHA 確認を必須とする。「workflow を書く」「actions の uses を直す」
   「SHA ピン」「mise-action の書き方」「サプライチェーン対策で actions を固定」では必ず使う。
   `.github/**/*.yaml` 編集時は原則ロードする。 PR チェック失敗の原因調査だけは
-  ci-investigator 等、ブランチ命名だけは git.branch-rule、アプリ／Dart 実装そのものでは使わない。
+  ci-investigator 等、ブランチ命名だけは workspace.git-branch-rule、アプリ／Dart 実装そのものでは使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -25,7 +25,7 @@ metadata:
 ## いつ使わないか
 
 * CI 失敗のログ調査・原因切り分けだけ（必要なら本 SKILL と併用）
-* Git ブランチ命名だけ → `git.branch-rule`
+* Git ブランチ命名だけ → `workspace.git-branch-rule`
 * アプリケーションコードやテスト実装そのもの
 * GitHub 以外の CI（CircleCI 等）だけの作業
 

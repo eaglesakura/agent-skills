@@ -1,5 +1,5 @@
 {
-  "skill_name": "agent.memory.save",
+  "skill_name": "workspace.agent-memory-save",
   "evals": [
     {
       "id": 1,

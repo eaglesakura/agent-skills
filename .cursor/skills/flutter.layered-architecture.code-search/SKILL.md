@@ -6,7 +6,7 @@ description: >-
   1クラス1ファイル前提での探索、「〇〇機能のコードどこ？」「usecase / screen / repository の配置」、
   「関連 package 一覧」「TODO/FIXME の洗い出し」では必ず使う。
   Markdown 見出しだけの docs 探索は markdown.search、ドキュメント内パスの解決だけは
-  resolve-file-path、画面 MVVM／設計の新規作成は flutter.layered-architecture.screen-mvvm /
+  workspace.resolve-file-path、画面 MVVM／設計の新規作成は flutter.layered-architecture.screen-mvvm /
   design、コーディング規約のみ・アプリ起動デバッグのみでは使わない。
 license: MIT License
 metadata:
@@ -26,7 +26,7 @@ metadata:
 ## いつ使わないか
 
 * Markdown の見出し TOC だけで docs を読む → `markdown.search`
-* 文書中の `path/to/file` を実パスに解決するだけ → `resolve-file-path`
+* 文書中の `path/to/file` を実パスに解決するだけ → `workspace.resolve-file-path`
 * 新規に画面 MVVM やレイヤー設計を書く → 該当 `flutter.layered-architecture.*`
 * Dart の言語規約だけの修正 → `flutter.coding-rules`
 

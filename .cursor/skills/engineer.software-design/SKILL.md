@@ -30,7 +30,7 @@ metadata:
 * 要件定義、または要件が書かれた既存計画ファイル
 * 関連プロンプト（意図の補足）
 
-計画ファイルの場所は `agent.temporary`（`.ai-agent/plan/`）に従う。職能粒度は `agent.job-description` のジュニア定義に合わせる。
+計画ファイルの場所は `workspace.agent-temporary`（`.ai-agent/plan/`）に従う。職能粒度は `agent.job-description` のジュニア定義に合わせる。
 
 ## ガードレール
 

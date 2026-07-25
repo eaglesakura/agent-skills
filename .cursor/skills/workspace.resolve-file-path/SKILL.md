@@ -1,5 +1,5 @@
 ---
-name: resolve-file-path
+name: workspace.resolve-file-path
 description: >-
   ドキュメント（主に Markdown）に書かれたパス表記を、実ファイルパスへ解決する SKILL。
   クォートされた `path/to/file`（リポジトリルート相対）、Markdown リンク
@@ -7,13 +7,13 @@ description: >-
   （`headquarters/.ai-agent` → ルート `.ai-agent`）を適用する。
   「この MD のリンク先はどこ？」「path/to/file の実体」「.ai-agent はどれ？」
   「参照パスを解決してから読んで」では必ず使う。パス解決前にロードする。
-  URL→Issue メタデータは parse.url-to-metadata、Markdown 整形のみは
+  URL→Issue メタデータは workspace.resolve-url-metadata、Markdown 整形のみは
   markdown.format、内容検索のみは markdown.search では使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
-# ファイルパス解決
+# Workspace / Resolve File Path
 
 ドキュメントに書かれたパスを、**実際に開くべき絶対パス（またはリポジトリルート相対の確定パス）**へ変換する。
 解決を誤ると参照先を読み違え、出力品質が落ちるため、パス付きの参照を扱う前にこの SKILL を適用する。
@@ -26,7 +26,7 @@ metadata:
 
 ## いつ使わないか
 
-* GitHub Issue URL から ID/タイトルを取る → `parse.url-to-metadata`
+* GitHub Issue URL から ID/タイトルを取る → `workspace.resolve-url-metadata`
 * Markdown の体裁整形だけ → `markdown.format`
 * キーワードで文書を探すだけ（パス表記の解決が不要）→ `markdown.search`
 

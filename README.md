@@ -119,13 +119,13 @@ Slash Command または SKILL からパス参照されるテンプレートで�
 * 「ジュニアエンジニアが作業可能」などレベル指定時に、許容される作業・避けるべき抽象度を揃える。
 * 計画書・コードコメントの粒度など、職能に応じた要件を SKILL 本文で規定する。
 
-### agent.memory.save
+### workspace.agent-memory-save
 
 * 調査結果や会話サマリを不揮発の Memory として保存する手順を規定する。
 * 出力先は `.ai-agent/memory/{文脈内容}.md` とし、既存があれば更新する。
 * テンプレートと見出しレベル単位の構造により、後続チャットでのロードしやすさを確保する。
 
-### agent.temporary
+### workspace.agent-temporary
 
 * AI Agent が使ってよい一時領域（`.ai-agent/`）のルート・サブディレクトリ・Ignore を規定する。
 * 一時スクリプトや調査メモは `.ai-agent/tmp/`、実行計画は `.ai-agent/plan/` に置く。
@@ -202,7 +202,7 @@ Slash Command または SKILL からパス参照されるテンプレートで�
 * `monolith` / `monolith_localization` を用い、`dart run monolith_runner:localization` でコード生成する。
 * パッケージごとの `strings.dart` と `L10nStringsMixin` の使い方、他パッケージリソースの参照方法を定める。
 
-### git.branch-rule
+### workspace.git-branch-rule
 
 * `main`・`feature/id/...`・`release/...` などブランチ運用ルールを規定する。
 * ブランチ名から Issue との対応や作業種別を推測する際の参照とする。
@@ -250,7 +250,7 @@ Slash Command または SKILL からパス参照されるテンプレートで�
 * `README.md`・`.cursor/`・`.ai-agent/memory/` など優先パスと、grep による見出し一覧の切り方を示す。
 * 構造把握後に本文を読む流れで、広いリポジトリでも迷わないようにする。
 
-### parse.url-to-metadata
+### workspace.resolve-url-metadata
 
 * Issue URL 等からタスク ID・タイトルなど取得可能なメタデータを整理する。
 * `gh issue view ... --json number,title` など CLI での取得例と JSON の読み方を示す。
