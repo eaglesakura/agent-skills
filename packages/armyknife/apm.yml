@@ -1,0 +1,13 @@
+name: armyknife
+version: 0.1.0
+description: |
+  汎用開発向けのユーティリティ SKILL 集。
+  Markdown 整備、ワークスペース運用、ツール作成、キャッシュ調査などをまとめる。
+author: "@eaglesakura"
+license: MIT
+type: skill
+includes: auto
+targets:
+  - cursor
+  - claude
+  - copilot

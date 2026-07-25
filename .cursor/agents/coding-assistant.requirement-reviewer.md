@@ -10,7 +10,7 @@ is_background: true
 metadata:
   required_skills:
     - engineer.software-requirement
-    - markdown.search
+    - markdown-search
 ---
 
 # 実装アシスタント / 要件定義レビュー
@@ -25,8 +25,8 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: [engineer.software-requirement](../skills/engineer.software-requirement/SKILL.md)
-  * 必須ロード: [markdown.search](../skills/markdown.search/SKILL.md)
+  * 必須ロード: `engineer.software-requirement`
+  * 必須ロード: `markdown-search`
 * レビュー対象ドキュメントの構造: [要件定義フォーマット](../extra/coding/requirements.md)
 
 ## 実施タスク

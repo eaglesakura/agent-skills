@@ -11,7 +11,7 @@ metadata:
   required_skills:
     - agent.job-description
     - engineer.software-design
-    - markdown.search
+    - markdown-search
 ---
 
 # 実装アシスタント / 承認済み計画ステップの実装（シニア）
@@ -27,9 +27,9 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: [agent.job-description](../skills/agent.job-description/SKILL.md)
-  * 必須ロード: [engineer.software-design](../skills/engineer.software-design/SKILL.md)
-  * 必須ロード: [markdown.search](../skills/markdown.search/SKILL.md)
+  * 必須ロード: `agent.job-description`
+  * 必須ロード: `engineer.software-design`
+  * 必須ロード: `markdown-search`
 * 計画ファイルの期待フォーマット: [詳細設計テンプレート](../extra/coding/design.md)
 
 ## 実施タスク

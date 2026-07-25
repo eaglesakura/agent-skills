@@ -1,0 +1,26 @@
+{
+  "skill_name": "tool-sub-agent-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "create-test-reporter: 新規 Sub Agent coding-assistant.test-reporter をテンプレ準拠で作成",
+      "expected_output": "テンプレ準拠の agent md。required_skills に実在 SKILL。追加コンテキスト必須文。author なし。",
+      "files": [],
+      "expectations": []
+    },
+    {
+      "id": 2,
+      "prompt": "create-explore-lite: 必須 SKILL なしの軽量探索 Agent",
+      "expected_output": "required_skills キー省略。テンプレ見出し。デフォルト frontmatter。",
+      "files": [],
+      "expectations": []
+    },
+    {
+      "id": 3,
+      "prompt": "migrate-plan-reviewer: 既存 plan-reviewer を現行テンプレへ更新",
+      "expected_output": "必須セクション揃え、required_skills 追加、プレースホルダなし、追加コンテキスト必須文。",
+      "files": ["evals inputs via workspace"],
+      "expectations": []
+    }
+  ]
+}

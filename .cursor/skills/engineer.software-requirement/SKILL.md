@@ -25,7 +25,7 @@ metadata:
 ## 入力
 
 * ユーザーの依頼文、関連プロンプト、既存の計画ファイル（あればロード）
-* 計画ファイルの置き場は `workspace.agent-temporary`（`.ai-agent/plan/`）に従う
+* 計画ファイルの置き場は `workspace-agent-temporary`（`.ai-agent/plan/`）に従う
 
 依頼が一言でも、完了条件・前提・テスト・影響範囲に分解してよい。足りない情報は推測で埋めず、不明点として残す。
 
@@ -58,7 +58,7 @@ metadata:
 ### ステップ4. 出力
 
 * [要件定義フォーマット](../../extra/coding/requirements.md) に沿って出力する
-* 計画ファイルへ書く場合は `.ai-agent/plan/{計画名}.md`（`workspace.agent-temporary`）
+* 計画ファイルへ書く場合は `.ai-agent/plan/{計画名}.md`（`workspace-agent-temporary`）
 * 必須セクションの目安: 要件カテゴリ、暗黙的な要件（なければ「なし」）、テスト要件
 
 ## 品質の目安

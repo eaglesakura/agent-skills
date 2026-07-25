@@ -1,0 +1,11 @@
+name: armyknife_cursor
+version: 0.1.0
+description: |
+  Cursor 向け専用 SKILL 集。
+  Claude Code CLI 提案を Cursor Agent CLI へ置き換えるなど、Cursor 固有の運用をまとめる。
+author: "@eaglesakura"
+license: MIT
+type: skill
+includes: auto
+targets:
+  - cursor

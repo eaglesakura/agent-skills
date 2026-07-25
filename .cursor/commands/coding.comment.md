@@ -32,7 +32,7 @@ metadata:
 指定範囲のコードコメントの粒度を、プロジェクト方針に合わせて適正化する。
 `/coding.execute` の品質フォローアップ等から参照される補助コマンドである。
 
-対象言語のコーディング規約 SKILL（例: `golang.coding-rules` / `flutter.coding-rules`）と、
+対象言語のコーディング規約 SKILL（例: `golang-coding-rules` / `flutter-coding-rules`）と、
 各 `references/code_comment.md` を適用したうえで、コメントの追加・更新を行う。
 
 ## 入力
@@ -125,8 +125,8 @@ flowchart TD
 ### ステップ1: 規約 SKILL のロード
 
 * 対象コードの言語・拡張子から、必要なコーディング規約 SKILL をロードする
-  * Go（`*.go`）: `golang.coding-rules` と [code_comment](../skills/golang.coding-rules/references/code_comment.md)
-  * Dart（`*.dart`）: `flutter.coding-rules` と [code_comment](../skills/flutter.coding-rules/references/code_comment.md)
+  * Go（`*.go`）: `golang-coding-rules` と [code_comment](../../packages/golang/.apm/skills/golang-coding-rules/references/code_comment.md)
+  * Dart（`*.dart`）: `flutter-coding-rules` と [code_comment](../../packages/flutter/.apm/skills/flutter-coding-rules/references/code_comment.md)
   * 上記以外: 対象リポジトリに存在する同種のコメント規約・コーディング規約をロードする
 * 言語または適用すべき規約が特定できない場合は、次の文言で終了する
 

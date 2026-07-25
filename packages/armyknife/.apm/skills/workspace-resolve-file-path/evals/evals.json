@@ -1,0 +1,38 @@
+{
+  "skill_name": "workspace-resolve-file-path",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "ドキュメントにクォートで `docs/guide.md` と書いてある。実ファイルを開くとき、どの基準でパスを解決すべき？コマンド例を1つ示して。",
+      "expected_output": "git リポジトリルート相対。git rev-parse --show-toplevel を使う例",
+      "files": [],
+      "assertions": [
+        "Says to resolve relative to the git repository root",
+        "Mentions git rev-parse --show-toplevel (or equivalent root resolution)",
+        "Shows an example path joining root with docs/guide.md"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "`example/markdown/file.md` に `[example](../doc.txt)` というリンクがある。`doc.txt` の実パスはどう組み立てる？ルート相対と混同しないよう短く説明して。",
+      "expected_output": "リンク元ファイルの dirname からの相対",
+      "files": [],
+      "assertions": [
+        "Says Markdown link paths are relative to the source markdown file (not repo root)",
+        "Shows resolving via dirname of example/markdown/file.md plus ../doc.txt (or equivalent)",
+        "Explicitly warns against treating it as repo-root-relative"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "AI Agent の一時ファイルを `.ai-agent/` に置きたい。候補ディレクトリの優先順と、採用ルールを短く教えて。",
+      "expected_output": "headquarters/.ai-agent が先、次にルート .ai-agent。存在する最初を採用",
+      "files": [],
+      "assertions": [
+        "Lists headquarters/.ai-agent before root .ai-agent",
+        "Says to use the first candidate directory that exists",
+        "Mentions git rev-parse --show-toplevel or repository root as the base"
+      ]
+    }
+  ]
+}

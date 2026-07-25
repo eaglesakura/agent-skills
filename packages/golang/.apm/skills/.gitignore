@@ -1,0 +1,11 @@
+# skill-creator 評価ワークスペース（sandbox / snapshot / grading / timing）
+*-workspace/
+
+# 評価レビュー用の生成物（静的 HTML・analyst notes 等）
+*-eval-review/
+agent-skills-eval-review/
+
+# 評価実行の一時マップ・フィードバック（コミット不要）
+*eval-run-map*.json
+feedback.json
+**/feedback.json

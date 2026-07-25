@@ -12,7 +12,7 @@ metadata:
   required_skills:
     - agent.job-description
     - engineer.software-design
-    - markdown.search
+    - markdown-search
 ---
 
 # シニアエンジニア / 詳細設計の DO NOT 監査
@@ -28,9 +28,9 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: [agent.job-description](../skills/agent.job-description/SKILL.md)
-  * 必須ロード: [engineer.software-design](../skills/engineer.software-design/SKILL.md)
-  * 必須ロード: [markdown.search](../skills/markdown.search/SKILL.md)
+  * 必須ロード: `agent.job-description`
+  * 必須ロード: `engineer.software-design`
+  * 必須ロード: `markdown-search`
 * 計画ファイルの期待フォーマット: [詳細設計テンプレート](../extra/coding/design.md)
 
 ## 実施タスク
@@ -52,9 +52,9 @@ metadata:
 
 * [ ] 親から渡されたレビュー対象の詳細設計を把握する
 
-### ステップ2. DO NOT 見出しの収集（markdown.search に従う）
+### ステップ2. DO NOT 見出しの収集（markdown-search に従う）
 
-調査は必ず [markdown.search](../skills/markdown.search/SKILL.md) の 3 段階（見出し TOC → 範囲ロード → 必要時のみ全文）に従う。
+調査は必ず `markdown-search` の 3 段階（見出し TOC → 範囲ロード → 必要時のみ全文）に従う。
 
 * [ ] 探索範囲を次に限定する
   * リポジトリ内の `docs/` 配下の Markdown
@@ -62,7 +62,8 @@ metadata:
 * [ ] Stage 1: `### DO NOT:`（および同等の `DO NOT:` 見出し）を横断で当たり付けする
 
   ```bash
-  SCRIPT=".cursor/skills/markdown.search/scripts/md_section.py"
+  # SKILL_DIR は markdown-search の SKILL.md があるディレクトリ
+  SCRIPT="$SKILL_DIR/scripts/md_section.py"
   rg -n '^###? DO NOT:' --glob '*.md' docs/ .cursor/skills/*/references/
   # または
   python3 "$SCRIPT" toc --grep 'DO NOT' path/to/file.md
@@ -129,14 +130,14 @@ metadata:
 
 * 一切の更新を行わず、プロダクションコード・設計ファイルに差分を与えてはならない
 * 探索範囲を `docs/` と `{skill}/references/` 以外に勝手に広げてはならない（親が明示した追加 path がある場合のみ例外）
-* `markdown.search` の Stage を飛ばして全文ロードしてはならない
+* `markdown-search` の Stage を飛ばして全文ロードしてはならない
 * DO NOT 以外の観点（改善提案・実装可否・コメント量など）で主題を拡大してはならない
 * 抵触を推測で断定してはならない。根拠条文と詳細設計の対応が説明できない場合は指摘に含めない
 * 指摘を要約・間引きしてはならない
 
 ## ナレッジベース
 
-### DO: markdown.search の Stage 1→2 で DO NOT を収集してから突合する
+### DO: markdown-search の Stage 1→2 で DO NOT を収集してから突合する
 
 * 見出し一覧と行範囲で当たりを付け、条文本文は範囲ロードする
 

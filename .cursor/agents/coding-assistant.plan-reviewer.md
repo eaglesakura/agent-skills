@@ -11,7 +11,7 @@ metadata:
   required_skills:
     - agent.job-description
     - engineer.software-design
-    - markdown.search
+    - markdown-search
 ---
 
 # 実装アシスタント / 計画実現性レビュー
@@ -26,8 +26,8 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: 職能定義: [agent.job-description](../skills/agent.job-description/SKILL.md)
-  * 必須ロード: 詳細設計前提: [engineer.software-design](../skills/engineer.software-design/SKILL.md)
+  * 必須ロード: 職能定義: `agent.job-description`
+  * 必須ロード: 詳細設計前提: `engineer.software-design`
 * 計画ファイルの期待フォーマット: [詳細設計テンプレート](../extra/coding/design.md)
 
 ## 実施タスク

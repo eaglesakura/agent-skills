@@ -4,7 +4,7 @@ metadata:
     author: "@eaglesakura"
     references:
         - [template.md](../extra/github.create-pull-request/template.md)
-        - workspace.agent-temporary
+        - workspace-agent-temporary
     help: >-
         作業ブランチの差分を整理し、GitHub Pull Request を新規作成または既存 PR 本文を更新する。
         対象リポジトリ・base ブランチ・既存 PR は省略可（省略時は origin / origin/main / 新規作成）。
@@ -33,7 +33,7 @@ metadata:
 このコマンドは、作業ブランチでの変更を Pull Request として GitHub に公開（または既存 PR 本文を上書き）する。
 
 * PR 本文の正本: [template.md](../extra/github.create-pull-request/template.md)
-* 一時ファイルの置き場は `workspace.agent-temporary`（`.ai-agent/tmp/`）に従う
+* 一時ファイルの置き場は `workspace-agent-temporary`（`.ai-agent/tmp/`）に従う
 * 新規作成と既存 PR 更新は、入力の有無で分岐する（対話で選ばない）
 
 ## 入力
@@ -176,7 +176,7 @@ git diff origin/main HEAD
 * [template.md](../extra/github.create-pull-request/template.md) をロードする
 * ステップ1の差分・ログから Summary / Features / Fixed / Deleted を日本語で埋める
 * 空セクションは残してよいが、該当が無い旨を無理に捏造しない
-* `workspace.agent-temporary` に従い、本文を `.ai-agent/tmp/` 配下の一時ファイルへ保存する（例: `.ai-agent/tmp/pr-body.md`）
+* `workspace-agent-temporary` に従い、本文を `.ai-agent/tmp/` 配下の一時ファイルへ保存する（例: `.ai-agent/tmp/pr-body.md`）
 
 ### ステップ3-A: 新規PRを作成
 
@@ -256,7 +256,7 @@ Pull Request: [{#PR番号} {タイトル}]({PRへのリンク})
 
 ### DO: 一時本文は `.ai-agent/tmp/` に閉じる
 
-* `workspace.agent-temporary` の解決順に従い、作業後は削除する
+* `workspace-agent-temporary` の解決順に従い、作業後は削除する
 
 ### DO NOT: 差分に無い変更を PR 本文へ書く
 
