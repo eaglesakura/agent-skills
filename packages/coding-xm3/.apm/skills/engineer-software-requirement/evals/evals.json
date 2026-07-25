@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "評価用サンドボックスをリポジトリルートとみなす。プロダクションコードは変更しない。依頼: 設定画面にアプリの Git リビジョンを表示したい。取れないときはプレースホルダ。要件定義ドキュメントを .ai-agent/plan/settings-git-revision-requirements.md に書いて。",
-      "expected_output": "requirements テンプレ相当（カテゴリ/暗黙/テスト）で計画ファイルに出力。具体コード差分は書かない。",
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。プロダクションコードは変更しない。依頼: 設定画面にアプリの Git リビジョンを表示したい。取れないときはプレースホルダ。要件定義ドキュメントを .ai-agent/plan/settings-git-revision-requirements.md に書いて。フォーマットは SKILL の {assets}/coding/requirements.md を解決してから従うこと。",
+      "expected_output": "coding-xm3/.apm/assets/coding/requirements.md を実体として参照したうえで計画ファイル出力。具体コード差分は書かない。",
       "files": [],
       "expectations": [
         "Wrote .ai-agent/plan/settings-git-revision-requirements.md",
@@ -12,7 +12,8 @@
         "Includes 暗黙的な要件 or explicit なし",
         "Includes テスト要件 with normal/error style cases",
         "Does not include concrete production code diffs as the main deliverable",
-        "Did not modify production source files outside .ai-agent/"
+        "Did not modify production source files outside .ai-agent/",
+        "Asset resolve: cites or loads path under packages/coding-xm3/.apm/assets/coding/requirements.md"
       ]
     },
     {
@@ -37,6 +38,17 @@
         "Mentions EULA agreement gate before Home",
         "Does not add a detailed implementation file tree as the main change",
         "Did not modify production source files outside .ai-agent/"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "基準ファイルは packages/coding-xm3/.apm/skills/engineer-software-requirement/SKILL.md である。本文の ## アセットディレクトリ と {assets}/coding/requirements.md から実ファイルを解決し、存在する絶対パスを answer.md に書け。推測で他パッケージの assets を当てない。",
+      "expected_output": "解決結果が packages/coding-xm3/.apm/assets/coding/requirements.md を指す。",
+      "files": [],
+      "expectations": [
+        "answer.md lists a path ending with packages/coding-xm3/.apm/assets/coding/requirements.md",
+        "Does not claim armyknife or unrelated package assets as the hit",
+        "Mentions ## アセットディレクトリ or candidate ../../assets/"
       ]
     }
   ]

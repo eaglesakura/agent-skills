@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "評価用サンドボックスをリポジトリルートとみなす。プロダクションコードは変更しない。次の要件をもとに詳細設計を .ai-agent/plan/settings-git-revision-design.md に書け。要件: 設定画面に Git リビジョン文字列を表示。取得失敗時はプレースホルダ『—』。ユニットテストで成功時表示と失敗時プレースホルダを確認。ジュニアが実装できる具体差分・ファイルツリー・手順が必要。対象は架空の Flutter 構成でもよいがパスは具体的に。",
-      "expected_output": "design テンプレ相当: ツリー、差分、手順、テスト。コード本体は変更しない。",
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。プロダクションコードは変更しない。次の要件をもとに詳細設計を .ai-agent/plan/settings-git-revision-design.md に書け。要件: 設定画面に Git リビジョン文字列を表示。取得失敗時はプレースホルダ『—』。ユニットテストで成功時表示と失敗時プレースホルダを確認。ジュニアが実装できる具体差分・ファイルツリー・手順が必要。対象は架空の Flutter 構成でもよいがパスは具体的に。フォーマットは SKILL の {assets}/coding/design.md を解決してから従うこと。",
+      "expected_output": "coding-xm3/.apm/assets/coding/design.md を実体として参照した設計ドキュメント。コード本体は変更しない。",
       "files": [],
       "expectations": [
         "Wrote .ai-agent/plan/settings-git-revision-design.md",
@@ -12,7 +12,8 @@
         "Includes concrete before/after or pseudocode diffs",
         "Includes step-by-step implementation checklist",
         "Includes test cases for success and failure placeholder",
-        "Did not modify production source files outside .ai-agent/"
+        "Did not modify production source files outside .ai-agent/",
+        "Asset resolve: cites or loads path under packages/coding-xm3/.apm/assets/coding/design.md"
       ]
     },
     {
@@ -36,6 +37,17 @@
         "References DebugEcho / AuthService behavior",
         "Includes file tree and implementation steps",
         "Did not modify production source files outside .ai-agent/"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "基準ファイルは packages/coding-xm3/.apm/skills/engineer-software-design/SKILL.md である。本文の ## アセットディレクトリ と {assets}/coding/design.md から実ファイルを解決し、存在する絶対パスを answer.md に書け。推測で他パッケージの assets を当てない。",
+      "expected_output": "解決結果が packages/coding-xm3/.apm/assets/coding/design.md を指す。",
+      "files": [],
+      "expectations": [
+        "answer.md lists a path ending with packages/coding-xm3/.apm/assets/coding/design.md",
+        "Does not claim armyknife or unrelated package assets as the hit",
+        "Mentions ## アセットディレクトリ or candidate ../../assets/"
       ]
     }
   ]

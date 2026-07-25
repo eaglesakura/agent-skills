@@ -4,9 +4,6 @@ description: 要件定義に特化し、未定義・暗黙要件を明文化し�
 license: MIT License
 metadata:
   author: '@eaglesakura'
-  assets:
-  - '[assets/](../../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
 # エンジニア / 要件定義
 
@@ -20,6 +17,11 @@ metadata:
 * 既存計画の「要件」だけを厚くしたいとき
 
 詳細なコード差分・ファイルツリー・実装手順が欲しいときは本 SKILL ではなく `engineer-software-design` を使う。
+
+## アセットディレクトリ
+
+* `../../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 入力
 
@@ -37,7 +39,7 @@ metadata:
 
 ### ステップ1. フォーマット確認
 
-* [要件定義フォーマット](../{assets}/coding/requirements.md) をロードする
+* `{assets}/coding/requirements.md`（要件定義フォーマット）をロードする
 
 ### ステップ2. 要件整理
 
@@ -56,7 +58,7 @@ metadata:
 
 ### ステップ4. 出力
 
-* [要件定義フォーマット](../{assets}/coding/requirements.md) に沿って出力する
+* `{assets}/coding/requirements.md`（要件定義フォーマット）に沿って出力する
 * 計画ファイルへ書く場合は `.ai-agent/plan/{計画名}.md`（`workspace-agent-temporary`）
 * 必須セクションの目安: 要件カテゴリ、暗黙的な要件（なければ「なし」）、テスト要件
 

@@ -33,6 +33,17 @@
         "States senior should first produce a detailed junior-ready plan",
         "States work beyond requirements is not allowed"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "基準ファイルは packages/coding-xm3/.apm/skills/agent-job-description/SKILL.md である。## アセットディレクトリ の候補を読み、文書相対で解決したときに到達するパッケージの assets ルート絶対パスを answer.md に書け。期待は coding-xm3 パッケージ配下の .apm/assets である。",
+      "expected_output": "packages/coding-xm3/.apm/assets を指す絶対パスが書かれている。",
+      "files": [],
+      "expectations": [
+        "answer.md lists a path ending with packages/coding-xm3/.apm/assets",
+        "Does not claim armyknife assets as the package root",
+        "Mentions ## アセットディレクトリ or ../../assets/"
+      ]
     }
   ]
 }

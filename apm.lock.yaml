@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-25T14:58:03.162931+00:00'
+generated_at: '2026-07-25T15:35:27.780858+00:00'
 apm_version: 0.26.0
 dependencies:
 - repo_url: _local/armyknife
@@ -170,12 +170,12 @@ dependencies:
   - .cursor/commands/coding.requirement.md
   - .cursor/commands/plan.init.md
   deployed_file_hashes:
-    .agents/skills/agent-job-description/SKILL.md: sha256:f6514e6b2b991956019e7c1128649238b15a3c41dd907335cc31170c7208ecf8
-    .agents/skills/agent-job-description/evals/evals.json: sha256:796b39d47531780c7ed24c0bb7817e9d50bea8c5ae926e37a31d6e29677ac284
-    .agents/skills/engineer-software-design/SKILL.md: sha256:5fd9417b1009bfa12dd77fd7ea56551f9e7a75a72dd160feca26c114376e6f17
-    .agents/skills/engineer-software-design/evals/evals.json: sha256:936222f3a4da00abcd907f19dc8ddba884437981b81ee4a4dbe034b151c69eda
-    .agents/skills/engineer-software-requirement/SKILL.md: sha256:d15da72f6760f8b253205b9076a60e8f1b8e4739f6887253b60dc3ffc79e671b
-    .agents/skills/engineer-software-requirement/evals/evals.json: sha256:ade17c7f5f52e56b51a576db196e09a87263beee186a1a88311c16e00567b809
+    .agents/skills/agent-job-description/SKILL.md: sha256:bdd1931132bda3741e036c94b4a83867d7154d67c1c8ad1551807b15d74790b5
+    .agents/skills/agent-job-description/evals/evals.json: sha256:e74c3cd4e5654033a910109c5426e02618422f5283c639ec251ce0f321585711
+    .agents/skills/engineer-software-design/SKILL.md: sha256:cc6ed5c28246691a48b26612ee1730ac15030d639d9f304014262a28cbb1b333
+    .agents/skills/engineer-software-design/evals/evals.json: sha256:f2e979ab6e7c355212c0b64403e47175a7aee6fb1a8952d6960d531185341f12
+    .agents/skills/engineer-software-requirement/SKILL.md: sha256:d9a66dc78231534c5399028f9db7bfe06abebcb896500c57d766e6db6a696179
+    .agents/skills/engineer-software-requirement/evals/evals.json: sha256:5c28a8f58431f557c3ddd89bff74e9ec9dad2b483d71bb2b1462fc5ee202203b
     .cursor/agents/coding-assistant.junior-engineer.md: sha256:65a0a297a11f30dd03c3c476b8c61bcdcd42553748edf11b82983b54c8866651
     .cursor/agents/coding-assistant.plan-reviewer.md: sha256:dd1764c1bebd77f4a1bff0284fd741aed908292b29b0941ee64f87aceb0029dc
     .cursor/agents/coding-assistant.requirement-reviewer.md: sha256:858f1bcc512954671b78bb36441ca070cf805b9d66406c8cee77bf5d26704763
@@ -1137,7 +1137,7 @@ deployments:
   owners:
   - ./packages/coding-xm3
   active_owner: ./packages/coding-xm3
-  content_hash: sha256:f6514e6b2b991956019e7c1128649238b15a3c41dd907335cc31170c7208ecf8
+  content_hash: sha256:bdd1931132bda3741e036c94b4a83867d7154d67c1c8ad1551807b15d74790b5
 - kind: project-relative
   target: cursor
   value: .agents/skills/agent-job-description/evals/evals.json
@@ -1146,7 +1146,7 @@ deployments:
   owners:
   - ./packages/coding-xm3
   active_owner: ./packages/coding-xm3
-  content_hash: sha256:796b39d47531780c7ed24c0bb7817e9d50bea8c5ae926e37a31d6e29677ac284
+  content_hash: sha256:e74c3cd4e5654033a910109c5426e02618422f5283c639ec251ce0f321585711
 - kind: project-relative
   target: cursor
   value: .agents/skills/apm-usage
@@ -1515,7 +1515,7 @@ deployments:
   owners:
   - ./packages/coding-xm3
   active_owner: ./packages/coding-xm3
-  content_hash: sha256:5fd9417b1009bfa12dd77fd7ea56551f9e7a75a72dd160feca26c114376e6f17
+  content_hash: sha256:cc6ed5c28246691a48b26612ee1730ac15030d639d9f304014262a28cbb1b333
 - kind: project-relative
   target: cursor
   value: .agents/skills/engineer-software-design/evals/evals.json
@@ -1524,7 +1524,7 @@ deployments:
   owners:
   - ./packages/coding-xm3
   active_owner: ./packages/coding-xm3
-  content_hash: sha256:936222f3a4da00abcd907f19dc8ddba884437981b81ee4a4dbe034b151c69eda
+  content_hash: sha256:f2e979ab6e7c355212c0b64403e47175a7aee6fb1a8952d6960d531185341f12
 - kind: project-relative
   target: cursor
   value: .agents/skills/engineer-software-requirement
@@ -1542,7 +1542,7 @@ deployments:
   owners:
   - ./packages/coding-xm3
   active_owner: ./packages/coding-xm3
-  content_hash: sha256:d15da72f6760f8b253205b9076a60e8f1b8e4739f6887253b60dc3ffc79e671b
+  content_hash: sha256:d9a66dc78231534c5399028f9db7bfe06abebcb896500c57d766e6db6a696179
 - kind: project-relative
   target: cursor
   value: .agents/skills/engineer-software-requirement/evals/evals.json
@@ -1551,7 +1551,7 @@ deployments:
   owners:
   - ./packages/coding-xm3
   active_owner: ./packages/coding-xm3
-  content_hash: sha256:ade17c7f5f52e56b51a576db196e09a87263beee186a1a88311c16e00567b809
+  content_hash: sha256:5c28a8f58431f557c3ddd89bff74e9ec9dad2b483d71bb2b1462fc5ee202203b
 - kind: project-relative
   target: cursor
   value: .agents/skills/flutter-app-debug

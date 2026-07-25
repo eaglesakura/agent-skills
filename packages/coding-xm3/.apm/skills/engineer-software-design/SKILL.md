@@ -4,9 +4,6 @@ description: 要件を満たす詳細設計を行い、ジュニアが実装で�
 license: MIT License
 metadata:
   author: '@eaglesakura'
-  assets:
-  - '[assets/](../../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
 # エンジニア / 詳細設計
 
@@ -20,6 +17,11 @@ metadata:
 * 「ジュニアが作業可能」な計画へ落とし込むとき
 
 要件が曖昧なまま詳細設計だけ求められた場合は、先に不足要件を指摘するか `engineer-software-requirement` へ戻す。
+
+## アセットディレクトリ
+
+* `../../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 入力
 
@@ -57,7 +59,7 @@ metadata:
 
 ### ステップ3. 変更提案
 
-* [詳細設計テンプレート](../{assets}/coding/design.md) をロードする（プロンプト指示による軽微なフォーマット差は可）
+* `{assets}/coding/design.md`（詳細設計テンプレート）をロードする（プロンプト指示による軽微なフォーマット差は可）
 * [ ] 具体的な変更差分を提示する（前後コードまたは同等の完全手順）
 * [ ] 編集対象すべてのファイルツリー（`[New]` / `[Del]` / 変更はサフィックスなし）
 * [ ] 十分なコードコメント方針とテストコード提案
@@ -67,7 +69,7 @@ metadata:
 
 * [ ] `agent-job-description` のジュニアが実装可能な粒度か
 * [ ] ファイルツリー・差分・手順・テストが揃っているか
-* [詳細設計テンプレート](../{assets}/coding/design.md) に沿って計画へ出力する
+* `{assets}/coding/design.md`（詳細設計テンプレート）に沿って計画へ出力する
 
 ## 満たすべき品質
 

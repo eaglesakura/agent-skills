@@ -4,9 +4,6 @@ description: ジュニア／シニア等の職能ごとの技能範囲を定義�
 license: MIT License
 metadata:
   author: '@eaglesakura'
-  assets:
-  - '[assets/](../../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
 # エンジニア技能・職能定義
 
@@ -21,6 +18,11 @@ metadata:
 * 実装 Agent に委任するとき: その Agent の職能（ジュニア／シニア）に応じた逸脱ルールを適用する
 
 計画の **立案** と **実装** は別である。シニアは抽象方針から詳細計画を書けるが、実装時に抽象指示のまま手を動かすことはできない。
+
+## アセットディレクトリ
+
+* `../../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ---
 
