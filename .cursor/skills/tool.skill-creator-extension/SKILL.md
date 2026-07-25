@@ -1,5 +1,5 @@
 ---
-name: factory.skill-creator-extension
+name: tool.skill-creator-extension
 description: >-
   SKILL 作成・改訂時のコマンド記述ルールを補足する SKILL。 skill-creator で新規 SKILL を書く、
   既存 SKILL のコマンド例を直す、手順書に `dart` / `flutter` / `go` / `npm` 等を載せるときは必ず使う。
@@ -10,7 +10,7 @@ license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
-# Skill Creator Extension / コマンド記述の補足
+# Tool / Skill Creator Extension
 
 SKILL はリポジトリ横断・環境横断で再利用される。ツールチェイン管理（`mise` / `fvm` / `asdf` 等）の
 prefix・wrapper は **プロジェクト固有の実行規約** であり、SKILL 本文に焼き付けると他環境でノイズになる。
