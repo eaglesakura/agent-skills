@@ -1,19 +1,17 @@
 ---
-name: engineer.software-design
-description: >-
-  要件を満たす詳細設計を行い、ジュニアが実装できる具体差分・ファイルツリー・手順を提案する SKILL。
-  「詳細設計して」「実装計画を具体化」「差分と手順を書いて」、`/coding.design`・Plan モードの設計フェーズ、
-  計画ファイルの実装セクション更新時は必ずロードする。
-  要件の洗い出し・暗黙要件の明文化が主目的なら先に `engineer.software-requirement` を使う。
-  プロダクションコードは変更せず、計画ドキュメントのみ更新する。コードレビュー系 SKILL の併用が望ましい。
+name: engineer-software-design
+description: 要件を満たす詳細設計を行い、ジュニアが実装できる具体差分・ファイルツリー・手順を提案する SKILL。 「詳細設計して」「実装計画を具体化」「差分と手順を書いて」、`/coding.design`・Plan モードの設計フェーズ、 計画ファイルの実装セクション更新時は必ずロードする。 要件の洗い出し・暗黙要件の明文化が主目的なら先に `engineer-software-requirement` を使う。 プロダクションコードは変更せず、計画ドキュメントのみ更新する。コードレビュー系 SKILL の併用が望ましい。
 license: MIT License
 metadata:
-  author: "@eaglesakura"
+  author: '@eaglesakura'
+  assets:
+  - '[assets/](../../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
 # エンジニア / 詳細設計
 
 主題は **どう実装するか** を、ジュニアエンジニアが手を動かせる粒度で提案することである。
-要件の洗い出しそのものは `engineer.software-requirement` の役目である。
+要件の洗い出しそのものは `engineer-software-requirement` の役目である。
 
 ## いつ使うか
 
@@ -21,7 +19,7 @@ metadata:
 * `/coding.design` や Plan の詳細設計フェーズ
 * 「ジュニアが作業可能」な計画へ落とし込むとき
 
-要件が曖昧なまま詳細設計だけ求められた場合は、先に不足要件を指摘するか `engineer.software-requirement` へ戻す。
+要件が曖昧なまま詳細設計だけ求められた場合は、先に不足要件を指摘するか `engineer-software-requirement` へ戻す。
 
 ## 入力
 
@@ -30,7 +28,7 @@ metadata:
 * 要件定義、または要件が書かれた既存計画ファイル
 * 関連プロンプト（意図の補足）
 
-計画ファイルの場所は `workspace-agent-temporary`（`.ai-agent/plan/`）に従う。職能粒度は `agent.job-description` のジュニア定義に合わせる。
+計画ファイルの場所は `workspace-agent-temporary`（`.ai-agent/plan/`）に従う。職能粒度は `agent-job-description` のジュニア定義に合わせる。
 
 ## ガードレール
 
@@ -59,7 +57,7 @@ metadata:
 
 ### ステップ3. 変更提案
 
-* [詳細設計テンプレート](../../extra/coding/design.md) をロードする（プロンプト指示による軽微なフォーマット差は可）
+* [詳細設計テンプレート](../{assets}/coding/design.md) をロードする（プロンプト指示による軽微なフォーマット差は可）
 * [ ] 具体的な変更差分を提示する（前後コードまたは同等の完全手順）
 * [ ] 編集対象すべてのファイルツリー（`[New]` / `[Del]` / 変更はサフィックスなし）
 * [ ] 十分なコードコメント方針とテストコード提案
@@ -67,9 +65,9 @@ metadata:
 
 ### ステップ4. 出力前チェック
 
-* [ ] `agent.job-description` のジュニアが実装可能な粒度か
+* [ ] `agent-job-description` のジュニアが実装可能な粒度か
 * [ ] ファイルツリー・差分・手順・テストが揃っているか
-* [詳細設計テンプレート](../../extra/coding/design.md) に沿って計画へ出力する
+* [詳細設計テンプレート](../{assets}/coding/design.md) に沿って計画へ出力する
 
 ## 満たすべき品質
 

@@ -82,16 +82,16 @@ Sub Agent はクリーンコンテキストで起動し、親の Skills カタ�
 
 * 記載されたDescriptionから、必要に応じてApplyすること
 
-### agent.job-description
+### agent-job-description
 
-* Path: /path/to/repo/.cursor/skills/agent.job-description
+* Path: /path/to/repo/.agents/skills/agent-job-description
 
 ジュニア／シニア等の職能ごとの技能範囲を定義する SKILL。
 「ジュニアエンジニアが作業可能」…（description全文）
 
-### engineer.software-design
+### engineer-software-design
 
-* Path: /path/to/repo/.cursor/skills/engineer.software-design
+* Path: /path/to/repo/.agents/skills/engineer-software-design
 
 （description全文）
 ```

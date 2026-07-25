@@ -1,12 +1,12 @@
 ---
-name: agent.job-description
-description: >-
-  ジュニア／シニア等の職能ごとの技能範囲を定義する SKILL。
-  「ジュニアエンジニアが作業可能」「シニアに任せる」「職能の範囲で」「計画がジュニア実装可能か」などレベルや職能を指定されたとき、
-  詳細設計・計画レビュー・実装委任・plan-reviewer 実行時に必ずロードし、この定義に合わせて粒度と逸脱許容を揃える。
+name: agent-job-description
+description: ジュニア／シニア等の職能ごとの技能範囲を定義する SKILL。 「ジュニアエンジニアが作業可能」「シニアに任せる」「職能の範囲で」「計画がジュニア実装可能か」などレベルや職能を指定されたとき、 詳細設計・計画レビュー・実装委任・plan-reviewer 実行時に必ずロードし、この定義に合わせて粒度と逸脱許容を揃える。
 license: MIT License
 metadata:
-  author: "@eaglesakura"
+  author: '@eaglesakura'
+  assets:
+  - '[assets/](../../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
 # エンジニア技能・職能定義
 

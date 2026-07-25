@@ -18,10 +18,10 @@
     {
       "id": 2,
       "prompt": "評価用サンドボックスをリポジトリルートとみなす。ユーザーは『ログイン改善の要件定義ドキュメントを docs に書いて』と言っている。markdown-documentation スキルとして、計画の要件定義と技術ドキュメントのどちら向きか判断し、適切なら短い技術文書、不適切ならエンジニア要件 SKILL へ誘導する説明を outputs/result.md に書け。プロダクション想定の大規模実装はしない。",
-      "expected_output": "要件定義依頼を engineer.software-requirement へ誘導、または境界を明示",
+      "expected_output": "要件定義依頼を engineer-software-requirement へ誘導、または境界を明示",
       "files": [],
       "expectations": [
-        "Mentions engineer.software-requirement or 要件定義スキル / 計画ファイル",
+        "Mentions engineer-software-requirement or 要件定義スキル / 計画ファイル",
         "Does not treat a full coding.requirement plan as the primary docs/ deliverable without noting the boundary"
       ]
     },

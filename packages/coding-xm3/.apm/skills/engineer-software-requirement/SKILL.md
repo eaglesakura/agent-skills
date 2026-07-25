@@ -1,18 +1,17 @@
 ---
-name: engineer.software-requirement
-description: >-
-  要件定義に特化し、未定義・暗黙要件を明文化して要件ドキュメントを出力する SKILL。
-  「要件を整理して」「何を作るか決めたい」「完了条件・テスト観点・影響範囲を書きたい」、
-  `/coding.requirement`・Plan モードの要件フェーズ、計画ファイルの「要件」セクション更新時は必ずロードする。
-  詳細なコード差分やファイルツリー提案が主目的なら `engineer.software-design` を使う（本 SKILL は実装差分を書かない）。
+name: engineer-software-requirement
+description: 要件定義に特化し、未定義・暗黙要件を明文化して要件ドキュメントを出力する SKILL。 「要件を整理して」「何を作るか決めたい」「完了条件・テスト観点・影響範囲を書きたい」、 `/coding.requirement`・Plan モードの要件フェーズ、計画ファイルの「要件」セクション更新時は必ずロードする。 詳細なコード差分やファイルツリー提案が主目的なら `engineer-software-design` を使う（本 SKILL は実装差分を書かない）。
 license: MIT License
 metadata:
-  author: "@eaglesakura"
+  author: '@eaglesakura'
+  assets:
+  - '[assets/](../../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
 # エンジニア / 要件定義
 
 主題は **何を満たせば完了か** を曖昧さなく書くことである。
-詳細設計（どう実装するか・差分）は `engineer.software-design` の役目であり、ここでは踏み込まない。
+詳細設計（どう実装するか・差分）は `engineer-software-design` の役目であり、ここでは踏み込まない。
 
 ## いつ使うか
 
@@ -20,7 +19,7 @@ metadata:
 * `/coding.requirement` や Plan の要件フェーズ
 * 既存計画の「要件」だけを厚くしたいとき
 
-詳細なコード差分・ファイルツリー・実装手順が欲しいときは本 SKILL ではなく `engineer.software-design` を使う。
+詳細なコード差分・ファイルツリー・実装手順が欲しいときは本 SKILL ではなく `engineer-software-design` を使う。
 
 ## 入力
 
@@ -38,7 +37,7 @@ metadata:
 
 ### ステップ1. フォーマット確認
 
-* [要件定義フォーマット](../../extra/coding/requirements.md) をロードする
+* [要件定義フォーマット](../{assets}/coding/requirements.md) をロードする
 
 ### ステップ2. 要件整理
 
@@ -57,11 +56,11 @@ metadata:
 
 ### ステップ4. 出力
 
-* [要件定義フォーマット](../../extra/coding/requirements.md) に沿って出力する
+* [要件定義フォーマット](../{assets}/coding/requirements.md) に沿って出力する
 * 計画ファイルへ書く場合は `.ai-agent/plan/{計画名}.md`（`workspace-agent-temporary`）
 * 必須セクションの目安: 要件カテゴリ、暗黙的な要件（なければ「なし」）、テスト要件
 
 ## 品質の目安
 
 後続の詳細設計が「方針に従って実装」ではなく、受け入れ条件から差分を起こせる粒度であること。
-職能の物差しが必要なときは `agent.job-description` を参照する（要件自体はジュニア向け疑似コードまでは落とさない）。
+職能の物差しが必要なときは `agent-job-description` を参照する（要件自体はジュニア向け疑似コードまでは落とさない）。

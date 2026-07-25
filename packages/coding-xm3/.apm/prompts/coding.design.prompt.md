@@ -1,37 +1,33 @@
 ---
 license: MIT License
 metadata:
-    author: "@eaglesakura"
-    references:
-        - /coding.*
-        - /coding.requirement
-        - /coding.execute
-        - /coding.format-plan
-        - engineer.software-design
-        - agent.job-description
-        - [design.md](../extra/coding/design.md)
-    help: >-
-        既存の計画ファイル（`.ai-agent/plan/*.md`）を詳細設計し、ジュニアエンジニアが実装可能な粒度へ更新する。
-        Coding-Commands のステップ2。対象の計画ファイルを引数または文脈から渡す。
-        レビューのみの場合はその旨を添える。計画は新規作成せず上書きする。
-    input:
-        - Required: 対象の計画ファイル
-        - Optional: 作業指示
-    output:
-        - Required: 計画ファイル
-        - Required: レビュー指摘内容
-        - Required: 詳細設計結果
-    example:
-        - >-
-            /coding.design
-        - >-
-            /coding.design .ai-agent/plan/login-home.md
-        - >-
-            /coding.design .ai-agent/plan/login-home.md 実装修正を行い、再レビュー
-        - >-
-            /coding.design .ai-agent/plan/login-home.md レビューのみ
+  author: '@eaglesakura'
+  references:
+  - /coding.*
+  - /coding.requirement
+  - /coding.execute
+  - /coding.format-plan
+  - engineer-software-design
+  - agent-job-description
+  - '`{assets}/coding/design.md`'
+  help: 既存の計画ファイル（`.ai-agent/plan/*.md`）を詳細設計し、ジュニアエンジニアが実装可能な粒度へ更新する。 Coding-Commands のステップ2。対象の計画ファイルを引数または文脈から渡す。 レビューのみの場合はその旨を添える。計画は新規作成せず上書きする。
+  input:
+  - Required: 対象の計画ファイル
+  - Optional: 作業指示
+  output:
+  - Required: 計画ファイル
+  - Required: レビュー指摘内容
+  - Required: 詳細設計結果
+  example:
+  - /coding.design
+  - /coding.design .ai-agent/plan/login-home.md
+  - /coding.design .ai-agent/plan/login-home.md 実装修正を行い、再レビュー
+  - /coding.design .ai-agent/plan/login-home.md レビューのみ
+  assets:
+  - '[assets/](../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
+description: 既存の計画ファイル（`.ai-agent/plan/*.md`）を詳細設計し、ジュニアエンジニアが実装可能な粒度へ更新する。 Coding-Commands のステップ2。対象の計画ファイルを引数または文脈から渡す。 レビューのみの場合はその旨を添える。計画は新規作成せず上書きする。
 ---
-
 # 実装フロー / 詳細設計
 
 ## 概要
@@ -44,9 +40,9 @@ metadata:
   2. `/coding.design`
   3. `/coding.execute`
 * 計画ファイルとは、`.ai-agent/plan/*.md` に保存された「要件定義・詳細設計・実装手順」等が記載されたファイルである
-* 出力フォーマットの正本は [design.md](../extra/coding/design.md) である
-* 実行時は `engineer.software-design` SKILL をロードする
-* ジュニアの技能定義・提案粒度は `agent.job-description` を参照する
+* 出力フォーマットの正本は `{assets}/coding/design.md` である
+* 実行時は `engineer-software-design` SKILL をロードする
+* ジュニアの技能定義・提案粒度は `agent-job-description` を参照する
 
 ## 入力
 
@@ -81,7 +77,7 @@ metadata:
 ### Required: 計画ファイル
 
 * 入力と同じ計画ファイルを上書き更新する
-* 書式: [design.md](../extra/coding/design.md) に準ずる
+* 書式: `{assets}/coding/design.md` に準ずる
 * 成功条件:
   * ジュニアエンジニアが作業可能な具体差分・ファイルツリー・実装手順が含まれている
   * プロダクションコードに差分が無いこと
@@ -182,9 +178,9 @@ flowchart TD
     ```
 
 * 既存の計画ファイルの内容（特に要件）を確認する
-* `engineer.software-design` SKILL をロードする
-* [design.md](../extra/coding/design.md) をロードする
-* `agent.job-description` 等からジュニアエンジニアの技能定義と提案粒度を確定する
+* `engineer-software-design` SKILL をロードする
+* `{assets}/coding/design.md` を `workspace-resolve-file-path` で解決してからロードする
+* `agent-job-description` 等からジュニアエンジニアの技能定義と提案粒度を確定する
 * 要件を実現するための、ジュニアが作業可能な具体的な変更差分を提案し、計画ファイルへ反映する
 * 要件が抽象的すぎて差分を書けない場合は、推測で埋めず次の形式で終了する
 

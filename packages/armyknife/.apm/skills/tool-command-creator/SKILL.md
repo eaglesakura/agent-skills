@@ -141,7 +141,7 @@ references:
   - /coding.*
   - /coding.requirement
   - /coding.design
-  - engineer.software-requirement
+  - engineer-software-requirement
   - [requirements.md](../extra/coding/requirements.md)
 ```
 

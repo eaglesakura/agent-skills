@@ -1,3 +1,15 @@
+---
+description: Plan モード開始前に Agent を初期化する。提案書式は共有テンプレートに従う。
+metadata:
+  assets:
+  - '[assets/](../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
+  author: '@eaglesakura'
+  references:
+  - '`{assets}/plan/plan-mode.md`'
+  - engineer-software-requirement
+  - engineer-software-design
+---
 # Planモード初期化
 
 ## 概要
@@ -6,7 +18,7 @@
 
 ## 出力ルール
 
-* ユーザーへの提案書式は [テンプレート](../extra/plan/plan-mode.md) に従う
+* ユーザーへの提案書式は `{assets}/plan/plan-mode.md` に従う
 
 ## 計画立案ルール
 
@@ -15,8 +27,8 @@
   
 * Planを行うにあたり、積極的にSKILLの適用を行う。
   * SKILL例
-    * `/engineer.software-requirement`
-    * `/engineer.software-design`
+    * `/engineer-software-requirement`
+    * `/engineer-software-design`
 
 ## レビュールール
 

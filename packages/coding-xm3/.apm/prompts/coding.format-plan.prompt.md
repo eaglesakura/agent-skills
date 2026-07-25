@@ -1,29 +1,27 @@
 ---
 license: MIT License
 metadata:
-    author: "@eaglesakura"
-    references:
-        - /coding.*
-        - /coding.requirement
-        - /coding.design
-        - [requirements.md](../extra/coding/requirements.md)
-        - [design.md](../extra/coding/design.md)
-    help: >-
-        計画ファイル（`.ai-agent/plan/*.md`）を、動作モードに応じた所定書式へ整形する。
-        `/coding.*` の補助コマンド。対象ファイルと動作モード（要件定義 / 詳細設計）を
-        引数または文脈から渡す。内容の追加・削除は行わない。
-    input:
-        - Required: 対象の計画ファイル
-        - Required: 動作モード
-    output:
-        - Required: 整形済み計画ファイル
-    example:
-        - >-
-            /coding.format-plan
-        - >-
-            /coding.format-plan .ai-agent/plan/login-home.md
+  author: '@eaglesakura'
+  references:
+  - /coding.*
+  - /coding.requirement
+  - /coding.design
+  - '`{assets}/coding/requirements.md`'
+  - '`{assets}/coding/design.md`'
+  help: 計画ファイル（`.ai-agent/plan/*.md`）を、動作モードに応じた所定書式へ整形する。 `/coding.*` の補助コマンド。対象ファイルと動作モード（要件定義 / 詳細設計）を 引数または文脈から渡す。内容の追加・削除は行わない。
+  input:
+  - Required: 対象の計画ファイル
+  - Required: 動作モード
+  output:
+  - Required: 整形済み計画ファイル
+  example:
+  - /coding.format-plan
+  - /coding.format-plan .ai-agent/plan/login-home.md
+  assets:
+  - '[assets/](../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
+description: 計画ファイル（`.ai-agent/plan/*.md`）を、動作モードに応じた所定書式へ整形する。 `/coding.*` の補助コマンド。対象ファイルと動作モード（要件定義 / 詳細設計）を 引数または文脈から渡す。内容の追加・削除は行わない。
 ---
-
 # 計画ファイル / 書式整形
 
 ## 概要
@@ -31,8 +29,8 @@ metadata:
 このコマンドは、`/coding.*` の補助コマンドである。
 計画ファイルの内容を整理し、動作モードに応じた所定書式へ整えることで、レビュアーや実装者の読解負荷を下げる。
 
-* 要件定義モードの正本: [requirements.md](../extra/coding/requirements.md)
-* 詳細設計モードの正本: [design.md](../extra/coding/design.md)
+* 要件定義モードの正本: `{assets}/coding/requirements.md`
+* 詳細設計モードの正本: `{assets}/coding/design.md`
 * 要件・詳細設計・実装手順の中身を変えず、見出し・順序・表記・インデックスなどの書式のみを整える
 
 ## 入力
@@ -122,7 +120,7 @@ flowchart TD
 
 動作モードが要件定義モードの場合に実施する。
 
-* [requirements.md](../extra/coding/requirements.md) をロードする
+* `{assets}/coding/requirements.md` を `workspace-resolve-file-path` で解決してからロードする
 * 書式（見出し構成・必須セクションの有無・表記）に合わせて計画ファイルを整理し、上書き保存する
 * 要件の意味内容・文言の意図は変更しない（言い換えによる意味変化も避ける）
 
@@ -130,7 +128,7 @@ flowchart TD
 
 動作モードが詳細設計モードの場合に実施する。
 
-* [design.md](../extra/coding/design.md) をロードする
+* `{assets}/coding/design.md` を `workspace-resolve-file-path` で解決してからロードする
 * 書式に合わせて計画ファイルを整理し、上書き保存する
 * 作業手順は `ステップ1` から始まるようにインデックスを最適化する
 * 実装内容・差分提案の意味は変更しない
@@ -153,8 +151,8 @@ flowchart TD
 
 ### DO: モードに対応する正本テンプレートだけを使う
 
-* 要件定義モード → [requirements.md](../extra/coding/requirements.md)
-* 詳細設計モード → [design.md](../extra/coding/design.md)
+* 要件定義モード → `{assets}/coding/requirements.md`
+* 詳細設計モード → `{assets}/coding/design.md`
 
 ### DO: 詳細設計モードではステップ番号を振り直す
 

@@ -4,7 +4,7 @@ description: >-
   技術ドキュメント（docs 配下などの *.md）を作成・更新する SKILL。
   「ドキュメントを書いて」「アーキテクチャ説明を更新」「ナレッジベース付きの md を整えて」、
   技術文書の差分提案時は必ずロードする。
-  計画ファイル（要件・詳細設計）が主目的なら engineer.software-requirement / engineer.software-design を使う。
+  計画ファイル（要件・詳細設計）が主目的なら engineer-software-requirement / engineer-software-design を使う。
   書式の自動修正だけなら markdown-fix、既存 docs の検索だけなら markdown-search を使う。
 license: MIT License
 metadata:

@@ -86,8 +86,8 @@ description: >-
 ```yaml
 metadata:
   required_skills:
-    - engineer.software-design
-    - agent.job-description
+    - engineer-software-design
+    - agent-job-description
 ```
 
 * 親の `agent-call-sub-agent` は、この一覧を **必須サジェスト** の第一ソースとして扱う

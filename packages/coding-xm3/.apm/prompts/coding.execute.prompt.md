@@ -1,37 +1,33 @@
 ---
 license: MIT License
 metadata:
-    author: "@eaglesakura"
-    references:
-        - /coding.*
-        - /coding.requirement
-        - /coding.design
-        - /coding.comment
-        - agent.job-description
-        - [work-orders.md](../extra/coding.execute/work-orders.md)
-        - [design.md](../extra/coding/design.md)
-    help: >-
-        詳細設計済みの計画ファイル（`.ai-agent/plan/*.md`）に従い、実装を反映する。
-        Coding-Commands のステップ3。対象の計画ファイルを引数または文脈から渡す。
-        作業範囲を省略した場合は計画内の全作業を対象とする。
-    input:
-        - Required: 対象の計画ファイル
-        - Optional: 作業範囲
-    output:
-        - Required: 実装差分
-        - Required: 更新された計画ファイル
-        - Required: 実行結果サマリ
-    example:
-        - >-
-            /coding.execute
-        - >-
-            /coding.execute .ai-agent/plan/login-home.md
-        - >-
-            /coding.execute .ai-agent/plan/login-home.md すべてのステップを実行してください
-        - >-
-            /coding.execute .ai-agent/plan/login-home.md ステップ3まで完了させてください
+  author: '@eaglesakura'
+  references:
+  - /coding.*
+  - /coding.requirement
+  - /coding.design
+  - /coding.comment
+  - agent-job-description
+  - '`{assets}/coding.execute/work-orders.md`'
+  - '`{assets}/coding/design.md`'
+  help: 詳細設計済みの計画ファイル（`.ai-agent/plan/*.md`）に従い、実装を反映する。 Coding-Commands のステップ3。対象の計画ファイルを引数または文脈から渡す。 作業範囲を省略した場合は計画内の全作業を対象とする。
+  input:
+  - Required: 対象の計画ファイル
+  - Optional: 作業範囲
+  output:
+  - Required: 実装差分
+  - Required: 更新された計画ファイル
+  - Required: 実行結果サマリ
+  example:
+  - /coding.execute
+  - /coding.execute .ai-agent/plan/login-home.md
+  - /coding.execute .ai-agent/plan/login-home.md すべてのステップを実行してください
+  - /coding.execute .ai-agent/plan/login-home.md ステップ3まで完了させてください
+  assets:
+  - '[assets/](../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
+description: 詳細設計済みの計画ファイル（`.ai-agent/plan/*.md`）に従い、実装を反映する。 Coding-Commands のステップ3。対象の計画ファイルを引数または文脈から渡す。 作業範囲を省略した場合は計画内の全作業を対象とする。
 ---
-
 # 実装フロー / 実装反映
 
 ## 概要
@@ -43,8 +39,8 @@ metadata:
   2. `/coding.design`
   3. `/coding.execute`
 * 計画ファイルとは、`.ai-agent/plan/*.md` に保存された「要件定義・詳細設計・実装手順」等が記載されたファイルである
-* 詳細設計の書式正本は [design.md](../extra/coding/design.md) である
-* Sub Agent への作業指示テンプレート正本は [work-orders.md](../extra/coding.execute/work-orders.md) である
+* 詳細設計の書式正本は `{assets}/coding/design.md` である
+* Sub Agent への作業指示テンプレート正本は `{assets}/coding.execute/work-orders.md` である
 * 本コマンド実行により、要件定義モード・詳細設計モードのハーネスは解除され、実コードの修正を行う
 
 ## 入力
@@ -158,12 +154,12 @@ flowchart TD
 
 ### ステップ2: 実行
 
-* [work-orders.md](../extra/coding.execute/work-orders.md) の「ジュニアエンジニアへの作業指示」に従い、`/coding-assistant.junior-engineer` Sub Agent へ作業を依頼する
+* `{assets}/coding.execute/work-orders.md` の「ジュニアエンジニアへの作業指示」に従い、`/coding-assistant.junior-engineer` Sub Agent へ作業を依頼する
 * ジュニアが対象ステップを完遂できなかった場合はステップ2-A を実施する。完遂した場合はステップ2-B へ進む
 
 ### ステップ2-A: シニアへ引き継ぎ
 
-* [work-orders.md](../extra/coding.execute/work-orders.md) の「ジュニア失敗時のシニア引き継ぎ」に従い、`/coding-assistant.senior-engineer` へ未完了ステップの継続を依頼する
+* `{assets}/coding.execute/work-orders.md` の「ジュニア失敗時のシニア引き継ぎ」に従い、`/coding-assistant.senior-engineer` へ未完了ステップの継続を依頼する
 * 完了後、ステップ2-B へ進む
 
 ### ステップ2-B: 結果統合
@@ -181,7 +177,7 @@ flowchart TD
 
 ### ステップ3: 品質フォローアップ
 
-* [work-orders.md](../extra/coding.execute/work-orders.md) の「品質担保（シニア）」に従い、`/coding-assistant.senior-engineer` へ品質フォローアップを依頼する
+* `{assets}/coding.execute/work-orders.md` の「品質担保（シニア）」に従い、`/coding-assistant.senior-engineer` へ品質フォローアップを依頼する
   * コメント方針は `/coding.comment` も適宜参照する
 * 実施内容に基づき、計画ファイルのチェックリストを更新する
 * 「実行結果サマリ」の形式で最終結果を返す

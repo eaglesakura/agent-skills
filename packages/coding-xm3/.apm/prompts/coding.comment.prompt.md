@@ -1,30 +1,26 @@
 ---
 license: MIT License
 metadata:
-    author: "@eaglesakura"
-    references:
-        - /coding.*
-    help: >-
-        指定範囲のコードコメント粒度をプロジェクト方針に合わせて適正化する。
-        引数・選択範囲・開いているファイル等から対象スコープを渡す。
-        既定はコメントの追加・更新のみ（削除しない）。
-    input:
-        - Required: 対象コードのスコープ
-        - Optional: コメント操作方針
-    output:
-        - Required: コメントを適正化した対象コード
-        - Optional: 変更サマリ
-    example:
-        - >-
-            /coding.comment path/to/user_service.go
-        - >-
-            /coding.comment path/to/preference_key.dart の PreferenceKey
-        - >-
-            /coding.comment 選択中の FetchUser 関数
-        - >-
-            /coding.comment path/to/user_service.go を追加のみでコメント適正化
+  author: '@eaglesakura'
+  references:
+  - /coding.*
+  help: 指定範囲のコードコメント粒度をプロジェクト方針に合わせて適正化する。 引数・選択範囲・開いているファイル等から対象スコープを渡す。 既定はコメントの追加・更新のみ（削除しない）。
+  input:
+  - Required: 対象コードのスコープ
+  - Optional: コメント操作方針
+  output:
+  - Required: コメントを適正化した対象コード
+  - Optional: 変更サマリ
+  example:
+  - /coding.comment path/to/user_service.go
+  - /coding.comment path/to/preference_key.dart の PreferenceKey
+  - /coding.comment 選択中の FetchUser 関数
+  - /coding.comment path/to/user_service.go を追加のみでコメント適正化
+  assets:
+  - '[assets/](../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
+description: 指定範囲のコードコメント粒度をプロジェクト方針に合わせて適正化する。 引数・選択範囲・開いているファイル等から対象スコープを渡す。 既定はコメントの追加・更新のみ（削除しない）。
 ---
-
 # 実装フロー / コメント粒度の適正化
 
 ## 概要
@@ -125,8 +121,8 @@ flowchart TD
 ### ステップ1: 規約 SKILL のロード
 
 * 対象コードの言語・拡張子から、必要なコーディング規約 SKILL をロードする
-  * Go（`*.go`）: `golang-coding-rules` と [code_comment](../../packages/golang/.apm/skills/golang-coding-rules/references/code_comment.md)
-  * Dart（`*.dart`）: `flutter-coding-rules` と [code_comment](../../packages/flutter/.apm/skills/flutter-coding-rules/references/code_comment.md)
+  * Go（`*.go`）: `golang-coding-rules` と [code_comment](../../.agents/skills/golang-coding-rules/references/code_comment.md)
+  * Dart（`*.dart`）: `flutter-coding-rules` と [code_comment](../../.agents/skills/flutter-coding-rules/references/code_comment.md)
   * 上記以外: 対象リポジトリに存在する同種のコメント規約・コーディング規約をロードする
 * 言語または適用すべき規約が特定できない場合は、次の文言で終了する
 

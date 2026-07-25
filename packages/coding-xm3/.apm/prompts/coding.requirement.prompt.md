@@ -1,43 +1,38 @@
 ---
 license: MIT License
 metadata:
-    author: "@eaglesakura"
-    references:
-        - /coding.*
-        - engineer.software-requirement
-        - [requirements.md](../extra/coding/requirements.md)
-    help: >-
-        要件をもとに計画ファイル（`.ai-agent/plan/*.md`）を作成・更新する。
-        Coding-Commands のステップ1。引数または文脈に要件を渡す。
-        既存計画を更新する場合はパスまたは計画名を添える。
-    input:
-        - Required: 要件定義情報
-        - Optional: 対象の計画ファイル
-    output:
-        - Required: 計画ファイル
-        - Required: レビュー指摘内容
-        - Required: 要件定義結果
-    example:
-        - >-
-            /coding.requirement 
-            # 要件
-            
-            * ログイン後にホームへ遷移する
+  author: '@eaglesakura'
+  references:
+  - /coding.*
+  - engineer-software-requirement
+  - '`{assets}/coding/requirements.md`'
+  help: 要件をもとに計画ファイル（`.ai-agent/plan/*.md`）を作成・更新する。 Coding-Commands のステップ1。引数または文脈に要件を渡す。 既存計画を更新する場合はパスまたは計画名を添える。
+  input:
+  - Required: 要件定義情報
+  - Optional: 対象の計画ファイル
+  output:
+  - Required: 計画ファイル
+  - Required: レビュー指摘内容
+  - Required: 要件定義結果
+  example:
+  - '/coding.requirement  # 要件
 
-            ## 実装要件
+    * ログイン後にホームへ遷移する
 
-            * MVVMに従う
+    ## 実装要件
 
-            ## テスト要件
+    * MVVMに従う
 
-            * Golden Testが必要
-            * E2Eテストは手動で行う
-        - >-
-            /coding.requirement .ai-agent/plan/login-home.md の要件を修正し再レビュー
-        - >-
-            /coding.requirement 要件の修正を行い、再レビュー
+    ## テスト要件
+
+    * Golden Testが必要 * E2Eテストは手動で行う'
+  - /coding.requirement .ai-agent/plan/login-home.md の要件を修正し再レビュー
+  - /coding.requirement 要件の修正を行い、再レビュー
+  assets:
+  - '[assets/](../assets/)'
+  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
+description: 要件をもとに計画ファイル（`.ai-agent/plan/*.md`）を作成・更新する。 Coding-Commands のステップ1。引数または文脈に要件を渡す。 既存計画を更新する場合はパスまたは計画名を添える。
 ---
-
 # 実装フロー / 要件定義
 
 ## 概要
@@ -50,8 +45,8 @@ metadata:
   2. `/coding.design`
   3. `/coding.execute`
 * 計画ファイルとは、`.ai-agent/plan/*.md` に保存された「要件定義・詳細設計・実装手順」等が記載されたファイルである
-* 出力フォーマットの正本は [requirements.md](../extra/coding/requirements.md) である
-* 実行時は `engineer.software-requirement` SKILL をロードする
+* 出力フォーマットの正本は `{assets}/coding/requirements.md` である
+* 実行時は `engineer-software-requirement` SKILL をロードする
 
 ## 入力
 
@@ -81,7 +76,7 @@ metadata:
 ### Required: 計画ファイル
 
 * 保存先: `.ai-agent/plan/{計画名}.md`（新規作成または既存の上書き）
-* 書式: [requirements.md](../extra/coding/requirements.md) に準ずる
+* 書式: `{assets}/coding/requirements.md` に準ずる
 * 成功条件: 必須セクション（要件カテゴリ、暗黙的な要件、テスト要件）が埋まり、プロダクションコードに差分が無いこと
 
 ### Required: レビュー指摘内容
@@ -193,8 +188,8 @@ flowchart TD
     ユーザーが明示的に指示するまで、詳細設計と実装は行いません。
     ```
 
-* `engineer.software-requirement` SKILL をロードする
-* [requirements.md](../extra/coding/requirements.md) をロードする
+* `engineer-software-requirement` SKILL をロードする
+* `{assets}/coding/requirements.md` を `workspace-resolve-file-path` で解決してからロードする
 * 関連ディレクトリ・package・技術資料・既存の要件定義を、関連 SKILL で調査して整理する
 * ユーザー要件と関連情報を整理し、計画ファイルへ書き出す（実装差分・詳細設計は書かない）
 
@@ -204,7 +199,7 @@ flowchart TD
   * テストケースの不足が無いか
   * 要件に矛盾や不足・隠れた暗黙要件が無いか
   * シニアエンジニアが実装可能な粒度の要件か
-  * 書式が [requirements.md](../extra/coding/requirements.md) に準じているか
+  * 書式が `{assets}/coding/requirements.md` に準じているか
   * 凡例に従い、ファイルツリーに `[編集]` 等のタグを付与しているか（該当する場合）
 * レビュー完了を待つ
 * 指摘内容を「レビュー指摘内容」の出力形式で整理して出す
@@ -244,7 +239,7 @@ flowchart TD
 
 ### DO NOT: 実装方針や具体コード差分を要件に書く
 
-* 理由: 詳細設計は `/coding.design` と `engineer.software-design` の役割である
+* 理由: 詳細設計は `/coding.design` と `engineer-software-design` の役割である
 
 ### DO NOT: 計画ファイル以外を更新する
 
