@@ -24,7 +24,7 @@ metadata:
             /coding.format-plan .ai-agent/plan/login-home.md
 ---
 
-# coding.format-plan
+# 計画ファイル / 書式整形
 
 ## 概要
 

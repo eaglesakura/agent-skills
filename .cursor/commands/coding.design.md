@@ -32,7 +32,7 @@ metadata:
             /coding.design .ai-agent/plan/login-home.md レビューのみ
 ---
 
-# coding.design
+# 実装フロー / 詳細設計
 
 ## 概要
 

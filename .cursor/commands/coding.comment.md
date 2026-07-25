@@ -25,7 +25,7 @@ metadata:
             /coding.comment path/to/user_service.go を追加のみでコメント適正化
 ---
 
-# コメント粒度の適正化
+# 実装フロー / コメント粒度の適正化
 
 ## 概要
 

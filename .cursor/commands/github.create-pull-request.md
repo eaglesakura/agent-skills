@@ -26,7 +26,7 @@ metadata:
             /github.create-pull-request https://github.com/OWNER/REPO/pull/123 の本文を更新
 ---
 
-# github.create-pull-request
+# GitHub / Pull Request作成
 
 ## 概要
 
