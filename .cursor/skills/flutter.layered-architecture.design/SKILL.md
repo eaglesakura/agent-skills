@@ -1,75 +1,119 @@
 ---
 name: flutter.layered-architecture.design
-description: Flutter-Layered-Architecture アプリに最適化された設計を知るためのSKILL。コード調査についても、アーキテクチャを知ることで精度を高めることができる。
+description: >-
+  Flutter Layered Architecture のレイヤー責務・依存方向・DI（Riverpod）・
+  「アプリ処理は Usecase」という設計前提を適用する SKILL。
+  新規機能の配置判断、「どのレイヤー？」「Repository と Usecase の違いは？」、
+  インターフェース／実装分離、詳細設計前のアーキテクチャ確認では必ず使う。
+  Usecase/Repository の定番実装パターン詳細は flutter.layered-architecture.design-patterns、
+  画面 MVVM 実装は screen-mvvm、所在調査は code-search、Dart 言語規約のみは
+  flutter.coding-rules、汎用の実装差分設計のみは engineer.software-design を使う。
 license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
 # Flutter-Layered-Architecture / 設計
 
-* モノリス構造であり、 `dart workspace` 機能を用いたdartプロジェクトで構築される
-* 複数の階層からなるアーキテクチャレイヤーを適用する。
-* レイヤーごとに責任範囲を明確に分離し、上位レイヤーが下位レイヤーに依存する構造を取る。これにより、テスタビリティと保守性が向上する。
+モノリスを `dart workspace` で分割し、**上位が下位に依存する**複数レイヤーで責務を分離する。
+テスタビリティと保守性のため、レイヤー境界と DI を守る。
+
+詳細は文脈に応じて `references/` を追加ロードする（本 SKILL は地図と原則）。
+
+## いつ使うか
+
+* 機能をどのレイヤー／package プレフィックスに置くか決めるとき
+* 依存方向・DI（interface / impl / Riverpod）の設計判断
+* 「処理は Usecase」「データ抽象は Repository（data）」の整理
+* 詳細設計・実装の前にアーキテクチャ前提を揃えるとき
+
+## いつ使わないか
+
+* Usecase / Repository の Request&Result 等の **実装パターン詳細** → `flutter.layered-architecture.design-patterns`
+* 画面の MVVM 実装手順 → `flutter.layered-architecture.screen-mvvm`
+* 既存コードの所在調査 → `flutter.layered-architecture.code-search`
+* Dart のコーディング規約だけ → `flutter.coding-rules`
+* レイヤー非依存の汎用詳細設計ドキュメント化だけ → `engineer.software-design`（必要なら本 SKILL を併用）
+
+## 作業手順
+
+1. 要求がどのレイヤー責務かを、下表で特定する
+2. 依存は **上位 → 下位** のみ（同レベルでも循環クラス参照を作らない）
+3. package は interface と実装を分け、Riverpod で結ぶ
+4. 細部が必要なら該当 `references/` を読む
 
 ## レイヤー一覧
 
-| レイヤー名 | package名プレフィックス | レイヤーレベル | 役割 |
-| -- | -- | -- | -- |
-| app | app | 7 | アプリケーション |
-| screen | screen_* | 6 | 各画面、Model-View-ViewModelで設計・実装する |
-| view | view_* | 5 | Widget等、UI要素 |
-| usecase | usecase_* | 4 | ビジネスロジックを提供する |
-| data | data_* | 4 | データRead/Writeロジックを提供する |
-| infra | infra_* | 3 | OS差異・Unit Testと実機差異の吸収等、アプリ実行インフラを提供する |
-| domain | domain_* | 2 | アプリドメインを提供する |
-| foundation | foundation_* | 1 | DI等、アプリ実行基盤 |
-| testing | testing_* | - | テストサポート、アーキテクチャレベル範囲外 |
+| レイヤー名 | package 名プレフィックス | レベル | 役割 |
+| --- | --- | --- | --- |
+| app | `app` | 7 | アプリケーション起動・DI 統合 |
+| screen | `screen_*` | 6 | 各画面（MVVM） |
+| view | `view_*` | 5 | 再利用 UI（Widget 等） |
+| usecase | `usecase_*` | 4 | ビジネスロジック |
+| data | `data_*` | 4 | データ Read/Write（Repository 等） |
+| infra | `infra_*` | 3 | OS／実機差の吸収 |
+| domain | `domain_*` | 2 | アプリドメイン |
+| foundation | `foundation_*` | 1 | DI 等の実行基盤 |
+| testing | `testing_*` | - | テスト支援（レベル外） |
 
-## 依存する重要なライブラリ
+* レベルが低いほど基盤。上位は下位に依存し、下位は上位に依存しない
+* usecase と data は同レベル。相互の **インターフェース** 依存は認めうるが、クラス循環は避ける（詳細は design-patterns）
 
-* [riverpod](https://pub.dev/packages/riverpod)
-  * レイヤー間の結合（Dependency Injection）に利用する
+## Dependency Injection
 
-## インターフェースと実装の分離(Dependency Injection)
+* 結合には [riverpod](https://pub.dev/packages/riverpod) を使う
+* 各関心は `abstract interface class`（公開）と実装 `class`（別 package）に分ける
+  * 循環参照防止と実装隠蔽のため
+* テストではテスト専用 package／オーバーライドで差し替える
 
-* レイヤー内でのpackage分離、循環参照防止、可換性等、様々な問題を解決するため、Dependency Injectionの導入が重要である。
-* 各packageはインターフェース（`abstract interface class`）と実装（ `class` ） が明確に分離する
-  * この分離は、dart packageの循環参照を防ぐことと、個別のライブラリの隠蔽のため採用されている
-* 依存注入(Dependency Injection)には [riverpod](https://pub.dev/packages/riverpod) ライブラリを利用する
-* Dependency Injectionを行い、かつ依存を含めたUnit Testを行うために `テスト専用のpackage` を導入している
+詳細・`DependencyBuilder`・package 分割例 → [references/dependency-injection.md](./references/dependency-injection.md)  
+実装例 → [references/example/dependency_builder.md](./references/example/dependency_builder.md) / [test_context_extensions.md](./references/example/test_context_extensions.md)
 
-## `ビジネスロジック(Usecase)` の考え方
+## ビジネスロジック（Usecase）の考え方
 
-* `Flutter-Layered-Architecture` において、「アプリに関連する処理は、すべてビジネスロジック(Usecase)である」と考える
-* 各packageで共通で利用するUsecase
-  * ビジネスロジックのなかで、data層に所属し、データ読み書きの抽象化を行うインターフェース、 `Repository` と呼ぶ
-  * 冪等なロジック（アプリ固有のテキストフォーマッタ、エラー分類器等）
-  * 冪等ではないロジック（ログイン時のAPI呼び出し、Repositoryへのアクセスを含んだ処理）
-* 各画面固有のUsecase
-  * 冪等なロジック（画面固有のテキストフォーマッタ等）
-  * 冪等ではないロジック（画面ステートを更新する、データのリロード処理やエラーハンドリングの共通処理等）
+このアーキテクチャでは **アプリに関連する処理はすべてビジネスロジック（Usecase）** と捉える。
+
+* **共通 Usecase**
+  * data 層の `Repository`（読み書き抽象）
+  * 冪等（フォーマッタ、分類器など）／非冪等（API・Repository アクセスを含む処理）
+* **画面固有 Usecase**
+  * 冪等／非冪等（画面ステート更新、リロード、エラー処理の共通化など）
 
 ```mermaid
 flowchart TB
-  subgraph アプリのロジック["アプリのロジック ＝ Usecase（ビジネスロジック）"]
-    subgraph 共通["各packageで共通で利用するUsecase"]
-      Repository["Repository\n（data層・データ読み書きの抽象化）"]
-      共通冪等["冪等なロジック\n（テキストフォーマッタ、エラー分類器等）"]
-      共通非冪等["冪等ではないロジック\n（ログイン時のAPI呼び出し、Repositoryへのアクセス等）"]
+  subgraph アプリのロジック["アプリのロジック ＝ Usecase"]
+    subgraph 共通["共通"]
+      Repository["Repository（data）"]
+      共通冪等["冪等"]
+      共通非冪等["非冪等"]
     end
-    subgraph 画面固有["各画面固有のUsecase"]
-      画面冪等["冪等なロジック\n（画面固有のテキストフォーマッタ等）"]
-      画面非冪等["冪等ではないロジック\n（画面ステート更新、リロード、エラーハンドリング等）"]
+    subgraph 画面固有["画面固有"]
+      画面冪等["冪等"]
+      画面非冪等["非冪等"]
     end
   end
 ```
 
-## 追加ドキュメント
+## 追加ドキュメント（progressive disclosure）
 
-文脈に応じて、下記のドキュメントを追加ロードする.
-ドキュメント記載の内容を遵守し、ユーザーの指示と統合して出力を行う.
+| 参照 | 使うとき |
+| --- | --- |
+| [architecture-design.md](./references/architecture-design.md) | 各レイヤーの詳細・全体像 |
+| [dependency-injection.md](./references/dependency-injection.md) | interface/impl、DI 設計 |
+| [workspace-layout.md](./references/workspace-layout.md) | ディレクトリ／package 配置の慣習 |
+| [example/…](./references/example/) | DependencyBuilder / テスト拡張の具体例 |
 
-* [アーキテクチャ全体像](./references/architecture-design.md)
-  * 例: 詳細設計
-* [依存注入](./references/dependency-injection.md)
-  * 例: インターフェース設計、全体設計時
+ディレクトリ例に特定リポジトリ名が出ても、**プレフィックスとレイヤー責務**を優先して読み替える。
+
+## ナレッジベース
+
+### DO: まずレイヤーと依存方向を決める
+
+* 実装パターンや画面 MVVM に入る前に、置き場所と依存を固定する
+
+### DO: interface と実装を package で分ける
+
+* 公開面は interface、実装詳細は実装 package に閉じる
+
+### DO NOT: 下位レイヤーから上位レイヤーへ依存する
+
+* domain / foundation が screen を知る、などは境界破壊である
