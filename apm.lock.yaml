@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-25T15:35:27.780858+00:00'
+generated_at: '2026-07-25T15:39:45.930972+00:00'
 apm_version: 0.26.0
 dependencies:
 - repo_url: _local/armyknife
@@ -94,7 +94,7 @@ dependencies:
     .agents/skills/tool-command-creator/evals/evals.json: sha256:d17ed386c0a4708ba1856ee01f22ff57f5f0f5026926c1a0648bd8b65a6d3fd0
     .agents/skills/tool-command-creator/evals/files/coding.comment.md: sha256:03f18b6557d3dd51d17171f56049e8dbe3dfeea19ed58f3b7da81abecb7d373a
     .agents/skills/tool-command-creator/evals/files/coding.format-plan.md: sha256:ff027da049158ad7dc58a5f5ba1a216cb1a5a86e8ebf84a6148cfd5b328d4bfa
-    .agents/skills/tool-skill-creator-extension/SKILL.md: sha256:f1c08e75a79511a642ed409a0edd4480e9fe1a3b45bd7ea9a729970520611735
+    .agents/skills/tool-skill-creator-extension/SKILL.md: sha256:d459bebf6a3e8fa95fc8358a9485719d19ee519db2196b352946edbe546caeb8
     .agents/skills/tool-sub-agent-creator/SKILL.md: sha256:11a1a512d7f90e90bb9b2cb8f32f234e2459f2c49fbc83961e88e435268dc6fc
     .agents/skills/tool-sub-agent-creator/assets/subagent.md: sha256:d65932673c9132913c3c5b5b63adf452afd5e28479ee6f3986d8c480efd0fe58
     .agents/skills/tool-sub-agent-creator/evals/evals.json: sha256:a5da45842376ca01ebdab97a65d5b4217b416b6f29a363d53449c23b1843f6fa
@@ -5574,7 +5574,7 @@ deployments:
   owners:
   - ./packages/armyknife
   active_owner: ./packages/armyknife
-  content_hash: sha256:f1c08e75a79511a642ed409a0edd4480e9fe1a3b45bd7ea9a729970520611735
+  content_hash: sha256:d459bebf6a3e8fa95fc8358a9485719d19ee519db2196b352946edbe546caeb8
 - kind: project-relative
   target: cursor
   value: .agents/skills/tool-sub-agent-creator
