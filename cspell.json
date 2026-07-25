@@ -20,6 +20,7 @@
         "sdkman",
         "secretmanager",
         "testx",
+        "tiktoken",
         "toplevel",
         "Usecase",
         "viewmodel",
