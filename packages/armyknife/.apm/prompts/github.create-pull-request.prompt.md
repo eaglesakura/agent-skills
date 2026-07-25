@@ -1,9 +1,17 @@
 ---
 license: MIT License
+description: >-
+  作業ブランチの差分を整理し、GitHub Pull Request を新規作成または既存 PR 本文を更新する。
+  対象リポジトリ・base ブランチ・既存 PR は省略可（省略時は origin / origin/main / 新規作成）。
+  PR 本文はテンプレートに従い日本語で書く。
 metadata:
     author: "@eaglesakura"
+    assets:
+        - "[github.create-pull-request/](../assets/github.create-pull-request/)"
+        - apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/
     references:
-        - [template.md](../extra/github.create-pull-request/template.md)
+        - "`{assets}/template.md`"
+        - workspace-resolve-file-path
         - workspace-agent-temporary
     help: >-
         作業ブランチの差分を整理し、GitHub Pull Request を新規作成または既存 PR 本文を更新する。
@@ -32,7 +40,7 @@ metadata:
 
 このコマンドは、作業ブランチでの変更を Pull Request として GitHub に公開（または既存 PR 本文を上書き）する。
 
-* PR 本文の正本: [template.md](../extra/github.create-pull-request/template.md)
+* PR 本文の正本: `{assets}/template.md`（実体は `workspace-resolve-file-path` で解決）
 * 一時ファイルの置き場は `workspace-agent-temporary`（`.ai-agent/tmp/`）に従う
 * 新規作成と既存 PR 更新は、入力の有無で分岐する（対話で選ばない）
 
@@ -173,7 +181,7 @@ git diff origin/main HEAD
 
 ### ステップ2: PR本文を作成
 
-* [template.md](../extra/github.create-pull-request/template.md) をロードする
+* `{assets}/template.md` を `workspace-resolve-file-path` で実ファイルへ解決してからロードする
 * ステップ1の差分・ログから Summary / Features / Fixed / Deleted を日本語で埋める
 * 空セクションは残してよいが、該当が無い旨を無理に捏造しない
 * `workspace-agent-temporary` に従い、本文を `.ai-agent/tmp/` 配下の一時ファイルへ保存する（例: `.ai-agent/tmp/pr-body.md`）
@@ -241,7 +249,7 @@ Pull Request: [{#PR番号} {タイトル}]({PRへのリンク})
 コマンドを終了します。
 ```
 
-* PR 本文は [template.md](../extra/github.create-pull-request/template.md) に従い、日本語で書く
+* PR 本文は `{assets}/template.md` に従い、日本語で書く
 * 一時ファイルは `.ai-agent/tmp/` のみに置き、レポート出力後に削除する
 * 未コミット変更を勝手に commit しない
 * force push（`push --force` 等）を行わない

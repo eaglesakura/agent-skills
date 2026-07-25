@@ -33,6 +33,19 @@
         "Says to use the first candidate directory that exists",
         "Mentions git rev-parse --show-toplevel or repository root as the base"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "コマンド本文に `{assets}/template.md` とあり、frontmatter は次のとおり。実ファイル候補をどう列挙し、どれを採用する？短く手順で答えて。\n\n```yaml\nmetadata:\n  assets:\n    - \"[github.create-pull-request/](../assets/github.create-pull-request/)\"\n    - apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/\n```\n\n基準ファイル: `packages/armyknife/.apm/prompts/github.create-pull-request.prompt.md`",
+      "expected_output": "metadata.assets の各DIRについて文書相対とルート相対を試し、ヒットを列挙。1件なら採用、複数なら列挙順の先勝ち（非対話）",
+      "files": [],
+      "assertions": [
+        "Mentions reading metadata.assets and treating {assets}/ as a metavariable (not a literal folder)",
+        "Tries both document-relative and workspace/repo-root-relative bases for each assets candidate",
+        "Includes a candidate path under .apm/assets/github.create-pull-request/template.md (via ../assets from prompts/)",
+        "Includes a candidate under apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/...",
+        "Explains hit handling: list hits; if one use it; if multiple show them / first-hit for non-interactive"
+      ]
     }
   ]
 }

@@ -18,12 +18,12 @@
 
 ## APM Packages
 
-一部の汎用 SKILL は APM（Agent Package Manager）パッケージとして公開する。実体は `.cursor/skills/` ではなく `packages/` 配下のみに置く。
+一部の汎用 SKILL / Prompt は APM（Agent Package Manager）パッケージとして公開する。実体は `.cursor/skills/` / `.cursor/commands/` ではなく `packages/` 配下のみに置く。
 
 | パッケージ | パス | 依存の書き方 |
 | --- | --- | --- |
 | `armyknife` | [`packages/armyknife`](packages/armyknife) | `eaglesakura/agent-skills/packages/armyknife` |
-| `armyknife_cursor` | [`packages/armyknife_cursor`](packages/armyknife_cursor) | `eaglesakura/agent-skills/packages/armyknife_cursor` |
+| `armyknife-cursor` | [`packages/armyknife-cursor`](packages/armyknife-cursor) | `eaglesakura/agent-skills/packages/armyknife-cursor` |
 | `flutter` | [`packages/flutter`](packages/flutter) | `eaglesakura/agent-skills/packages/flutter` |
 | `golang` | [`packages/golang`](packages/golang) | `eaglesakura/agent-skills/packages/golang` |
 
@@ -31,14 +31,14 @@
 dependencies:
   apm:
     - eaglesakura/agent-skills/packages/armyknife
-    - eaglesakura/agent-skills/packages/armyknife_cursor
+    - eaglesakura/agent-skills/packages/armyknife-cursor
     - eaglesakura/agent-skills/packages/flutter
     - eaglesakura/agent-skills/packages/golang
 ```
 
 ## 収録Slash-Command
 
-※ `.cursor/commands/` 直下の Markdown ファイルと対応する（アルファベット順）。サブディレクトリ内はテンプレート等であり、Slash Command 本体ではない。
+※ `.cursor/commands/` 直下の Markdown と、APM パッケージの `.apm/prompts/` に対応する（アルファベット順）。サブディレクトリ内はテンプレート等であり、Slash Command 本体ではない。
 
 ### coding.*
 
@@ -74,10 +74,11 @@ dependencies:
 * 要件の初期案から実装計画を `.ai-agent/plan/{計画名}.md` に保存する。出力フォーマットは [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) に準ずる。
 * ガードレールとして、計画・レビュー関連ファイル以外の変更を行わない要件定義モードを規定する。
 
-### github.create-pull-request
+### github.create-pull-request（APM: `armyknife`）
 
 * ブランチでの作業完了後に Pull Request を作成する、または既存 PR の本文を更新する。
-* 差分の整理・[Pull Request テンプレート](.cursor/extra/github.create-pull-request/template.md) による本文作成・`gh pr create` / `gh pr edit` の利用を手順として規定する。
+* 実体: [`packages/armyknife/.apm/prompts/github.create-pull-request.prompt.md`](packages/armyknife/.apm/prompts/github.create-pull-request.prompt.md)
+* 差分の整理・[Pull Request テンプレート](packages/armyknife/.apm/assets/github.create-pull-request/template.md) による本文作成・`gh pr create` / `gh pr edit` の利用を手順として規定する。
 * 対象リポジトリ・base ブランチ・既存 Pull Request URL はオプションで指定できる。
 
 ### plan.init
@@ -118,16 +119,16 @@ dependencies:
 * 詳細設計ドキュメントや実装のレビュアー。指摘は要約せず一覧で親 Agent に渡す（`readonly`・バックグラウンド実行想定）。
 * [engineer.software-design](.cursor/skills/engineer.software-design/SKILL.md) と [詳細設計テンプレート](.cursor/extra/coding/design.md) を参照する。
 
-## `.cursor/extra/` 補助ファイル
+## 補助ファイル（テンプレート）
 
-Slash Command または SKILL からパス参照されるテンプレートである。
+Slash Command または SKILL からパス参照されるテンプレートである。`.cursor/extra/` または APM パッケージの `.apm/assets/` に置く。
 
 | ファイル | 参照元の例 |
 | --- | --- |
 | [extra/coding/design.md](.cursor/extra/coding/design.md) | `/coding.design`、`/coding.format-plan`（詳細設計モード）、詳細設計レビュー・ジュニア／シニア Engineer Agent |
 | [extra/coding/requirements.md](.cursor/extra/coding/requirements.md) | `/coding.requirement`、`/coding.format-plan`（要件定義モード）、要件レビュアー Agent、[engineer.software-requirement](.cursor/skills/engineer.software-requirement/SKILL.md) |
-| [extra/github.create-pull-request/template.md](.cursor/extra/github.create-pull-request/template.md) | `/github.create-pull-request` |
 | [extra/plan/plan-mode.md](.cursor/extra/plan/plan-mode.md) | `/plan.init` |
+| [assets/github.create-pull-request/template.md](packages/armyknife/.apm/assets/github.create-pull-request/template.md) | `/github.create-pull-request`（`armyknife`。install 後は `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/...`） |
 
 ## 収録SKILL一覧
 

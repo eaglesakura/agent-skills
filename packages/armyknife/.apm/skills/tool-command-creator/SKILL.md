@@ -27,19 +27,29 @@ slash-command は Agent が実行する再利用可能な手順書である。
 * このリポジトリでは `{領域}.{動詞や目的}` のドット区切りを推奨する（例: `coding.format-plan`, `github.create-pull-request`）
 * 本文 H1 はファイル名ではなく、内容要約のタイトル（例: `実装フロー / 要件定義`）にする
 
-## 共有アセット（`.cursor/extra/`）
+## 共有アセット
 
 コマンド本文に長い書式・テンプレート・複数コマンドで共有する資料を埋め込まない。
-関連アセットや、複数コマンドから参照するアセットは `.cursor/extra/` 配下に置く。
+
+### リポジトリ直下のコマンド（未パッケージ）
 
 * 配置: `.cursor/extra/{領域またはコマンド名}/...`
-  * 領域共有の例: `.cursor/extra/coding/requirements.md`（`/coding.requirement` と `/coding.format-plan` 等）
-  * コマンド専用の例: `.cursor/extra/github.create-pull-request/template.md`
+  * 領域共有の例: `.cursor/extra/coding/requirements.md`
 * コマンドからの参照は相対パス（例: `[requirements.md](../extra/coding/requirements.md)`）
 * `metadata.references` にも同じパスを載せる
-* 新規アセットが必要なら、コマンド Markdown と一緒に `.cursor/extra/` へ作成・更新する
 
-コマンド単体に閉じる短い例示だけなら本文に書いてよい。書式の正本・長いテンプレート・共有ルールは `.cursor/extra/` へ寄せる。
+### APM パッケージ内のコマンド
+
+* ソース配置: `.apm/assets/{領域またはコマンド名}/...`
+  * 例: `.apm/assets/github.create-pull-request/template.md`
+* 本文・`metadata.references` ではインストール先の 1 パスを直書きせず、`{assets}/...` メタ変数を使う
+  * 例: `{assets}/template.md`
+* frontmatter の `metadata.assets` に、実ディレクトリ候補を列挙する（YAML の Markdown リンクはクォートする）
+  * ソース相対（開発時）: `"[label](../assets/github.create-pull-request/)"`
+  * install 後ルート相対: `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/`
+* 実行時の実体解決は `workspace-resolve-file-path` に従う（文書相対とワークスペースルート相対の両方を試し、ヒットを示す）
+
+コマンド単体に閉じる短い例示だけなら本文に書いてよい。書式の正本・長いテンプレート・共有ルールはアセットへ寄せる。
 
 ## 必須: テンプレート準拠
 
