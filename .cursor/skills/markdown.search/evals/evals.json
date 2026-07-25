@@ -1,0 +1,38 @@
+{
+  "skill_name": "markdown.search",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。docs/ から ### DO: と ### DO NOT: を検索し、ヒットしたパスと見出しを outputs/result.md にまとめよ。可能なら mise exec 経由の grep を使う。",
+      "expected_output": "DO/DO NOT 一覧",
+      "files": [],
+      "expectations": [
+        "Wrote outputs/result.md listing DO and/or DO NOT hits",
+        "References docs/ paths from the sandbox",
+        "Mentions at least one DO heading text"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。『認証』に関係しそうなドキュメントを見出し検索で当たりをつけ、読むべきファイルを優先度付きで outputs/result.md に提案せよ。全文の無駄読みは避けた手順を transcript に残す。",
+      "expected_output": "見出しベースの候補リスト",
+      "files": [],
+      "expectations": [
+        "Wrote outputs/result.md with candidate files",
+        "Transcript or result describes header-first search",
+        "Includes at least one path under docs/"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "評価用サンドボックスをリポジトリルートとみなす。.cursor/skills/ は無いので docs/skills-like/ を SKILL ドキュメントの代用とする。関連しそうな『SKILL』文書を見つけ、追加で読むべきファイル名を outputs/result.md に書け。",
+      "expected_output": "skills-like 配下の候補",
+      "files": [],
+      "expectations": [
+        "Mentions docs/skills-like/ or a file within it",
+        "Wrote outputs/result.md",
+        "Does not claim to have edited production code"
+      ]
+    }
+  ]
+}

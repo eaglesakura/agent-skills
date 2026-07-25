@@ -1,63 +1,67 @@
 ---
 name: markdown.search
-description: ワークスペース内のドキュメント内容を検索・把握するSKILL。ワークスペース内のドキュメント検索に特化している。コード提案、レビュー等、積極的にこのSKILLを使用し、ナレッジを把握する。
+description: >-
+  ワークスペース内の Markdown ドキュメントを検索・概要把握する SKILL。
+  「docs を調べて」「DO / DO NOT を探して」「関連ドキュメントを把握してから実装／レビュー」、
+  コーディング・設計・レビュー前のナレッジ収集時は積極的に使う。
+  文書を新規に書く作業は markdown.documentation、lint 修正は markdown.fix。
+  Memory の中身を保存する作業は agent.memory.save。
 license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
 # ドキュメント検索
 
-* ワークスペース内のドキュメント（主に各リポジトリの `**/docs/**/*.md` ディレクトリ内）の構造は、基本的に次の内容に統一されている
-* 検索結果を確認し、必要に応じて完全な文書をロードする
+実装やレビューの前に、既存の `DO` / 構成ドキュメントを拾うための SKILL である。
+全文をいきなり読まず、見出しで当たりをつけてから必要なファイルだけロードする。
 
-## ドキュメントの基本的な配置
+## いつ使うか
 
-リポジトリルート(.gitディレクトリの配置されたディレクトリ) からの相対パスで、下記のディレクトリ/ファイルを優先する
+* コーディング・詳細設計・レビューの前にナレッジを集めたいとき
+* 「どこに書いてあるか」を探すとき
+* `### DO:` / `### DO NOT:` を横断したいとき
+
+## 優先して見る配置
+
+リポジトリルート（`.git` があるディレクトリ）からの相対パス:
 
 * `docs/`
 * `README.md`
 * `.cursor/skills/`
-* `.ai-agent/memory/`
+* `.ai-agent/memory/`（場所は `agent.temporary` に従う）
 
-## ドキュメント把握手順
+## 把握手順
 
-1. レベル2以上のヘッダから概要を調査
-    * レベル2以上のヘッダを確認することで、ドキュメント全体の大まかな内容と関連性を把握する
+### 1. 見出しで概要を取る
 
-    ```bash
-    grep -rH -E '^(# |## |### |#### )' --include='*.md' path/to/directory
-
-    # 実行例
-    grep -rH -E '^(# |## |### |#### )' --include='*.md' .cursor/skills
-    grep -rH -E '^(# |## |### |#### )' --include='*.md' docs
-    ```
-
-2. 実際のドキュメントを読み込み、詳細内容を把握
-    * 詳細はドキュメントを直接読み込む
-    * ヘッダは関連性の推測に使用し、内容は直接ドキュメントを参照する
-
-3. `.cursor/skills/` 配下のドキュメントは、ファイルパスからSKILL名が抽出できる。関連性が高いドキュメントに一致するSKILLは、必要に応じて追加ロードを行う。
-    * `.cursor/skills/{SKILL名}/SKILL.md`
-    * `.cursor/skills/{SKILL名}/**/*.md`
-
-## ナレッジベース把握
-
-* コーディングや設計を行う際は、 `### DO:` で始まるヘッダを検索し、積極的に従う
-* レビューを行う際は、 `### DO NOT:` で始まるヘッダを検索し、積極的に指摘する
+レベル2以上のヘッダから関連性を推測する。
 
 ```bash
-# DO（コーディング・設計時）
+grep -rH -E '^(# |## |### |#### )' --include='*.md' path/to/directory
+```
+
+### 2. 必要な本文だけ読む
+
+* ヘッダは当たり付け、中身は該当ファイルを直接読む
+* 無関係な全文ロードは避ける
+
+### 3. SKILL ドキュメントの追加ロード
+
+`.cursor/skills/{SKILL名}/SKILL.md` および配下 `*.md` がヒットしたら、関連 SKILL を必要に応じてロードする。
+
+## ナレッジベース（DO / DO NOT）
+
+* コーディング・設計時: `### DO:` を検索し従う
+* レビュー時: `### DO NOT:` を検索し指摘に使う
+
+```bash
 grep -rH -E '^### DO:' --include='*.md' path/to/directory
-
-# DO NOT（レビュー時）
 grep -rH -E '^### DO NOT:' --include='*.md' path/to/directory
-
-# 実行例
-grep -rH -E '^### DO:' --include='*.md' .cursor/skills
-grep -rH -E '^### DO NOT:' --include='*.md' .cursor/skills
-grep -rH -E '^### DO:' --include='*.md' docs
-grep -rH -E '^### DO NOT:' --include='*.md' docs
-
-# DO / DO NOT をまとめて抽出する場合
 grep -rH -E '^### DO( NOT)?:' --include='*.md' path/to/directory
 ```
+
+## 出力の目安
+
+* ヒットしたパスと見出しの一覧
+* 採用すべき `DO` / 避けるべき `DO NOT` の要約
+* 次に読むべきファイルの提案
