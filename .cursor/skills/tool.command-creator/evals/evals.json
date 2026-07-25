@@ -3,12 +3,13 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "既存の `/coding.format-plan` を、現行の slash-command テンプレートに準拠する形で作り直してください。要件: YAML metadata（input/output/references）、入力/出力セクション、Mermaid flowchart、入力があるのでバリデーション表（✅️/⛔️）、非対話・不明確時は「{XXXX} が不明確です。\\nコマンドを終了します。」で終了。関連コマンド `/coding.requirement` と `/coding.design` を references に含める。入力ファイルは inputs/coding.format-plan.md。完成物を outputs/coding.format-plan.md に保存。実リポジトリの .cursor/commands は変更しない。",
-      "expected_output": "テンプレート準拠の coding.format-plan.md。flowchart、バリデーション、非対話エラー文言、関連コマンド references。",
+      "prompt": "既存の `/coding.format-plan` を、現行の slash-command テンプレートに準拠する形で作り直してください。要件: YAML metadata（input/output/references/example）、入力/出力セクション、Mermaid flowchart、入力があるのでバリデーション表（✅️/⛔️）、非対話・不明確時は「{XXXX} が不明確です。\\nコマンドを終了します。」で終了。関連コマンド `/coding.requirement` と `/coding.design` を references に含める。入力ファイルは inputs/coding.format-plan.md。完成物を outputs/coding.format-plan.md に保存。実リポジトリの .cursor/commands は変更しない。",
+      "expected_output": "テンプレート準拠の coding.format-plan.md。flowchart、バリデーション、非対話エラー文言、関連コマンド references、metadata.example。",
       "files": ["evals/files/coding.format-plan.md"],
       "expectations": [
         "Output file coding.format-plan.md exists under outputs/",
         "YAML frontmatter includes metadata.input and metadata.output lists",
+        "metadata.example includes at least one entry starting with /coding.format-plan",
         "metadata.references includes /coding.requirement and /coding.design",
         "Body has ## 入力 and ## 出力 sections with Required or Optional headings",
         "Body has a mermaid flowchart under ## 手順",
@@ -20,12 +21,13 @@
     },
     {
       "id": 2,
-      "prompt": "コミット前チェック用の slash-command `/git.preflight` を新規作成してください。入力は Optional の対象パス（省略時はリポジトリ全体）。出力はチェック結果レポート。現行テンプレート準拠（YAML metadata、flowchart、バリデーション表、非対話・不明確時エラー文言）。実リポジトリの .cursor/commands は変更せず、outputs/git.preflight.md に保存。",
-      "expected_output": "テンプレート準拠の git.preflight.md。Optional 入力、flowchart、バリデーション、エラー文言、ガードレール。",
+      "prompt": "コミット前チェック用の slash-command `/git.preflight` を新規作成してください。入力は Optional の対象パス（省略時はリポジトリ全体）。出力はチェック結果レポート。現行テンプレート準拠（YAML metadata に example 必須、flowchart、バリデーション表、非対話・不明確時エラー文言）。実リポジトリの .cursor/commands は変更せず、outputs/git.preflight.md に保存。",
+      "expected_output": "テンプレート準拠の git.preflight.md。Optional 入力、flowchart、バリデーション、エラー文言、ガードレール、metadata.example。",
       "files": [],
       "expectations": [
         "Output file git.preflight.md exists under outputs/",
         "YAML frontmatter includes metadata.input and metadata.output lists",
+        "metadata.example includes at least one entry starting with /git.preflight",
         "Optional target path input is documented (omit means whole repo)",
         "Check-result report is documented as output",
         "Body has a mermaid flowchart under ## 手順",
@@ -37,20 +39,23 @@
     },
     {
       "id": 3,
-      "prompt": "既存の `coding.comment.md` を現行 slash-command テンプレートに寄せて更新してください。要件: YAML metadata、flowchart、バリデーション表、非対話・不明確時エラー文言。既存ナレッジ（主語・スペーシング・改行・example・削除禁止）は維持。入力ファイルは inputs/coding.comment.md。outputs/coding.comment.md に保存。実リポジトリの .cursor/commands は変更しない。",
-      "expected_output": "テンプレート準拠の coding.comment.md。既存ナレッジ維持、flowchart、バリデーション、エラー文言。",
+      "prompt": "既存の `coding.comment.md` を現行 slash-command テンプレートに寄せて更新してください。要件: YAML metadata（input/output/references/example）、flowchart、バリデーション表、非対話・不明確時エラー文言。references には `/coding.*` を含める。ナレッジベースは markdown.documentation と同じ `### DO:` / `### DO NOT:` 見出し形式にする。既存ナレッジ（主語・スペーシング・改行・example・削除禁止）は維持。入力ファイルは inputs/coding.comment.md。outputs/coding.comment.md に保存。実リポジトリの .cursor/commands は変更しない。",
+      "expected_output": "テンプレート準拠の coding.comment.md。metadata.example、/coding.* references、DO/DO NOT ナレッジ、flowchart、バリデーション、エラー文言。",
       "files": ["evals/files/coding.comment.md"],
       "expectations": [
         "Output file coding.comment.md exists under outputs/",
         "YAML frontmatter includes metadata.input and metadata.output lists",
+        "metadata.example includes at least one entry starting with /coding.comment",
+        "metadata.references includes /coding.*",
         "Required code-scope input is documented",
         "Body has a mermaid flowchart under ## 手順",
         "Validation section with ✅️/⛔️ table exists because inputs are present",
         "Non-interactive error format 「が不明確です」「コマンドを終了します」 is documented",
-        "Knowledge about 主語の有無 is preserved",
-        "Knowledge about Japanese/English spacing (DO / DO NOT) is preserved",
+        "Knowledge base uses ### DO: and ### DO NOT: heading format",
+        "Knowledge about 主語省略 is preserved under DO/DO NOT headings",
+        "Knowledge about Japanese/English spacing is preserved under DO/DO NOT headings",
         "Knowledge about 改行 and function example comments is preserved",
-        "Rule that inline comments are add/update only is preserved",
+        "Rule that inline comments are add/update only (no delete) is preserved",
         "No unreplaced template placeholders or HTML comment scaffolding remain"
       ]
     }

@@ -26,6 +26,20 @@ slash-command は Agent が実行する再利用可能な手順書である。
 * ファイル名がコマンド名になる（例: `coding.requirement.md` → `/coding.requirement`）
 * このリポジトリでは `{領域}.{動詞や目的}` のドット区切りを推奨する（例: `coding.format-plan`, `github.create-pull-request`）
 
+## 共有アセット（`.cursor/extra/`）
+
+コマンド本文に長い書式・テンプレート・複数コマンドで共有する資料を埋め込まない。
+関連アセットや、複数コマンドから参照するアセットは `.cursor/extra/` 配下に置く。
+
+* 配置: `.cursor/extra/{領域またはコマンド名}/...`
+  * 領域共有の例: `.cursor/extra/coding/requirements.md`（`/coding.requirement` と `/coding.format-plan` 等）
+  * コマンド専用の例: `.cursor/extra/github.create-pull-request/template.md`
+* コマンドからの参照は相対パス（例: `[requirements.md](../extra/coding/requirements.md)`）
+* `metadata.references` にも同じパスを載せる
+* 新規アセットが必要なら、コマンド Markdown と一緒に `.cursor/extra/` へ作成・更新する
+
+コマンド単体に閉じる短い例示だけなら本文に書いてよい。書式の正本・長いテンプレート・共有ルールは `.cursor/extra/` へ寄せる。
+
 ## 必須: テンプレート準拠
 
 出力は必ず [assets/command.md](./assets/command.md) に従う。
@@ -74,17 +88,37 @@ frontmatter の `metadata` で、実行に必要な契約を先に固定する�
 | `help` | 使い方の短い説明（チャットで `/command` した後に何を渡せばよいか） |
 | `input` | 入力の一覧。各要素は `{Required \| Optional}: {ラベル}` |
 | `output` | 出力の一覧。各要素は `{Required \| Optional}: {ラベル}` |
+| `example` | 利用者向けの呼び出し例。チャットに打つ文字列を列挙する |
+
+### example の記載規則
+
+利用者が `/` で呼ぶときの具体例を `example` に載せる。`help` の抽象説明だけでは呼び出し方が伝わりにくいためである。
+
+* 各要素は、実際にチャットへ入力する文字列（`/コマンド名` から始まる）
+* 最低1件。引数あり／なし、典型的な追加プロンプトなど、利用パターンが分かれるなら複数件
+* `input` の Required / Optional と矛盾しない（Required があるのに引数なし例だけのときは、引数あり例も添える）
+
+```yaml
+example:
+  - >-
+    /coding.format-plan
+  - >-
+    /coding.format-plan .ai-agent/plan/foo.md を要件定義モードで整形
+```
 
 ### references の記載規則
 
 関連があれば必ず `references` に載せる。特に次を優先する。
 
 * 前後関係のある slash-command（例: `/coding.requirement` → `/coding.design`）
+* 同一領域の補助コマンドで、個別列挙よりファミリー参照が適切な場合は `/coding.*` のように記載する
 * 実行時にロードすべき SKILL
-* 書式・テンプレート・外部ドキュメント（Markdown リンク可）
+* `.cursor/extra/` 配下の共有アセット・書式テンプレート（Markdown リンク）
+* その他の関連ドキュメント（Markdown リンク可）
 
 ```yaml
 references:
+  - /coding.*
   - /coding.requirement
   - /coding.design
   - engineer.software-requirement
@@ -92,6 +126,7 @@ references:
 ```
 
 関連が無い場合は空配列にせず、少なくとも自分自身の位置づけが分かる参照（親ワークフローや補助コマンド）を残すか、意図的に「単独完結」と `help` に書く。
+ファミリー参照（`/領域.*`）と個別コマンドは併用してよい。補助コマンドはファミリー、パイプライン前後は個別、が典型である。
 
 ## 本文セクション
 
@@ -102,7 +137,7 @@ references:
 3. **出力** — 成果物の場所・形式・成功条件。例があれば `####` で示す。出力定義が取れない場合のエラーも書く
 4. **手順** — 先に Mermaid フローチャート、続けて（入力があるなら）固定見出し `### バリデーション`、その後 `### ステップ{n}`。分岐は `ステップ{n-A}` 等で明示する
 5. **ガードレール** — 非対話・不明確時エラー終了・その他の禁止事項
-6. **ナレッジベース** — 繰り返し効く判断基準（なければ見出しだけ残さず省略してよい）
+6. **ナレッジベース** — 繰り返し効く判断基準。`### DO:` / `### DO NOT:` 見出し形式（`markdown.documentation` と同じ）。なければセクションごと省略
 
 ## バリデーションステップ（入力がある場合は必須）
 
@@ -187,8 +222,9 @@ flowchart TD
 
 ### ステップ2: metadata の下書き
 
-`input` / `output` / `references` / `help` を先に書き、契約を固定する。
+`input` / `output` / `references` / `help` / `example` を先に書き、契約を固定する。
 関連コマンドがある場合は、呼び出し順や前提関係が `help` か `概要` から分かるようにする。
+`example` には利用者が打つ `/コマンド名 ...` の具体例を最低1件入れる。
 
 ### ステップ3: 手順とフローチャート
 
@@ -200,16 +236,20 @@ flowchart TD
 ### ステップ4: 本文の完成と配置
 
 * [assets/command.md](./assets/command.md) に沿って Markdown を完成させる
+* 共有アセット・長いテンプレートが必要なら `.cursor/extra/{領域またはコマンド名}/` に配置し、コマンドから相対リンクする
 * `.cursor/commands/{command-name}.md` へ書き出す（改訂時は差分の意図を保つ）
 * プレースホルダ・説明用 HTML コメントが残っていないことを確認する
 
 ### ステップ5: 自己レビュー
 
 * [ ] metadata の input/output と本文の「入力」「出力」が一致している
-* [ ] references に関連コマンド・SKILL・文書が載っている（ある場合）
+* [ ] metadata.example に `/コマンド名` から始まる利用者向け呼び出し例が1件以上ある
+* [ ] references に関連コマンド・SKILL・`.cursor/extra/` 文書が載っている（ある場合）。補助コマンドなら `/領域.*` も検討する
+* [ ] 共有・長文アセットは `.cursor/extra/` にあり、コマンド本文から相対リンクされている（ある場合）
 * [ ] フローチャートがあり、手順見出しと対応している
 * [ ] `metadata.input` がある場合: 見出しが正確に `### バリデーション` である（`ステップN: バリデーション` ではない）
 * [ ] 同上: 表が `| Label | 値 | バリデーション |` で、判定セルが ✅️/⛔️ である
+* [ ] ナレッジベースがある場合: 見出しが `### DO:` / `### DO NOT:` 形式である（トピック見出し＋箇条書き DO ではない）
 * [ ] 非対話・不明確時エラー終了・エラー文言フォーマットが手順とガードレールに書かれている
 * [ ] ガードレールが実行時の禁止事項として具体的である
 * [ ] ファイル名が `/` で呼びたいコマンド名と一致している
