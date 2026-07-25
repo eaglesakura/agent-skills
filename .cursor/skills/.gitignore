@@ -5,8 +5,7 @@
 *-eval-review/
 agent-skills-eval-review/
 
-# 評価実行の一時マップ・フィードバック
-*-eval-run-map.json
-agent-skills-eval-run-map.json
+# 評価実行の一時マップ・フィードバック（コミット不要）
+*eval-run-map*.json
 feedback.json
 **/feedback.json

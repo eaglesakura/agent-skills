@@ -21,7 +21,7 @@
 
 各パッケージの `res/strings.csv` に、以下のフォーマットで記述する。
 
-* **ファイルパス**: `app_packages/<category>/<package_name>/res/strings.csv`
+* **ファイルパス**: `<package>/res/strings.csv`（リポジトリの package 配置に従う）
 * **フォーマット**: CSV形式
 * **ヘッダー**: `id,ja,description` (必要に応じて他の言語コードを追加可能だが、現状は `ja` が主)
 
@@ -52,7 +52,7 @@ dart run monolith_runner:localization
 各パッケージの `lib/src/strings.dart` (または適切な場所) に、アクセサクラスを実装する。
 生成された `L10nStringsMixin` を mixin することで、定義した文字列にアクセスできる。
 
-**Example:** `app_packages/screen/feature/home2/lib/src/strings.dart`
+**Example:** `lib/src/strings.dart`（パッケージ名はプロジェクトに合わせる）
 
 ```dart
 import 'package:meta/meta.dart';
@@ -133,7 +133,8 @@ localization:
 `dart run monolith_runner:localization` 実行時、ARB 生成直後に次が出力される。
 
 ```text
-app_packages/foundation/resources/lib/gen/strings_test_helper.dart
+${package_name}/${test_helper_path}
+# 例: foundation_resources/lib/gen/strings_test_helper.dart
 ```
 
 * `languages` の各言語について getter が生成される（例: `StringsTestHelper.ja`）
