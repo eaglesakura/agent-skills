@@ -12,6 +12,11 @@ description: >-
 license: MIT License
 metadata:
   author: "@eaglesakura"
+  references:
+    - skill-creator
+    - workspace-resolve-agent-assets
+    - tool-command-creator
+    - tool-sub-agent-creator
 ---
 # Tool / Skill Creator Extension
 
@@ -87,6 +92,8 @@ Agent / パッケージが共有するテンプレートや雛形を SKILL か�
 * **文書相対**（この `SKILL.md` から）または **リポジトリルート相対**
 * 開発時（ソース相対）と install 後（`apm_modules/...` 等のルート相対）の両方を並べると、展開先でも解決しやすい
 * Markdown リンク `[label](path)` 形式でもよい（`path` をディレクトリとして使う）
+* SKILL 改訂・新規ドラフトを提案するとき、本文に `{assets}/` が出るなら **同じ成果物に** `## アセットディレクトリ` ブロックを必ず含める（後回しにしない）
+* 見出し位置は、手順・実行の **前**（導入の直後〜入力の前）がよい。末尾にだけ置くと読み手が探索先を見落とす
 
 ```markdown
 ## アセットディレクトリ
@@ -100,6 +107,13 @@ Agent / パッケージが共有するテンプレートや雛形を SKILL か�
 ```markdown
 * `{assets}/coding/requirements.md`（要件定義フォーマット）をロードする
 ```
+
+#### DO NOT（アセット）
+
+* `{assets}/` 参照だけ書いて探索先セクションを省略する
+* `metadata.assets` だけを正本にする
+* 壊れた `../{assets}/file.md` 形式のリンクを残す
+* アセット不要な SKILL に空の `## アセットディレクトリ` を足す
 
 #### 実行時のパス解決
 
@@ -127,7 +141,9 @@ Agent / パッケージが共有するテンプレートや雛形を SKILL か�
 
 * [ ] コマンド例に `mise` / `fvm` / `asdf` 等の wrapper が無い
 * [ ] `{assets}/` を使う場合: `## アセットディレクトリ` に探索先が列挙されている（使わないならセクション無し）
+* [ ] `{assets}/` がある成果物に、文書相対と（可能なら）install 後ルート相対の両方がある
 * [ ] `{assets}/` の実行時解決が `workspace-resolve-agent-assets` 前提になっている（必要な場合）
+* [ ] 旧 `metadata.assets` だけを正本にしていない
 
 ## 境界
 

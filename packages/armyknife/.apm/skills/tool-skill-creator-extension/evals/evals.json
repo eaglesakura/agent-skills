@@ -1,0 +1,59 @@
+{
+  "skill_name": "tool-skill-creator-extension",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "次の SKILL 断片を portable なコマンド例に直した Markdown を outputs/skill_snippet.md に書いて。mise/fvm は本文に残さない。共有アセット参照は無い。\n\n```markdown\n## 手順\n\n```bash\nmise exec -- dart analyze\nfvm flutter test\n```\n```",
+      "expected_output": "dart analyze / flutter test のみ。アセット節なし。",
+      "files": [],
+      "expectations": [
+        "Contains dart analyze without mise",
+        "Contains flutter test without fvm",
+        "Does not contain mise exec",
+        "Does not contain fvm",
+        "Does not invent ## アセットディレクトリ when unused"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "次の旧 SKILL 断片を現行ルールに合わせて改訂し、完成した SKILL 断片を outputs/skill_snippet.md に出力せよ。共有テンプレート `{assets}/coding/requirements.md` をロードする手順がある。パッケージ名は coding-xm3 想定。SKILL.md は packages/coding-xm3/.apm/skills/example-req/SKILL.md にあるものとする。\n\n```markdown\n---\nname: example-req\ndescription: 要件を書く\nmetadata:\n  assets:\n    - ../../assets/\n---\n# 例 / 要件\n\n## 手順\n\n* [要件定義フォーマット](../{assets}/coding/requirements.md) をロードする\n* mise exec -- dart -h で確認する\n```",
+      "expected_output": "## アセットディレクトリ あり、{assets}/ 参照、mise 除去、metadata.assets なし、壊れた ../{assets} リンクなし。",
+      "files": [],
+      "expectations": [
+        "Contains heading ## アセットディレクトリ",
+        "Lists ../../assets/ or similar document-relative assets dir",
+        "Lists apm_modules path containing coding-xm3/.apm/assets",
+        "Uses {assets}/coding/requirements.md without ../{assets}",
+        "Does not use metadata.assets as the primary source",
+        "Does not contain mise exec",
+        "Mentions workspace-resolve-agent-assets or asset resolve via that skill"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "新規 SKILL のドラフトを outputs/skill_snippet.md に書け。内容: Go のユニットテスト実行手順のみ（共有アセット・テンプレート不要）。コマンドは portable。",
+      "expected_output": "go test 等のみ。## アセットディレクトリ を無理に追加しない。",
+      "files": [],
+      "expectations": [
+        "Contains go test without mise/asdf",
+        "Does not contain ## アセットディレクトリ",
+        "Does not contain {assets}/"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "次の SKILL 断片を、パッケージ横断で再利用できる形に直して outputs/skill_snippet.md に書いて。SKILL の置き場は packages/coding-xm3/.apm/skills/example-req/SKILL.md。テンプレート実体は packages/coding-xm3/.apm/assets/coding/requirements.md。\n\n```markdown\n---\nname: example-req\ndescription: 要件を書く\nmetadata:\n  assets:\n    - '[assets/](../../assets/)'\n---\n# 例 / 要件\n\n## 実行\n\n* [要件定義フォーマット](../{assets}/coding/requirements.md) を読む\n* mise exec -- dart analyze\n```",
+      "expected_output": "プロンプトがアセット節名を明示しなくても ## アセットディレクトリ と {assets}/ と resolve 言及、mise除去ができる。",
+      "files": [],
+      "expectations": [
+        "Contains heading ## アセットディレクトリ",
+        "Lists ../../assets/ or similar document-relative assets dir",
+        "Lists apm_modules path containing coding-xm3/.apm/assets",
+        "Uses {assets}/coding/requirements.md without ../{assets}",
+        "Does not use metadata.assets as the primary source",
+        "Does not contain mise exec",
+        "Mentions workspace-resolve-agent-assets or asset resolve via that skill"
+      ]
+    }
+  ]
+}
