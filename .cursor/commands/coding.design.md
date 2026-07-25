@@ -195,14 +195,25 @@ flowchart TD
 
 ### ステップ2: 実装計画のレビュー
 
-* `/coding-assistant.software-design-reviewer` Sub Agent を並列実行し、複数視点でレビューする
-  * 監査視点:
-    * ジュニアが実装可能な具体差分があるか
-    * 指定要件を満たしているか
+* Sub Agentによるレビュー実施
+  * `/coding-assistant.software-design-reviewer` Sub Agent を実行してレビューを受ける
+    * 監査者視点で、指定要件を満たしているか
     * プロジェクトのベストプラクティス・既存コードから大きく乖離していないか
     * 関連ドキュメントが反映されているか
-    * セキュリティおよびコーディングのアンチパターンに抵触していないか
-  * 実装視点: 上記と同じ観点で、実装可能性の側から査読する
+    * セキュリティおよびコーディングの一般的アンチパターンに抵触していないか
+  * `/coding-assistant.software-design-reviewer` Sub Agent を実行してレビューを受ける
+    * 実装者視点で、ジュニアが実装可能な具体差分があるか
+  * `/coding-assistant.software-design-audit` Sub Agent を実行し、詳細設計の DO NOT 抵触を監査する
+
+    ```markdown
+    # DO NOT 監査
+
+    * `docs/` および `{skill}/references/` の `DO NOT` 見出しと、詳細設計を突合してください。
+    * 監査結果を定型フォーマットで親Agentに伝えてください。
+
+    計画ファイル: [{計画名}]({path/to/plan.md})
+    ```
+
 * すべてのレビュー完了を待つ
 * 指摘内容を「レビュー指摘内容」の形式で整理して出す
   * `コメント不足` など非破壊的で悪影響のない指摘は推奨度「必須」としてよい
@@ -213,6 +224,7 @@ flowchart TD
   * 2人以上のレビュアーが指摘 → 反映する
   * 「具体性が足りない」旨の指摘 → 反映する
   * 内容を判断し適切と考える指摘 → 反映する
+  * DO NOT監査結果 → 反映する
   * その他は保留とする
 * `/coding-assistant.plan-reviewer` Sub Agent で、ジュニア視点の計画実現性を確認する
 
