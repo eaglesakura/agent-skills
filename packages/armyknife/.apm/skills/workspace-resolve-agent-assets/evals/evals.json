@@ -1,0 +1,39 @@
+{
+  "skill_name": "workspace-resolve-agent-assets",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "コマンド本文に `{assets}/template.md` とあり、frontmatter は次のとおり。実ファイル候補をどう列挙し、どれを採用する？短く手順で答えて。\n\n```yaml\nmetadata:\n  assets:\n    - \"[github.create-pull-request/](../assets/github.create-pull-request/)\"\n    - apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/\n```\n\n基準ファイル: `packages/armyknife/.apm/prompts/github.create-pull-request.prompt.md`",
+      "expected_output": "metadata.assets の各DIRについて文書相対とルート相対を試し、ヒットを列挙。1件なら採用、複数なら列挙順の先勝ち（非対話）",
+      "files": [],
+      "assertions": [
+        "Mentions reading metadata.assets and treating {assets}/ as a metavariable (not a literal folder)",
+        "Tries both document-relative and workspace/repo-root-relative bases for each assets candidate",
+        "Includes a candidate path under .apm/assets/github.create-pull-request/template.md (via ../assets from prompts/)",
+        "Includes a candidate under apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/...",
+        "Explains hit handling: list hits; if one use it; if multiple show them / first-hit for non-interactive"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "次のコマンド断片がある。`{assets}/coding/design.md` を解決するとき、候補ディレクトリはどこから何の順で読む？短く答えて。\n\n```markdown\n## アセットディレクトリ\n\n* `../assets/`\n* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`\n```",
+      "expected_output": "## アセットディレクトリ を先に読む。metadata.assets は互換で後続。",
+      "files": [],
+      "assertions": [
+        "Says to read ## アセットディレクトリ (body section) first",
+        "Mentions metadata.assets only as optional/compat fallback if at all",
+        "Treats listed paths as directories to join with coding/design.md suffix"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "`{assets}/foo.md` と書かれているが候補を全部試してもファイルが無い。どうする？",
+      "expected_output": "試した候補とルールを報告し、推測で別ファイルを読まない",
+      "files": [],
+      "assertions": [
+        "Says not to guess-read a different file",
+        "Says to report tried candidate paths / resolution rules"
+      ]
+    }
+  ]
+}

@@ -1,35 +1,47 @@
 ---
 license: MIT License
+description: >-
+  指定範囲のコードコメント粒度をプロジェクト方針に合わせて適正化する。
+  引数・選択範囲・開いているファイル等から対象スコープを渡す。
+  既定はコメントの追加・更新のみ（削除しない）。
 metadata:
   author: '@eaglesakura'
-  references:
-  - /coding.*
-  help: 指定範囲のコードコメント粒度をプロジェクト方針に合わせて適正化する。 引数・選択範囲・開いているファイル等から対象スコープを渡す。 既定はコメントの追加・更新のみ（削除しない）。
-  input:
-  - Required: 対象コードのスコープ
-  - Optional: コメント操作方針
-  output:
-  - Required: コメントを適正化した対象コード
-  - Optional: 変更サマリ
-  example:
-  - /coding.comment path/to/user_service.go
-  - /coding.comment path/to/preference_key.dart の PreferenceKey
-  - /coding.comment 選択中の FetchUser 関数
-  - /coding.comment path/to/user_service.go を追加のみでコメント適正化
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
-description: 指定範囲のコードコメント粒度をプロジェクト方針に合わせて適正化する。 引数・選択範囲・開いているファイル等から対象スコープを渡す。 既定はコメントの追加・更新のみ（削除しない）。
 ---
+
 # 実装フロー / コメント粒度の適正化
 
-## 概要
+## Help情報
 
 指定範囲のコードコメントの粒度を、プロジェクト方針に合わせて適正化する。
 `/coding.execute` の品質フォローアップ等から参照される補助コマンドである。
 
 対象言語のコーディング規約 SKILL（例: `golang-coding-rules` / `flutter-coding-rules`）と、
 各 `references/code_comment.md` を適用したうえで、コメントの追加・更新を行う。
+
+### Example
+
+```text
+/coding.comment path/to/user_service.go
+```
+
+```text
+/coding.comment path/to/preference_key.dart の PreferenceKey
+```
+
+```text
+/coding.comment 選択中の FetchUser 関数
+```
+
+```text
+/coding.comment path/to/user_service.go を追加のみでコメント適正化
+```
+
+## 関連ファイル
+
+* `/coding.*`
+* `/coding.execute`
+* `golang-coding-rules`
+* `flutter-coding-rules`
 
 ## 入力
 
@@ -105,13 +117,13 @@ flowchart TD
 
 | Label | 値 | バリデーション |
 | --- | --- | --- |
-| 対象コードのスコープ | {確定したパスと範囲、または空} | ✅️ / ⛔️ |
-| コメント操作方針 | {確定した方針、または「追加・更新のみ」（省略時既定）} | ✅️ / ⛔️ |
+| 対象コードのスコープ | {確定したパスと範囲、または空} | ✅️ |
+| コメント操作方針 | {確定した方針、または「追加・更新のみ」（省略時既定）} | ✅️ |
 
-* 対象コードのスコープがファイルパスと範囲として特定できない場合は `⛔️`
-* コメント操作方針が省略されている場合は既定 `追加・更新のみ` を採用し `✅️`
-* コメント操作方針に矛盾・解釈不能な指定がある場合は `⛔️`
-* 1つでも `⛔️` なら対話せずエラー終了する
+* 対象コードのスコープがファイルパスと範囲として特定できない場合は `対象コードのスコープ` を ⛔️ とする
+* コメント操作方針が省略されている場合は既定 `追加・更新のみ` を採用し ✅️ とする
+* コメント操作方針に矛盾・解釈不能な指定がある場合は `コメント操作方針` を ⛔️ とする
+* 1つでも ⛔️ なら対話せずエラー終了する
 
 ```markdown
 対象コードのスコープ が不明確です。
@@ -150,7 +162,7 @@ flowchart TD
 ## ガードレール
 
 * ユーザーと対話しない（確認質問・選択肢提示・追加情報の依頼を行わない）
-* 入力・出力・手順が不明確な場合はエラー終了する
+* 入力・出力が不明確な場合はエラー終了する
 * エラー時は次の形式のみを返し、処理を止める:
 
 ```markdown

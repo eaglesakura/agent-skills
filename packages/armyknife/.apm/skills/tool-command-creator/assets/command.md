@@ -1,24 +1,7 @@
 ---
 license: {Optional, ライセンス}
-metadata:
-    author: {Optional, 作成者}
-    references:
-        - {関連するコマンド}
-        - {関連するSKILL}
-        - [関連する共有アセット](../extra/{領域またはコマンド名}/{file}.md)
-        - [関連するファイル]({path/to/document.md})
-    help: >-
-        {利用方法等のヘルプテキスト}
-    input:
-        - {Required | Optional}: {入力値のラベル}
-    output:
-        - {Required | Optional}: {出力値のラベル}
-    example:
-        # 利用者向けの呼び出し例（チャットでどう打つか）
-        - >-
-            /{コマンド名}
-        - >-
-            /{コマンド名} {追加プロンプトの例}
+description: >-
+    {このコマンドの目的、大まかな処理内容等の概要説明}
 ---
 
 # {領域} / {内容の要約}
@@ -32,12 +15,43 @@ metadata:
 * ファイル名（`coding.requirement.md`）や `/coding.requirement` はタイトルに使わない
  -->
 
-## 概要
+## Help情報
 
 <!-- 
-* このコマンドの利用目的
-* 共有する書式・テンプレートがある場合は `.cursor/extra/` 配下を参照する
-  例: [requirements.md](../extra/coding/requirements.md)
+利用方法等のテキスト.
+ -->
+
+### Example
+
+<!-- 
+利用例等の追加情報.
+ -->
+
+```text
+/{コマンド名}
+```
+
+```text
+/{コマンド名} {追加プロンプトの例}
+```
+
+## 関連ファイル
+
+<!-- 
+* 関連ファイル、SKILL等がある場合は箇条書きで記載
+ -->
+
+## アセットディレクトリ
+
+<!-- 
+* `{assets}/...` を本文で使う場合に記載する（使わないならセクションごと省略可）
+* 参照すべきアセットディレクトリ一覧を箇条書きで記載する
+* `{assets}/example.txt` のように書かれた参照は、ここに列挙したディレクトリから検索する
+* 各行は「このファイルからの相対パス」または「リポジトリルートからの相対パス」
+* 開発時（ソース相対）と install 後（ルート相対）の両方を並べると解決が安定する
+  例:
+  * `../assets/github.create-pull-request/`
+  * `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/`
  -->
 
 ## 入力
@@ -106,7 +120,7 @@ flowchart TD
 ### バリデーション
 
 <!-- 
-* metadata.input が1件以上あるコマンドでは必須（Required / Optional を問わない）
+* 本文「入力」が1件以上あるコマンドでは必須（Required / Optional を問わない）
 * 見出し名は正確に「### バリデーション」（「### ステップ1: バリデーション」等にしない）
 * 入力値を全て列挙し、妥当性を検証する
 * 表の列は固定: Label | 値 | バリデーション

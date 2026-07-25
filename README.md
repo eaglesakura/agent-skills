@@ -131,7 +131,7 @@ dependencies:
 
 ## 補助ファイル（テンプレート）
 
-Slash Command または SKILL から `{assets}/...` で参照する。正本は各パッケージの `.apm/assets/`。解決は `workspace-resolve-file-path` に従う。
+Slash Command または SKILL から `{assets}/...` で参照する。正本は各パッケージの `.apm/assets/`。解決は `workspace-resolve-agent-assets` に従う。
 
 | ファイル | 参照元の例 |
 | --- | --- |

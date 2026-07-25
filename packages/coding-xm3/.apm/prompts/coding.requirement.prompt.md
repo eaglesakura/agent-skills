@@ -1,43 +1,18 @@
 ---
 license: MIT License
+description: >-
+  要件をもとに計画ファイル（`.ai-agent/plan/*.md`）を作成・更新する。
+  Coding-Commands のステップ1。引数または文脈に要件を渡す。
+  既存計画を更新する場合はパスまたは計画名を添える。
 metadata:
   author: '@eaglesakura'
-  references:
-  - /coding.*
-  - engineer-software-requirement
-  - '`{assets}/coding/requirements.md`'
-  help: 要件をもとに計画ファイル（`.ai-agent/plan/*.md`）を作成・更新する。 Coding-Commands のステップ1。引数または文脈に要件を渡す。 既存計画を更新する場合はパスまたは計画名を添える。
-  input:
-  - Required: 要件定義情報
-  - Optional: 対象の計画ファイル
-  output:
-  - Required: 計画ファイル
-  - Required: レビュー指摘内容
-  - Required: 要件定義結果
-  example:
-  - '/coding.requirement  # 要件
-
-    * ログイン後にホームへ遷移する
-
-    ## 実装要件
-
-    * MVVMに従う
-
-    ## テスト要件
-
-    * Golden Testが必要 * E2Eテストは手動で行う'
-  - /coding.requirement .ai-agent/plan/login-home.md の要件を修正し再レビュー
-  - /coding.requirement 要件の修正を行い、再レビュー
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
-description: 要件をもとに計画ファイル（`.ai-agent/plan/*.md`）を作成・更新する。 Coding-Commands のステップ1。引数または文脈に要件を渡す。 既存計画を更新する場合はパスまたは計画名を添える。
 ---
+
 # 実装フロー / 要件定義
 
-## 概要
+## Help情報
 
-このコマンドは、要件をもとに関連アーキテクチャ・既存実装・関連資料を確認し、実装に進む前の要件定義を計画ファイルへ落とし込むためのものである。
+要件をもとに関連アーキテクチャ・既存実装・関連資料を確認し、実装に進む前の要件定義を計画ファイルへ落とし込む。
 詳細設計や実装差分は扱わない。それらは後続の `/coding.design`・`/coding.execute` の役割である。
 
 * Coding-Commands のステップ1である
@@ -47,6 +22,42 @@ description: 要件をもとに計画ファイル（`.ai-agent/plan/*.md`）を�
 * 計画ファイルとは、`.ai-agent/plan/*.md` に保存された「要件定義・詳細設計・実装手順」等が記載されたファイルである
 * 出力フォーマットの正本は `{assets}/coding/requirements.md` である
 * 実行時は `engineer-software-requirement` SKILL をロードする
+
+### Example
+
+```text
+/coding.requirement
+# 要件
+* ログイン後にホームへ遷移する
+
+## 実装要件
+* MVVMに従う
+
+## テスト要件
+* Golden Testが必要
+* E2Eテストは手動で行う
+```
+
+```text
+/coding.requirement .ai-agent/plan/login-home.md の要件を修正し再レビュー
+```
+
+```text
+/coding.requirement 要件の修正を行い、再レビュー
+```
+
+## 関連ファイル
+
+* `/coding.*`
+* `/coding.design`
+* `/coding.execute`
+* `engineer-software-requirement`
+* `{assets}/coding/requirements.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 入力
 
@@ -213,7 +224,7 @@ flowchart TD
 ## ガードレール
 
 * ユーザーと対話してコマンド入力を補完しない。確認質問・選択肢提示・追加情報の依頼で入力を埋めない
-* 入力・出力・手順が不明確な場合は次の形式のみを返して終了する
+* 入力・出力が不明確な場合は次の形式のみを返して終了する
 
 ```markdown
 {XXXX} が不明確です。

@@ -8,21 +8,13 @@ is_background: false
 license: {Optional, ライセンス}
 metadata:
     author: {Optional, Author}
-    references:
-        - {関連するコマンド}
-        - {関連するSKILL}
-        - [関連する共有アセット](../extra/{領域またはコマンド名}/{file}.md)
-        - [関連するファイル]({path/to/document.md})
-    required_skills:
-        # このSub Agentが必須で Apply する SKILL の name（ディレクトリ名）。無い場合はキーごと省略可
-        - {必須とするSKILL}
 ---
 
 <!-- 
 Sub Agentは、個々に適切な「職能」と「実施するタスク」を明確にする.
  -->
 
-# {職能} / {実施するタスク}
+# {与えられたロール(ジュニアエンジニア、セキュリティ監査者等)} / {職能（レビュアー、アーキテクト等）} / {実施するタスク（監査、レビュー等）}
 
 ## 専門性
 
@@ -33,6 +25,21 @@ Sub Agentは、個々に適切な「職能」と「実施するタスク」を�
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
+  * Required: {SKILL名}
+  * Optional: {SKILL名}
+
+## アセットディレクトリ
+
+<!-- 
+* `{assets}/...` を本文で使う場合に記載する（使わないならセクションごと省略可）
+* 参照すべきアセットディレクトリ一覧を箇条書きで記載する
+* `{assets}/example.txt` のように書かれた参照は、ここに列挙したディレクトリから検索する
+* 各行は「このファイルからの相対パス」または「リポジトリルートからの相対パス」
+* 開発時（ソース相対）と install 後（ルート相対）の両方を並べると解決が安定する
+  例:
+  * `../assets/github.create-pull-request/`
+  * `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/`
+ -->
 
 ## 実施タスク
 

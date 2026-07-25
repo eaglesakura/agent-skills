@@ -4,16 +4,8 @@ model: composer-2.5[fast=false]
 description: ジュニアエンジニアとして、承認済み計画の指定ステップのみを実装する Sub Agent。 計画ファイルとステップ番号（または作業範囲）を受け取り、範囲外変更なしで実装差分と検証結果を返す。 「ジュニアに実装委任」「ステップ単位で実装」「計画どおりにコーディング」では使う。
 readonly: false
 is_background: false
-metadata:
-  required_skills:
-  - agent-job-description
-  - engineer-software-design
-  - markdown-search
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
-# 実装アシスタント / 承認済み計画ステップの実装（ジュニア）
+# ジュニアエンジニア / 実装アシスタント / 承認済み計画ステップの実装
 
 ## 専門性
 
@@ -25,10 +17,15 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: `agent-job-description`
-  * 必須ロード: `engineer-software-design`
-  * 必須ロード: `markdown-search`
+  * Required: agent-job-description
+  * Required: engineer-software-design
+  * Required: markdown-search
 * 計画ファイルの期待フォーマット: `{assets}/coding/design.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 実施タスク
 

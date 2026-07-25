@@ -1,38 +1,18 @@
 ---
 license: MIT License
+description: >-
+  詳細設計済みの計画ファイル（`.ai-agent/plan/*.md`）に従い、実装を反映する。
+  Coding-Commands のステップ3。対象の計画ファイルを引数または文脈から渡す。
+  作業範囲を省略した場合は計画内の全作業を対象とする。
 metadata:
   author: '@eaglesakura'
-  references:
-  - /coding.*
-  - /coding.requirement
-  - /coding.design
-  - /coding.comment
-  - agent-job-description
-  - '`{assets}/coding.execute/work-orders.md`'
-  - '`{assets}/coding/design.md`'
-  help: 詳細設計済みの計画ファイル（`.ai-agent/plan/*.md`）に従い、実装を反映する。 Coding-Commands のステップ3。対象の計画ファイルを引数または文脈から渡す。 作業範囲を省略した場合は計画内の全作業を対象とする。
-  input:
-  - Required: 対象の計画ファイル
-  - Optional: 作業範囲
-  output:
-  - Required: 実装差分
-  - Required: 更新された計画ファイル
-  - Required: 実行結果サマリ
-  example:
-  - /coding.execute
-  - /coding.execute .ai-agent/plan/login-home.md
-  - /coding.execute .ai-agent/plan/login-home.md すべてのステップを実行してください
-  - /coding.execute .ai-agent/plan/login-home.md ステップ3まで完了させてください
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
-description: 詳細設計済みの計画ファイル（`.ai-agent/plan/*.md`）に従い、実装を反映する。 Coding-Commands のステップ3。対象の計画ファイルを引数または文脈から渡す。 作業範囲を省略した場合は計画内の全作業を対象とする。
 ---
+
 # 実装フロー / 実装反映
 
-## 概要
+## Help情報
 
-このコマンドは、事前に構築された実装計画をもとに、プロダクションコードへ実装を反映するためのものである。
+事前に構築された実装計画をもとに、プロダクションコードへ実装を反映する。
 
 * Coding-Commands のステップ3である
   1. `/coding.requirement`
@@ -42,6 +22,39 @@ description: 詳細設計済みの計画ファイル（`.ai-agent/plan/*.md`）�
 * 詳細設計の書式正本は `{assets}/coding/design.md` である
 * Sub Agent への作業指示テンプレート正本は `{assets}/coding.execute/work-orders.md` である
 * 本コマンド実行により、要件定義モード・詳細設計モードのハーネスは解除され、実コードの修正を行う
+
+### Example
+
+```text
+/coding.execute
+```
+
+```text
+/coding.execute .ai-agent/plan/login-home.md
+```
+
+```text
+/coding.execute .ai-agent/plan/login-home.md すべてのステップを実行してください
+```
+
+```text
+/coding.execute .ai-agent/plan/login-home.md ステップ3まで完了させてください
+```
+
+## 関連ファイル
+
+* `/coding.*`
+* `/coding.requirement`
+* `/coding.design`
+* `/coding.comment`
+* `agent-job-description`
+* `{assets}/coding.execute/work-orders.md`
+* `{assets}/coding/design.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 入力
 

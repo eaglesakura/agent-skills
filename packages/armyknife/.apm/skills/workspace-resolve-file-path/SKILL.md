@@ -1,15 +1,13 @@
 ---
 name: workspace-resolve-file-path
 description: >-
-  ドキュメント（主に Markdown）に書かれたパス表記を、実ファイルパスへ解決する SKILL。
-  クォートされた `path/to/file`（リポジトリルート相対）、Markdown リンク
-  `[text](rel)`（リンク元ファイル相対）、`.ai-agent/` の候補順
-  （`headquarters/.ai-agent` → ルート `.ai-agent`）、および `{assets}/...`
-  （frontmatter の `metadata.assets` 候補ディレクトリから探索）を適用する。
+  ドキュメントの通常パス表記を実ファイルへ解決する SKILL。
+  クォート `path/to/file`（リポジトリルート相対）、Markdown リンク `[text](rel)`
+  （リンク元相対）、`.ai-agent/` 候補順（`headquarters/.ai-agent` → ルート）を扱う。
   「この MD のリンク先はどこ？」「path/to/file の実体」「.ai-agent はどれ？」
-  「`{assets}/template.md` の実体」「参照パスを解決してから読んで」では必ず使う。
-  パス解決前にロードする。URL→Issue メタデータは workspace-resolve-url-metadata、
-  Markdown 整形のみは markdown.format、内容検索のみは markdown-search では使わない。
+  「相対パスを解決してから読んで」では必ず使う。
+  `{assets}/...` は絶対にこの SKILL では解かず workspace-resolve-agent-assets を使う。
+  URL→Issue は workspace-resolve-url-metadata、整形のみは markdown.format では使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -22,19 +20,19 @@ metadata:
 ## いつ使うか
 
 * Markdown / 文書内の `path/to/file` や `[label](path)` の実体を探すとき
-* `{assets}/...` 形式のアセット参照を、frontmatter の候補ディレクトリから実体へ落とすとき
 * `.ai-agent/` 配下へ一時ファイルを書く／読む場所を決めるとき
-* 「ドキュメントの参照先を開いて」と言われ、表記が相対・リンク・メタ変数混在のとき
+* 「ドキュメントの参照先を開いて」と言われ、表記が相対・リンク混在のとき
 
 ## いつ使わないか
 
+* `{assets}/...` メタ変数の実体解決 → `workspace-resolve-agent-assets`
 * GitHub Issue URL から ID/タイトルを取る → `workspace-resolve-url-metadata`
 * Markdown の体裁整形だけ → `markdown.format`
 * キーワードで文書を探すだけ（パス表記の解決が不要）→ `markdown-search`
 
 ## 作業手順
 
-1. 表記がどれかを判別する（クォート相対 / Markdown リンク / `{assets}/` / `.ai-agent`）
+1. 表記がどれかを判別する（クォート相対 / Markdown リンク / `.ai-agent`）。`{assets}/` なら本 SKILL ではなく `workspace-resolve-agent-assets` を使う
 2. 対応ルールで候補パスを組み立てる
 3. 存在確認してから読む・書く（無ければ候補と解決ルールを報告する）
 
@@ -90,106 +88,16 @@ RELATIVE_PATH="../doc.txt"
 cat "$(dirname "$SOURCE_MD")/$RELATIVE_PATH"
 ```
 
-## `{assets}/...` 形式
-
-APM などでインストール先が変わっても参照を保てるよう、アセットは **メタ変数** `{assets}/` で書き、実ディレクトリは frontmatter の `metadata.assets` に候補として列挙する。
-
-### いつ使うか
-
-* コマンド / SKILL 本文や `metadata.references` に `{assets}/template.md` のように書かれているとき
-* パッケージソースと `apm_modules/` 展開先の両方に同じアセットがあり得るとき
-
-### 入力の読み方
-
-1. **参照文字列**: `{assets}/` 以降をサフィックスとする（例: `{assets}/template.md` → `template.md`）
-2. **候補ディレクトリ**: 同じファイルの frontmatter `metadata.assets` を上から読む
-   * プレーン文字列: そのままディレクトリパス
-   * Markdown リンク `[label](path)`: `path` をディレクトリパスとして使う（YAML ではクォートすること）
-3. **基準ファイル**: `{assets}/` が書かれているファイル自身（`SKILL.md` / `.prompt.md` / `.cursor/commands/*.md` など）
-
-### 解決手順
-
-各 `metadata.assets` エントリについて、次の **2 基準**で候補を作る（どちらも試す）。
-
-1. **文書相対**: `dirname(基準ファイル) / assets候補 / サフィックス`
-2. **ワークスペース（リポジトリ）ルート相対**: `$(git rev-parse --show-toplevel) / assets候補 / サフィックス`
-
-存在するファイル（またはディレクトリ）を **ヒット**として列挙する。重複パスは 1 回にまとめる。
-
-* ヒットが 1 件 → それを実体として使う
-* ヒットが複数 → すべて示し、利用側が選べるようにする。非対話で 1 つに決める必要がある場合は、`metadata.assets` の列挙順で最初にヒットしたものを採用する（文書相対とルート相対の両方ヒットした同一エントリでは文書相対を先とする）
-* ヒットが 0 件 → 試した候補パス一覧とルールを報告し、推測読みはしない
-
-### 実例（`github.create-pull-request`）
-
-frontmatter（要約）:
-
-```yaml
-metadata:
-  assets:
-    - "[github.create-pull-request/](../assets/github.create-pull-request/)"
-    - apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/
-  references:
-    - "`{assets}/template.md`"
-```
-
-本文参照: `{assets}/template.md`
-
-基準ファイルがパッケージソースの `.apm/prompts/github.create-pull-request.prompt.md` のとき、主な候補は次になる。
-
-```text
-# 文書相対 × 1件目
-.apm/prompts/../assets/github.create-pull-request/template.md
-  → .apm/assets/github.create-pull-request/template.md
-
-# ルート相対 × 2件目（利用者が apm install した場合）
-apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/template.md
-```
-
-```bash
-ROOT="$(git rev-parse --show-toplevel)"
-SOURCE_MD="path/to/github.create-pull-request.prompt.md"  # または展開後の .cursor/commands/...
-SUFFIX="template.md"
-
-# metadata.assets から取り出した DIR 候補ごとに:
-for DIR in \
-  "../assets/github.create-pull-request" \
-  "apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request"
-do
-  for CAND in \
-    "$(dirname "$SOURCE_MD")/${DIR}/${SUFFIX}" \
-    "${ROOT}/${DIR}/${SUFFIX}"
-  do
-    # 正規化して存在確認
-    if [ -e "$CAND" ]; then
-      echo "HIT: $CAND"
-    else
-      echo "miss: $CAND"
-    fi
-  done
-done
-```
-
-### 書き手向けメモ
-
-* 本文・`metadata.references` にはインストール先の絶対的な 1 パスだけを書かず、`{assets}/...` を使う
-* `metadata.assets` には **ソース相対**（開発時）と **install 後ルート相対**（利用者ワークスペース）を並べる
-* APM が frontmatter の `metadata` を落とすターゲットでも、本文の `{assets}/` とパッケージ実体（`apm_modules/...` やソース側）の定義を突き合わせて解決する
-
 ## ナレッジベース
 
 ### DO: 表記の種類を先に分けてから解決する
 
 * ルート相対とリンク元相対を混ぜると、別ファイルを開いてしまう
-* `{assets}/` は先に `metadata.assets` を読み、通常の相対パス解決に落とさない
+* `{assets}/` を見つけたら本 SKILL で無理に解かず `workspace-resolve-agent-assets` へ渡す
 
 ### DO: `.ai-agent` は候補順を守り、存在する最初のものを使う
 
 * HQ 構成では `headquarters/.ai-agent` がルート `.ai-agent` より優先
-
-### DO: `{assets}/` は全候補を試し、ヒットを明示する
-
-* install 前後で生きるパスが違うため、1 候補だけで決め打ちしない
 
 ### DO NOT: Markdown リンクをリポジトリルート相対だと決めつける
 
@@ -198,7 +106,3 @@ done
 ### DO NOT: パスを解決せずに「たぶんこのファイル」で読み進める
 
 * 解決失敗時は候補とルールを示し、推測読みを避ける
-
-### DO NOT: `{assets}/` をリテラルなディレクトリ名だと思い込む
-
-* `{assets}` はメタ変数であり、ディスク上のフォルダ名ではない

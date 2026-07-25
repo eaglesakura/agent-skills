@@ -4,16 +4,8 @@ model: grok-4.5[effort=high,fast=false]
 description: 詳細設計スペシャリストとして、計画ファイルや関連実装をレビューし改善案を提示する Sub Agent。 レビュー対象（計画・既存コード）と追加観点を受け取り、観点チェックリストと全件指摘（要約なし）を返す。 「詳細設計レビュー」「計画ファイルのレビュー」「設計改善案」では使う。
 readonly: true
 is_background: true
-metadata:
-  required_skills:
-  - engineer-software-design
-  - agent-job-description
-  - markdown-search
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
-# 実装アシスタント / 詳細設計レビュー
+# 詳細設計スペシャリスト / 設計レビュアー / 詳細設計レビュー
 
 ## 専門性
 
@@ -25,10 +17,15 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: `engineer-software-design`
-  * 必須ロード: `agent-job-description`
-  * 必須ロード: `markdown-search`
+  * Required: engineer-software-design
+  * Required: agent-job-description
+  * Required: markdown-search
 * 計画ファイルの期待フォーマット: `{assets}/coding/design.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 実施タスク
 

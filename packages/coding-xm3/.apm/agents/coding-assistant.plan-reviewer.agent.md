@@ -4,16 +4,8 @@ model: grok-4.5[effort=high,fast=false]
 description: ジュニアエンジニア視点で実装計画の実現性可否を判定する Sub Agent。 計画ファイルを受け取り、職能定義・詳細設計前提と突合した実現性レポート（チェックリストと不足情報）を返す。 「計画がジュニア実装可能か」「plan-reviewer」「実現性レビュー」では使う。
 readonly: true
 is_background: true
-metadata:
-  required_skills:
-  - agent-job-description
-  - engineer-software-design
-  - markdown-search
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
-# 実装アシスタント / 計画実現性レビュー
+# ジュニアエンジニア / 計画レビュアー / 計画実現性レビュー
 
 ## 専門性
 
@@ -25,9 +17,14 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: 職能定義: `agent-job-description`
-  * 必須ロード: 詳細設計前提: `engineer-software-design`
+  * Required: agent-job-description
+  * Required: engineer-software-design
 * 計画ファイルの期待フォーマット: `{assets}/coding/design.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 実施タスク
 

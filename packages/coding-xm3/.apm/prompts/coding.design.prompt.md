@@ -1,38 +1,18 @@
 ---
 license: MIT License
+description: >-
+  既存の計画ファイル（`.ai-agent/plan/*.md`）を詳細設計し、ジュニアエンジニアが実装可能な粒度へ更新する。
+  Coding-Commands のステップ2。対象の計画ファイルを引数または文脈から渡す。
+  レビューのみの場合はその旨を添える。計画は新規作成せず上書きする。
 metadata:
   author: '@eaglesakura'
-  references:
-  - /coding.*
-  - /coding.requirement
-  - /coding.execute
-  - /coding.format-plan
-  - engineer-software-design
-  - agent-job-description
-  - '`{assets}/coding/design.md`'
-  help: 既存の計画ファイル（`.ai-agent/plan/*.md`）を詳細設計し、ジュニアエンジニアが実装可能な粒度へ更新する。 Coding-Commands のステップ2。対象の計画ファイルを引数または文脈から渡す。 レビューのみの場合はその旨を添える。計画は新規作成せず上書きする。
-  input:
-  - Required: 対象の計画ファイル
-  - Optional: 作業指示
-  output:
-  - Required: 計画ファイル
-  - Required: レビュー指摘内容
-  - Required: 詳細設計結果
-  example:
-  - /coding.design
-  - /coding.design .ai-agent/plan/login-home.md
-  - /coding.design .ai-agent/plan/login-home.md 実装修正を行い、再レビュー
-  - /coding.design .ai-agent/plan/login-home.md レビューのみ
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
-description: 既存の計画ファイル（`.ai-agent/plan/*.md`）を詳細設計し、ジュニアエンジニアが実装可能な粒度へ更新する。 Coding-Commands のステップ2。対象の計画ファイルを引数または文脈から渡す。 レビューのみの場合はその旨を添える。計画は新規作成せず上書きする。
 ---
+
 # 実装フロー / 詳細設計
 
-## 概要
+## Help情報
 
-このコマンドは、要件が書かれた既存の計画ファイルをもとに、関連アーキテクチャと既存実装パターンを確認し、実装方針・ファイル構成・具体差分を計画へ落とし込むためのものである。
+要件が書かれた既存の計画ファイルをもとに、関連アーキテクチャと既存実装パターンを確認し、実装方針・ファイル構成・具体差分を計画へ落とし込む。
 本コマンドにおける詳細設計とは、**ジュニアエンジニアが実装可能なレベルでの具体的な実装を文書化すること**である。
 
 * Coding-Commands のステップ2である
@@ -43,6 +23,39 @@ description: 既存の計画ファイル（`.ai-agent/plan/*.md`）を詳細設�
 * 出力フォーマットの正本は `{assets}/coding/design.md` である
 * 実行時は `engineer-software-design` SKILL をロードする
 * ジュニアの技能定義・提案粒度は `agent-job-description` を参照する
+
+### Example
+
+```text
+/coding.design
+```
+
+```text
+/coding.design .ai-agent/plan/login-home.md
+```
+
+```text
+/coding.design .ai-agent/plan/login-home.md 実装修正を行い、再レビュー
+```
+
+```text
+/coding.design .ai-agent/plan/login-home.md レビューのみ
+```
+
+## 関連ファイル
+
+* `/coding.*`
+* `/coding.requirement`
+* `/coding.execute`
+* `/coding.format-plan`
+* `engineer-software-design`
+* `agent-job-description`
+* `{assets}/coding/design.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 入力
 
@@ -239,7 +252,7 @@ flowchart TD
 ## ガードレール
 
 * ユーザーと対話して入力を補完しない。確認質問・選択肢提示・追加情報の依頼を行わない
-* 入力・出力・手順が不明確な場合は次の形式のみを返して終了する
+* 入力・出力が不明確な場合は次の形式のみを返して終了する
 
 ```markdown
 {XXXX} が不明確です。

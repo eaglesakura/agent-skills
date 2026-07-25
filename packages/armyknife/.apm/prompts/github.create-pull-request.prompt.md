@@ -6,43 +6,49 @@ description: >-
   PR 本文はテンプレートに従い日本語で書く。
 metadata:
     author: "@eaglesakura"
-    assets:
-        - "[github.create-pull-request/](../assets/github.create-pull-request/)"
-        - apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/
-    references:
-        - "`{assets}/template.md`"
-        - workspace-resolve-file-path
-        - workspace-agent-temporary
-    help: >-
-        作業ブランチの差分を整理し、GitHub Pull Request を新規作成または既存 PR 本文を更新する。
-        対象リポジトリ・base ブランチ・既存 PR は省略可（省略時は origin / origin/main / 新規作成）。
-        PR 本文はテンプレートに従い日本語で書く。
-    input:
-        - Optional: 対象リポジトリ
-        - Optional: baseブランチ
-        - Optional: 既存Pull Request
-    output:
-        - Required: Pull Request作業レポート
-    example:
-        - >-
-            /github.create-pull-request
-            repo: app
-            base: feature/id/123/example
-        - >-
-            /github.create-pull-request base は develop
-        - >-
-            /github.create-pull-request https://github.com/OWNER/REPO/pull/123 の本文を更新
 ---
 
 # GitHub / Pull Request作成
 
-## 概要
+## Help情報
 
-このコマンドは、作業ブランチでの変更を Pull Request として GitHub に公開（または既存 PR 本文を上書き）する。
+作業ブランチでの変更を Pull Request として GitHub に公開する。既存 PR が指定されている場合は本文のみを上書きする。
 
-* PR 本文の正本: `{assets}/template.md`（実体は `workspace-resolve-file-path` で解決）
+* 対象リポジトリ・base ブランチ・既存 PR は省略可（省略時は `origin` / `origin/main` / 新規作成）
+* PR 本文の正本は `{assets}/template.md`（実体は `workspace-resolve-agent-assets` で解決）
 * 一時ファイルの置き場は `workspace-agent-temporary`（`.ai-agent/tmp/`）に従う
 * 新規作成と既存 PR 更新は、入力の有無で分岐する（対話で選ばない）
+
+### Example
+
+```text
+/github.create-pull-request
+```
+
+```text
+/github.create-pull-request
+repo: app
+base: feature/id/123/example
+```
+
+```text
+/github.create-pull-request base は develop
+```
+
+```text
+/github.create-pull-request https://github.com/OWNER/REPO/pull/123 の本文を更新
+```
+
+## 関連ファイル
+
+* `{assets}/template.md`
+* `workspace-resolve-agent-assets`
+* `workspace-agent-temporary`
+
+## アセットディレクトリ
+
+* `../assets/github.create-pull-request/`
+* `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/`
 
 ## 入力
 
@@ -181,7 +187,7 @@ git diff origin/main HEAD
 
 ### ステップ2: PR本文を作成
 
-* `{assets}/template.md` を `workspace-resolve-file-path` で実ファイルへ解決してからロードする
+* `{assets}/template.md` を `workspace-resolve-agent-assets` で実ファイルへ解決してからロードする
 * ステップ1の差分・ログから Summary / Features / Fixed / Deleted を日本語で埋める
 * 空セクションは残してよいが、該当が無い旨を無理に捏造しない
 * `workspace-agent-temporary` に従い、本文を `.ai-agent/tmp/` 配下の一時ファイルへ保存する（例: `.ai-agent/tmp/pr-body.md`）

@@ -1,37 +1,54 @@
 ---
 license: MIT License
+description: >-
+  計画ファイル（`.ai-agent/plan/*.md`）を、動作モードに応じた所定書式へ整形する。
+  `/coding.*` の補助コマンド。対象ファイルと動作モード（要件定義 / 詳細設計）を
+  引数または文脈から渡す。内容の追加・削除は行わない。
 metadata:
   author: '@eaglesakura'
-  references:
-  - /coding.*
-  - /coding.requirement
-  - /coding.design
-  - '`{assets}/coding/requirements.md`'
-  - '`{assets}/coding/design.md`'
-  help: 計画ファイル（`.ai-agent/plan/*.md`）を、動作モードに応じた所定書式へ整形する。 `/coding.*` の補助コマンド。対象ファイルと動作モード（要件定義 / 詳細設計）を 引数または文脈から渡す。内容の追加・削除は行わない。
-  input:
-  - Required: 対象の計画ファイル
-  - Required: 動作モード
-  output:
-  - Required: 整形済み計画ファイル
-  example:
-  - /coding.format-plan
-  - /coding.format-plan .ai-agent/plan/login-home.md
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
-description: 計画ファイル（`.ai-agent/plan/*.md`）を、動作モードに応じた所定書式へ整形する。 `/coding.*` の補助コマンド。対象ファイルと動作モード（要件定義 / 詳細設計）を 引数または文脈から渡す。内容の追加・削除は行わない。
 ---
+
 # 計画ファイル / 書式整形
 
-## 概要
+## Help情報
 
-このコマンドは、`/coding.*` の補助コマンドである。
+`/coding.*` の補助コマンドである。
 計画ファイルの内容を整理し、動作モードに応じた所定書式へ整えることで、レビュアーや実装者の読解負荷を下げる。
 
 * 要件定義モードの正本: `{assets}/coding/requirements.md`
 * 詳細設計モードの正本: `{assets}/coding/design.md`
 * 要件・詳細設計・実装手順の中身を変えず、見出し・順序・表記・インデックスなどの書式のみを整える
+
+### Example
+
+```text
+/coding.format-plan
+```
+
+```text
+/coding.format-plan .ai-agent/plan/login-home.md
+```
+
+```text
+/coding.format-plan .ai-agent/plan/login-home.md を要件定義モードで整形
+```
+
+```text
+/coding.format-plan .ai-agent/plan/login-home.md を詳細設計モードで整形
+```
+
+## 関連ファイル
+
+* `/coding.*`
+* `/coding.requirement`
+* `/coding.design`
+* `{assets}/coding/requirements.md`
+* `{assets}/coding/design.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 入力
 
@@ -136,7 +153,7 @@ flowchart TD
 ## ガードレール
 
 * ユーザーと対話して入力を補完しない。確認質問・選択肢提示・追加情報の依頼を行わない
-* 入力・出力・手順が不明確な場合は次の形式のみを返して終了する
+* 入力・出力が不明確な場合は次の形式のみを返して終了する
 
 ```markdown
 {XXXX} が不明確です。

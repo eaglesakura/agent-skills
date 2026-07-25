@@ -4,16 +4,8 @@ model: grok-4.5[effort=high,fast=false]
 description: シニアエンジニアとして、承認済み計画の指定ステップを実装する Sub Agent。 計画ファイルとステップ番号（または作業範囲）を受け取り、要件を満たす最小限の計画補正を許容した実装差分・コメント整備・検証結果を返す。 「シニアに実装委任」「最小限の計画逸脱を許容して実装」では使う。
 readonly: false
 is_background: false
-metadata:
-  required_skills:
-  - agent-job-description
-  - engineer-software-design
-  - markdown-search
-  assets:
-  - '[assets/](../assets/)'
-  - apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/
 ---
-# 実装アシスタント / 承認済み計画ステップの実装（シニア）
+# シニアエンジニア / 実装アシスタント / 承認済み計画ステップの実装
 
 ## 専門性
 
@@ -26,10 +18,15 @@ metadata:
 ## 追加コンテキスト
 
 * 親Agentから指示されたSKILLやドキュメントを自己判断によりロードする
-  * 必須ロード: `agent-job-description`
-  * 必須ロード: `engineer-software-design`
-  * 必須ロード: `markdown-search`
+  * Required: agent-job-description
+  * Required: engineer-software-design
+  * Required: markdown-search
 * 計画ファイルの期待フォーマット: `{assets}/coding/design.md`
+
+## アセットディレクトリ
+
+* `../assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
 
 ## 実施タスク
 
