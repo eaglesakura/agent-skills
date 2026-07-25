@@ -1,69 +1,90 @@
 ---
 name: flutter.app-debug
-description: `launch.json` をベースにアプリの起動やデバッグを行うためのSKILL. MCPを経由して自律的にアプリを制御し、実装の妥当性検証やデバッグを行う. AI Agentからの起動と、DTDによるアタッチをサポートする.
+description: >-
+  Flutter アプリの実機／エミュ起動・DTD アタッチ・ランタイムデバッグ用 SKILL。 launch.json 読取、`flutter devices` /
+  `flutter run --print-dtd`（`mise exec --` 等の規定 prefix）、 Dart MCP（DTD）での
+  get_runtime_errors / widget_inspector / hot_reload / hot_restart / flutter_driver、
+  「アプリ起動」「デバイスで動かす」「クラッシュ確認」「Widget ツリー」「DTD / ws:// に繋ぐ」「自律デバッグ」では必ず使う。 VM Service の
+  http:// と DTD の ws:// を混同しないこと。 Maestro の黒箱 UI テスト、Dart コーディング規約だけの実装、画面
+  MVVM／レイヤー設計のみ、golden／静的解析のみの作業では使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
-
 # Flutter / アプリデバッグ・起動、アタッチ
 
-## Flutterの起動構成の把握
+起動構成とデバイスを確定し、`flutter run --print-dtd` で起動したうえで Dart MCP（DTD）から内部状態を検査・操作する。
+黒箱の画面操作フローは Maestro MCP 側であり、本 SKILL と混同しない。
 
-* `.vscode/launch.json` を読み込む
-* `type` が `dart` かつ `request` が `launch` の構成を、起動構成として認識する
-  * `flutterMode` がある場合は、その値（`debug` / `profile` / `release`）を実行モードとする
-  * `flutterMode` が無い場合は、`debug` として扱う
-* 起動時は、構成の `cwd` / `program` / `args` / `deviceId` を引き継ぐ
-  * `args` に含まれる `--flavor` や `--dart-define-from-file` 等も省略しない
+## いつ使うか
+
+* 実機 / シミュレータでアプリを起動して確認したいとき
+* ランタイムエラー、Widget ツリー、ホットリロードでデバッグしたいとき
+* 既に起動中のアプリへ DTD アタッチしたいとき
+
+## 手順概要
+
+1. `launch.json` から起動構成を読む
+2. デバイスを1つに確定する
+3. `flutter run --print-dtd` で起動する（または既存 DTD にアタッチ）
+4. Dart MCP の `dtd` で接続し、目的の検査・操作を行う
+
+コマンドは常にプロジェクト規定の prefix（本リポジトリでは `mise exec --`）を付ける。
+
+## Flutter の起動構成の把握
+
+* `.vscode/launch.json` を読む
+* `type` が `dart` かつ `request` が `launch` の構成を起動構成とする
+  * `flutterMode` があればそれを実行モード（`debug` / `profile` / `release`）とする
+  * 無ければ `debug`
+* `cwd` / `program` / `args` / `deviceId` を引き継ぐ
+  * `args` の `--flavor` や `--dart-define-from-file` 等は省略しない
 
 ## 起動対象の把握
-
-* flutterコマンドを使用し、接続されているデバイスを列挙する
 
 ```bash
 flutter devices
 ```
 
-* プロンプトや文脈から、起動対象のデバイスを判断する
-  * デバイスが1つのみの場合は、暗黙的に決定する
-  * launch構成に `deviceId` がある場合は、それを優先する
-* 対象は、常に1つである
-  * 対象を判別できない場合、下記のようなテキストを出力して処理を中断する
+* 文脈・プロンプトからデバイスを決める
+  * 1台だけならそれを使う
+  * launch 構成の `deviceId` があれば優先
+* 対象は常に **1つ**
+  * 判別不能なら次を出して中断する
 
-  ```markdown
-  起動対象のデバイスを確定できませんでした。
-  対象デバイスを指定してください。
-  ```
+```markdown
+起動対象のデバイスを確定できませんでした。
+対象デバイスを指定してください。
+```
 
 ## 実行
 
 ### アプリを起動する
 
-* 既定の Dart MCP にはアプリ起動ツール（`launch_app` 等）が無効化されている
-  * そのため、起動はシェルの `flutter run` で行う
-* launch構成と選択デバイスから、次の形で起動する
-  * `--print-dtd` は必須とする（後続の MCP 接続に使う）
-  * `cwd` を作業ディレクトリとし、`program` と `args` を引き継ぐ
-  * `flutterMode` が `profile` / `release` の場合は、それぞれ `--profile` / `--release` を付与する
+* Dart MCP に起動ツールが無い／無効な場合はシェルの `flutter run` を使う
+* `--print-dtd` は必須（後続の MCP 接続用）
+* `cwd` を作業ディレクトリにし、`program` と `args` を引き継ぐ
+* `profile` / `release` ならそれぞれ `--profile` / `--release` を付ける
 
 ```bash
 flutter run -d ${deviceId} --print-dtd ${modeFlags} ${program} ${args}
 ```
 
-* 起動ログに出力される `DTD URI`（`ws://...`）を控える
-  * `http://...` 形式の VM Service URI は DTD URI ではない。混同しない
+* ログの **DTD URI**（`ws://...`）を控える
+  * `http://...` の VM Service URI は DTD ではない。混同しない
 
 ### 起動中のアプリにアタッチする
 
-#### DTD URIを取得する
+#### DTD URI を取得する
 
-* 次の順で DTD URI を確定する
-  1. 直前の `flutter run --print-dtd` 出力
-  2. プロンプトやユーザー指示
-  3. Dart MCP の `dtd` ツール（`listDtdUris`）
-     * working dir がホームディレクトリに見える DTD は、IDE 起動アプリの候補として優先する
-* DTD URIが認識できない場合、次のようなテキストを出力して終了する
+次の順で確定する。
+
+1. 直前の `flutter run --print-dtd` 出力
+2. プロンプトやユーザー指示
+3. Dart MCP の `dtd`（`listDtdUris`）
+   * working dir がホームに見える DTD は IDE 起動アプリ候補として優先してよい
+
+不明なら次を出して終了する。
 
 ```markdown
 DTD URIが認識できませんでした。
@@ -72,27 +93,27 @@ DTD URIを指定してください。
 例: `ws://127.0.0.1:63514/...`
 ```
 
-#### DTDに接続する
+#### DTD に接続する
 
-* Dart MCP の `dtd` ツールで接続する
-  * `connect` に確定した DTD URI を渡す
-  * 必要に応じて `listConnectedApps` で接続済みアプリを確認する
-* 複数アプリが接続されている場合は、操作対象の `appUri` を明示する
+* Dart MCP の `dtd` で `connect`（必要なら先にツールスキーマを確認する）
+* `listConnectedApps` で接続済みを確認してよい
+* 複数アプリがある場合は操作対象の `appUri` を明示する
 
 #### アプリを制御・検証する
 
-* DTD 接続後、目的に応じて次の Dart MCP ツールを使う
-  * `get_runtime_errors` … ランタイムエラーの確認
-  * `widget_inspector` … Widget ツリーの取得・選択状態の確認
-  * `flutter_driver_command` … タップ、テキスト入力、スクショ等の操作
-    * 操作前に `widget_inspector`（`get_widget_tree`）で実在する Widget を確認し、推測でセレクタを作らない
-  * `hot_reload` / `hot_restart` … コード変更の反映
-* UI 自動操作（Maestro MCP）が必要な場合は、本SKILLの Dart MCP 制御と用途を混同しない
-  * Flutter 内部の状態・エラー・Widget 検査は Dart MCP
-  * 端末上の黒箱 UI 操作は Maestro MCP
+| ツール | 用途 |
+| --- | --- |
+| `get_runtime_errors` | ランタイムエラー確認 |
+| `widget_inspector` | Widget ツリー・選択状態 |
+| `flutter_driver_command` | タップ・入力・スクショ等 |
+| `hot_reload` / `hot_restart` | 変更反映 |
+
+* `flutter_driver_command` の前に `widget_inspector`（`get_widget_tree`）で実在 Widget を確認し、推測セレクタを作らない
+* **Dart MCP**: Flutter 内部の状態・エラー・Widget
+* **Maestro MCP**: 端末上の黒箱 UI 操作（本 SKILL と用途を混ぜない）
 
 ## ナレッジベース
 
-### DO: `mise exec --` 等のプロジェクト規定prefixが存在する場合は、prefixを付与する
+### DO: プロジェクト規定のコマンド prefix を付ける
 
-* `fvm` や `mise` 等、プロジェクト固有の管理ツールがある場合は、そのルールに従う
+* `mise` / `fvm` 等がある場合はそのルールに従う（例: `flutter ...`）

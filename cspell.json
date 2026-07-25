@@ -23,6 +23,7 @@
         "toplevel",
         "Usecase",
         "viewmodel",
+        "worktree",
         "worktrees"
     ]
 }
