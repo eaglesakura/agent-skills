@@ -26,8 +26,8 @@ dependencies:
 
 ## 推奨するワークスペース構造
 
-`workspace-agent-temporary` / `workspace-agent-memory-save` / `markdown-search` 等に基づく。
-`.ai-agent/` はコミット対象外（ひな形は `workspace-agent-temporary` の `assets/.ai-agent/`）。
+`workspace-layout` / `workspace-agent-temporary` / `workspace-agent-memory-save` / `markdown-search` 等に基づく。
+`.ai-agent/` はコミット対象外（ひな形は `workspace-layout` の `assets/.ai-agent/`）。
 HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優先する（`workspace-resolve-file-path`）。
 
 ```text
@@ -80,13 +80,19 @@ HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優
 
 ### workspace-agent-temporary
 
-* AI Agent が使ってよい一時領域（`.ai-agent/`）のルート・サブディレクトリ・Ignore を規定する。
-* 一時スクリプトや調査メモは `.ai-agent/tmp/`、実行計画は `.ai-agent/plan/` に置く。
-* `assets/` の構成を参考にディレクトリを用意し、コミット対象外とする。
+* 一時ファイルが必要な作業で、`.ai-agent/` 配下の配置先（`tmp` / `plan` / `memory`）を提案する。
+* 一時スクリプトや調査下書きは `.ai-agent/tmp/`、実行計画は `.ai-agent/plan/` に置く。
+* `.ai-agent/` ひな形そのものは `workspace-layout` を参照する。
 
 ### workspace-count-tokens
 
 * Cursor ワークスペースのデフォルト Context と、動的ロード時の SKILL.md / docs・references の最大トークンを概算する。
+
+### workspace-layout
+
+* AI Agent 協業向けの推奨ワークスペース・レイアウト（ルート構成）を伝える。
+* `AGENTS.md` / `docs/` / `.ai-agent/` 等の配置推奨と、不足時の `.ai-agent/` ひな形導入を担う。
+* 一時ファイルの置き場提案は `workspace-agent-temporary` に委譲する。
 
 ### workspace-resolve-agent-assets
 

@@ -35,7 +35,7 @@ metadata:
 * `.cursor/skills/`
 * `.agents/skills/`
 * `apm_modules/`
-* `.ai-agent/memory/`（場所は `workspace-agent-temporary` に従う）
+* `.ai-agent/memory/`（場所は `workspace-layout` / 用途は `workspace-agent-temporary`）
 
 ## 同梱スクリプト
 

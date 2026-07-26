@@ -14,14 +14,14 @@
     },
     {
       "id": 2,
-      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。.ai-agent ディレクトリが未作成です。Agent 用の一時領域を新規に用意し、実行計画メモ plan/sample-feature.md と、調査下書き用の空に近いメモを適切な場所に置いてください。",
-      "expected_output": "assets 相当の構成（tmp/plan/memory と gitignore）で .ai-agent が作成され、計画は plan/、下書きの扱いは用途に応じて tmp または memory",
+      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。.ai-agent は既にある想定です。実行計画メモ plan/sample-feature.md と、調査下書き用の短いメモを適切な場所に置いてください（計画は進行中、下書きは使い捨て）。",
+      "expected_output": "進行中の計画は .ai-agent/plan/、使い捨て下書きは .ai-agent/tmp/（または用途が明確なら memory）。ルートや docs に置かない",
       "files": [],
       "expectations": [
-        "Created .ai-agent/ with tmp, plan, and memory directories",
-        "Includes a root .gitignore under .ai-agent/",
         "Active plan markdown is under .ai-agent/plan/",
-        "Directory name is .ai-agent (singular)"
+        "Disposable draft is under .ai-agent/tmp/ (or memory only if framed as reusable)",
+        "Directory name is .ai-agent (singular)",
+        "Did not place files under docs/ or repository root"
       ]
     },
     {

@@ -1,30 +1,44 @@
 ---
 name: workspace-agent-temporary
 description: >-
-  AI Agent が一時ファイル・実行計画・調査メモを置く場所（`.ai-agent/`）を規定する SKILL。
-  一時スクリプト（*.sh/*.py/*.ts）、テンポラリ出力、計画ドキュメント、調査結果、チャット引き継ぎメモを作成・保存するときは必ず従う。
-  「一時ファイルをどこに置くか」「plan/memory/tmp の使い分け」「`.ai-agent` を新規作成する」場面でもロードする。
+  一時ファイルが必要な作業で、配置先（`.ai-agent/` 配下のどれか）を提案する SKILL。
+  一時スクリプト（*.sh/*.py/*.ts）、テンポラリ出力、計画ドキュメント、調査下書きを
+  「どこに書くか」決めるときは必ず従う。
+  「plan/memory/tmp の使い分け」「このメモは tmp？ memory？」でもロードする。
+  ワークスペース全体の推奨レイアウトや `.ai-agent/` ひな形の導入は workspace-layout、
+  Memory 本文の書き方は workspace-agent-memory-save。
 license: MIT License
 metadata:
   author: "@eaglesakura"
+  references:
+    - workspace-layout
+    - workspace-agent-memory-save
+    - workspace-resolve-file-path
 ---
 # Workspace / Agent Temporary
 
-AI Agent の作業成果のうち、リポジトリ本体にコミットしない一時成果物は、すべて `.ai-agent/` 配下に集約する。
-散在すると後続チャットや他 Agent が発見できず、gitignore 漏れのリスクも上がるためである。
+一時成果物が必要な作業では、置き場を先に決めてから書く。
+ルート直下や `docs/`・プロダクションコードへ散らすと、後続 Agent が発見できず ignore 漏れも増える。
+
+**全体の箱（推奨レイアウト・`.ai-agent/` ひな形）** は `workspace-layout` が担う。
+本 SKILL は、その箱の中で **いまの作業ファイルをどこに置くか** を提案する。
 
 ## いつ使うか
 
 * 一時スクリプト・ログ・抽出結果・下書き Markdown を書くとき
 * 実行計画（要件・詳細設計・実装手順）を `.md` で残すとき
-* 調査結果や会話サマリを後続で再利用するとき（中身の書き方は `workspace-agent-memory-save`）
-* リポジトリに `.ai-agent/` がまだ無いとき
+* 「このファイルは tmp / plan / memory のどれ？」と迷ったとき
 
-## `.ai-agent/` の場所
+## いつ使わないか
 
-* ディレクトリ名は **`.ai-agent/`（単数形）** のみを使う
-* 未作成なら作成してよい。ひな形は [assets/.ai-agent/](./assets/.ai-agent/) をコピーする
-* 実パスの解決順は `workspace-resolve-file-path` に従う（HQ では `headquarters/.ai-agent` を優先）
+* リポジトリ全体の推奨構成・不足ディレクトリの導入 → `workspace-layout`
+* Memory の見出し構成・テンプレート本文 → `workspace-agent-memory-save`
+
+## 前提: `.ai-agent/` の実パス
+
+* ディレクトリ名は **`.ai-agent/`（単数形）** のみ
+* 無ければ `workspace-layout` に従いひな形を導入する（本 SKILL はひな形アセットを持たない）
+* 実パスの解決順は `workspace-resolve-file-path`（HQ では `headquarters/.ai-agent` を優先）
 
 ```bash
 ROOT="$(git rev-parse --show-toplevel)"
@@ -38,11 +52,9 @@ for candidate in \
 done
 ```
 
-* `.ai-agent/` 配下は ignore し、コミット対象から外す（assets 内の `.gitignore` をそのまま使う）
+## 配置先の提案（サブディレクトリ）
 
-## サブディレクトリの使い分け
-
-| パス | 用途 |
+| パス | この作業向けの用途 |
 | --- | --- |
 | `.ai-agent/tmp/` | タスク用の使い捨てファイル（`*.sh` `*.py` `*.ts` `*.md` `*.txt` など） |
 | `.ai-agent/plan/` | 実行中・レビュー中の計画ファイル（`*.md`） |
@@ -62,11 +74,11 @@ done
 
 ### `.ai-agent/memory/`
 
-* 保存フォーマット・更新方針は `workspace-agent-memory-save` に委譲する
-* パスだけはこの SKILL の規定に従う
+* 「再利用したい結論・判断材料」があるとき。フォーマットは `workspace-agent-memory-save`
+* 使い捨て下書きだけなら `tmp/` で足りる
 
-## 新規作成手順
+## 作業手順
 
-1. 上記の解決順で既存 `.ai-agent/` を探す
-2. 無ければ [assets/.ai-agent/](./assets/.ai-agent/) をリポジトリ側の採用パスへコピーする
-3. `tmp/` `plan/` `memory/`（および各 `done/`）が揃っていることを確認する
+1. 書く成果物の種類（使い捨て / 進行中計画 / 再利用 Memory）を判別する
+2. 上表で配置先を決める。`.ai-agent/` が無ければ先に `workspace-layout` で導入する
+3. ファイルを作成し、採用したパスを報告する
