@@ -34,7 +34,7 @@ HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優
 .
 ├── AGENTS.md                      # Agent 向けプロジェクト規約（常時 Context）
 ├── README.md
-├── apm.yml                        # APM 依存定義（任意）
+├── apm.yml                        # APM 依存定義
 ├── .ai-agent/                     # Agent 作業領域（gitignore・単数形のみ）
 │   ├── .gitignore
 │   ├── tmp/                       # 使い捨てスクリプト・ログ・下書き
@@ -91,8 +91,8 @@ HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優
 ### workspace-layout
 
 * AI Agent 協業向けの推奨ワークスペース・レイアウト（ルート構成）を伝える。
-* `AGENTS.md` / `docs/` / `.ai-agent/` 等の配置推奨と、不足時の `.ai-agent/` ひな形導入を担う。
-* 一時ファイルの置き場提案は `workspace-agent-temporary` に委譲する。
+* `AGENTS.md` / `README.md` はパス案内のみ。不足パスは必要になったタイミングで作成・移行を提案する。
+* `apm.yml` / `apm_modules/` は APM 配布前提として地図に含める。一時ファイルの置き場提案は `workspace-agent-temporary`。
 
 ### workspace-resolve-agent-assets
 

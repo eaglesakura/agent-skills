@@ -4,6 +4,7 @@ __pycache__/
 *.py[cod]
 # skill-creator 評価ワークスペース（sandbox / snapshot / grading / timing）
 *-workspace/
+!agentic-workspace/
 
 # 評価レビュー用の生成物（静的 HTML・analyst notes 等）
 *-eval-review/
