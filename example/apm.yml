@@ -1,0 +1,19 @@
+name: eaglesakura/agent-skills
+version: 0.1.0
+description: |
+  github.com/eaglesakura/agent-skills example.
+
+targets:
+  - cursor
+
+dependencies:
+  apm:
+    - microsoft/apm/packages/apm-guide#v0.26.0
+    - samber/cc-skills-golang#v1.9.0
+    - dart-lang/skills#main
+    - anthropics/skills/skills/skill-creator#main
+    - eaglesakura/agent-skills/packages/armyknife
+    - eaglesakura/agent-skills/packages/armyknife-cursor
+    - eaglesakura/agent-skills/packages/coding-xm3
+    - eaglesakura/agent-skills/packages/flutter
+    - eaglesakura/agent-skills/packages/golang
