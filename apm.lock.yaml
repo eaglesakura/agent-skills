@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-25T15:39:45.930972+00:00'
+generated_at: '2026-07-25T15:55:00.581474+00:00'
 apm_version: 0.26.0
 dependencies:
 - repo_url: _local/armyknife
@@ -14,6 +14,20 @@ dependencies:
   - .agents/skills/github-actions-workflow-build/SKILL.md
   - .agents/skills/maintenance-measure-cache-size
   - .agents/skills/maintenance-measure-cache-size/SKILL.md
+  - .agents/skills/maintenance-measure-cache-size/evals/.gitignore
+  - .agents/skills/maintenance-measure-cache-size/evals/README.md
+  - .agents/skills/maintenance-measure-cache-size/evals/evals.json
+  - .agents/skills/maintenance-measure-cache-size/evals/files/docker-system-df.txt
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.cache/tiny/x.bin
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.gradle/caches/modules.bin
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.npm/_cacache/data.bin
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.pub-cache/hosted/pkg.bin
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Documents/notes/readme.txt
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Library/Caches/Homebrew/downloads.bin
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Library/Caches/com.apple.Safari/web.bin
+  - .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/workspace/build/artifacts.bin
+  - .agents/skills/maintenance-measure-cache-size/evals/generate_fixtures.sh
+  - .agents/skills/maintenance-measure-cache-size/evals/templates/docker-system-df.txt
   - .agents/skills/markdown-documentation
   - .agents/skills/markdown-documentation/SKILL.md
   - .agents/skills/markdown-documentation/assets/template.md
@@ -37,6 +51,7 @@ dependencies:
   - .agents/skills/tool-command-creator/evals/files/coding.format-plan.md
   - .agents/skills/tool-skill-creator-extension
   - .agents/skills/tool-skill-creator-extension/SKILL.md
+  - .agents/skills/tool-skill-creator-extension/evals/evals.json
   - .agents/skills/tool-sub-agent-creator
   - .agents/skills/tool-sub-agent-creator/SKILL.md
   - .agents/skills/tool-sub-agent-creator/assets/subagent.md
@@ -76,7 +91,21 @@ dependencies:
     .agents/skills/agent-call-sub-agent/SKILL.md: sha256:8971da6a601433d367e0576bbe5f179795f633b33d83669df66af489794de3b3
     .agents/skills/agent-call-sub-agent/evals/evals.json: sha256:23b95072a8d17a58dd754eb475419d9216610ec0e96ababe626eebe07f8ad4f4
     .agents/skills/github-actions-workflow-build/SKILL.md: sha256:f68a5695a9f96b37dd340a870d2e3c7c7c3fd87818917e3b6f4cbb6580669d26
-    .agents/skills/maintenance-measure-cache-size/SKILL.md: sha256:aac07c2be7d085eaf55e89bd2490b54517a3c077bad69fee979cec94519bbdee
+    .agents/skills/maintenance-measure-cache-size/SKILL.md: sha256:6d3664edd6f72cae7ece3e76799a22cfafacd376c4239541a2ad150db604f354
+    .agents/skills/maintenance-measure-cache-size/evals/.gitignore: sha256:c66e220a3d0caadba127edaabbf71d859f244cf5fb0f779fa8073cd93828cb02
+    .agents/skills/maintenance-measure-cache-size/evals/README.md: sha256:e224490391b1b6d49e2dae60c3cdb8601697fd825bb7e786f83e49ec1fd8e2ff
+    .agents/skills/maintenance-measure-cache-size/evals/evals.json: sha256:dabeac22dd9048a9206c6cc582b8b0c78726d37285cbce6d82bd4839065be879
+    .agents/skills/maintenance-measure-cache-size/evals/files/docker-system-df.txt: sha256:faee335eb7a84a2d53f8d864b52cd20bfdcf75ddccb202f7151d52a8971a8b56
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.cache/tiny/x.bin: sha256:e5b844cc57f57094ea4585e235f36c78c1cd222262bb89d53c94dcb4d6b3e55d
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.gradle/caches/modules.bin: sha256:026e0c967a382e8851c67a26f04110722d4894522a60267d7ec20df4ddcf73bf
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.npm/_cacache/data.bin: sha256:78a137b7b548cfc1976d0b718a0045acf5a21fb8689cf092705fcaa443053f3c
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.pub-cache/hosted/pkg.bin: sha256:8213dc000104735271db2579aa28419f6b9b6f2509f97dc246a4c6ee681f4ff5
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Documents/notes/readme.txt: sha256:0a57622f8e3fdc35e351e073c75da66505301be57061c92efa3563740e9e2147
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Library/Caches/Homebrew/downloads.bin: sha256:6ed5e85372e488807486f4446e2a3a501d319be812e969e3de426db798cc5704
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Library/Caches/com.apple.Safari/web.bin: sha256:8565a714dca840f8652c5bae9249ab05f5fb5a4f9f13fbe23304b10f68252da2
+    .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/workspace/build/artifacts.bin: sha256:d51787eb4767cb7409c75f42858f283debf6203bbcec6fbb65859a913d4aa13f
+    .agents/skills/maintenance-measure-cache-size/evals/generate_fixtures.sh: sha256:92a0f6c8e858efd1e4ba88d64b502cbb2d8354ded6c90f2afc92bd07e35bc831
+    .agents/skills/maintenance-measure-cache-size/evals/templates/docker-system-df.txt: sha256:faee335eb7a84a2d53f8d864b52cd20bfdcf75ddccb202f7151d52a8971a8b56
     .agents/skills/markdown-documentation/SKILL.md: sha256:0b013385eade9fd915d05beb58a8093cb174944e91380a5bf1afa0960414e706
     .agents/skills/markdown-documentation/assets/template.md: sha256:9a8c12cc025d576f7103f2e9fd5a362c0315fd7a7d063e117293b71e293c98ab
     .agents/skills/markdown-documentation/evals/evals.json: sha256:9cfd8a6f3936645a31f454875f03259e5aa0d3955097704be4eb3f15aa9f9b2f
@@ -94,7 +123,8 @@ dependencies:
     .agents/skills/tool-command-creator/evals/evals.json: sha256:d17ed386c0a4708ba1856ee01f22ff57f5f0f5026926c1a0648bd8b65a6d3fd0
     .agents/skills/tool-command-creator/evals/files/coding.comment.md: sha256:03f18b6557d3dd51d17171f56049e8dbe3dfeea19ed58f3b7da81abecb7d373a
     .agents/skills/tool-command-creator/evals/files/coding.format-plan.md: sha256:ff027da049158ad7dc58a5f5ba1a216cb1a5a86e8ebf84a6148cfd5b328d4bfa
-    .agents/skills/tool-skill-creator-extension/SKILL.md: sha256:d459bebf6a3e8fa95fc8358a9485719d19ee519db2196b352946edbe546caeb8
+    .agents/skills/tool-skill-creator-extension/SKILL.md: sha256:4ffe7a1bcd30fba2076082fe396ee9dd70e89a3aff7692e6c70f22427e9dce61
+    .agents/skills/tool-skill-creator-extension/evals/evals.json: sha256:e26f29229a7f5f6c498e65634328c127d7979399955831ef6d1f6c0ba4755aea
     .agents/skills/tool-sub-agent-creator/SKILL.md: sha256:11a1a512d7f90e90bb9b2cb8f32f234e2459f2c49fbc83961e88e435268dc6fc
     .agents/skills/tool-sub-agent-creator/assets/subagent.md: sha256:d65932673c9132913c3c5b5b63adf452afd5e28479ee6f3986d8c480efd0fe58
     .agents/skills/tool-sub-agent-creator/evals/evals.json: sha256:a5da45842376ca01ebdab97a65d5b4217b416b6f29a363d53449c23b1843f6fa
@@ -376,7 +406,7 @@ dependencies:
   host: github.com
   resolved_commit: 83ba6311412300f1b20c43978965ba15ef45c9ba
   resolved_ref: main
-  version: unknown
+  version: 0.0.0
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/dart-add-unit-test
@@ -5196,7 +5226,133 @@ deployments:
   owners:
   - ./packages/armyknife
   active_owner: ./packages/armyknife
-  content_hash: sha256:aac07c2be7d085eaf55e89bd2490b54517a3c077bad69fee979cec94519bbdee
+  content_hash: sha256:6d3664edd6f72cae7ece3e76799a22cfafacd376c4239541a2ad150db604f354
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/.gitignore
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:c66e220a3d0caadba127edaabbf71d859f244cf5fb0f779fa8073cd93828cb02
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/README.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:e224490391b1b6d49e2dae60c3cdb8601697fd825bb7e786f83e49ec1fd8e2ff
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/evals.json
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:dabeac22dd9048a9206c6cc582b8b0c78726d37285cbce6d82bd4839065be879
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/docker-system-df.txt
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:faee335eb7a84a2d53f8d864b52cd20bfdcf75ddccb202f7151d52a8971a8b56
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.cache/tiny/x.bin
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:e5b844cc57f57094ea4585e235f36c78c1cd222262bb89d53c94dcb4d6b3e55d
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.gradle/caches/modules.bin
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:026e0c967a382e8851c67a26f04110722d4894522a60267d7ec20df4ddcf73bf
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.npm/_cacache/data.bin
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:78a137b7b548cfc1976d0b718a0045acf5a21fb8689cf092705fcaa443053f3c
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/.pub-cache/hosted/pkg.bin
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:8213dc000104735271db2579aa28419f6b9b6f2509f97dc246a4c6ee681f4ff5
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Documents/notes/readme.txt
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:0a57622f8e3fdc35e351e073c75da66505301be57061c92efa3563740e9e2147
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Library/Caches/Homebrew/downloads.bin
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:6ed5e85372e488807486f4446e2a3a501d319be812e969e3de426db798cc5704
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/Library/Caches/com.apple.Safari/web.bin
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:8565a714dca840f8652c5bae9249ab05f5fb5a4f9f13fbe23304b10f68252da2
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/files/fake-home/workspace/build/artifacts.bin
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:d51787eb4767cb7409c75f42858f283debf6203bbcec6fbb65859a913d4aa13f
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/generate_fixtures.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:92a0f6c8e858efd1e4ba88d64b502cbb2d8354ded6c90f2afc92bd07e35bc831
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/maintenance-measure-cache-size/evals/templates/docker-system-df.txt
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:faee335eb7a84a2d53f8d864b52cd20bfdcf75ddccb202f7151d52a8971a8b56
 - kind: project-relative
   target: cursor
   value: .agents/skills/markdown-documentation
@@ -5574,7 +5730,16 @@ deployments:
   owners:
   - ./packages/armyknife
   active_owner: ./packages/armyknife
-  content_hash: sha256:d459bebf6a3e8fa95fc8358a9485719d19ee519db2196b352946edbe546caeb8
+  content_hash: sha256:4ffe7a1bcd30fba2076082fe396ee9dd70e89a3aff7692e6c70f22427e9dce61
+- kind: project-relative
+  target: cursor
+  value: .agents/skills/tool-skill-creator-extension/evals/evals.json
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/armyknife
+  active_owner: ./packages/armyknife
+  content_hash: sha256:e26f29229a7f5f6c498e65634328c127d7979399955831ef6d1f6c0ba4755aea
 - kind: project-relative
   target: cursor
   value: .agents/skills/tool-sub-agent-creator
