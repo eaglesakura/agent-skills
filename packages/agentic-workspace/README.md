@@ -24,6 +24,28 @@ dependencies:
     - eaglesakura/agent-skills/packages/agentic-workspace/.apm/skills/markdown-format
 ```
 
+## 推奨するワークスペース構造
+
+`workspace-agent-temporary` / `workspace-agent-memory-save` / `markdown-search` 等に基づく。
+`.ai-agent/` はコミット対象外（ひな形は `workspace-agent-temporary` の `assets/.ai-agent/`）。
+HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優先する（`workspace-resolve-file-path`）。
+
+```text
+.
+├── AGENTS.md                      # Agent 向けプロジェクト規約（常時 Context）
+├── README.md
+├── apm.yml                        # APM 依存定義（任意）
+├── .ai-agent/                     # Agent 作業領域（gitignore・単数形のみ）
+│   ├── .gitignore
+│   ├── tmp/                       # 使い捨てスクリプト・ログ・下書き
+│   ├── plan/                      # 実行中・レビュー中の計画 (*.md)
+│   │   └── done/                  # 完了した計画
+│   └── memory/                    # 調査結果・引き継ぎ Memory (*.md)
+│       └── done/                  # 用済み Memory
+├── docs/                          # 技術ドキュメント正本（markdown-*）
+└── apm_modules/                   # APM 依存の展開先. AI Agentの固有アセットの探索先としても参照される.
+```
+
 ## SKILLS
 
 ※ `.apm/skills/` 配下（アルファベット順）。

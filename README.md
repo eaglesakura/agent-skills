@@ -16,17 +16,17 @@
 * 必要なpackageもしくはSKILLのみを選択して導入することが可能
 * 各パッケージの SKILL・Command・Sub Agent の詳細は、パッケージごとの README を参照する。
 
-| パッケージ | パス | 依存の書き方 |
+| パッケージ | 用途 | 依存の書き方 |
 | --- | --- | --- |
-| `agent-creator` | [`packages/agent-creator`](packages/agent-creator) | `eaglesakura/agent-skills/packages/agent-creator` |
-| `agentic-workspace` | [`packages/agentic-workspace`](packages/agentic-workspace) | `eaglesakura/agent-skills/packages/agentic-workspace` |
-| `coding-xm3` | [`packages/coding-xm3`](packages/coding-xm3) | `eaglesakura/agent-skills/packages/coding-xm3` |
-| `cursor-extensions` | [`packages/cursor-extensions`](packages/cursor-extensions) | `eaglesakura/agent-skills/packages/cursor-extensions` |
-| `flutter` | [`packages/flutter`](packages/flutter) | `eaglesakura/agent-skills/packages/flutter` |
-| `github` | [`packages/github`](packages/github) | `eaglesakura/agent-skills/packages/github` |
-| `golang` | [`packages/golang`](packages/golang) | `eaglesakura/agent-skills/packages/golang` |
-| `machine` | [`packages/machine`](packages/machine) | `eaglesakura/agent-skills/packages/machine` |
-| `ohitorisama` | [`packages/ohitorisama`](packages/ohitorisama) | `eaglesakura/agent-skills/packages/ohitorisama` |
+| [`agent-creator`](packages/agent-creator/README.md) | SKILL・slash-command・Sub Agent の作成・改訂 | `eaglesakura/agent-skills/packages/agent-creator` |
+| [`agentic-workspace`](packages/agentic-workspace/README.md) | AI Agentに最適化したワークスペースの構築・運用 | `eaglesakura/agent-skills/packages/agentic-workspace` |
+| [`coding-xm3`](packages/coding-xm3/README.md) | 要件定義・詳細設計・実施を効率的に行うAI Agentフロー | `eaglesakura/agent-skills/packages/coding-xm3` |
+| [`cursor-extensions`](packages/cursor-extensions/README.md) | Cursor 固有の運用（Claude Code CLI → Cursor Agent CLI 置換等） | `eaglesakura/agent-skills/packages/cursor-extensions` |
+| [`flutter`](packages/flutter/README.md) | Flutter / Dart 向け SKILL（規約・Layered Architecture・デバッグ等） | `eaglesakura/agent-skills/packages/flutter` |
+| [`github`](packages/github/README.md) | GitHub 運用（Actions 依存のセキュリティ等） | `eaglesakura/agent-skills/packages/github` |
+| [`golang`](packages/golang/README.md) | Go 向け SKILL（規約・fmt / lint / test 等） | `eaglesakura/agent-skills/packages/golang` |
+| [`machine`](packages/machine/README.md) | ローカルマシン運用（ディスク占有・キャッシュ調査等） | `eaglesakura/agent-skills/packages/machine` |
+| [`ohitorisama`](packages/ohitorisama/README.md) | 個人開発向け（PR 作成・ブランチ命名等） | `eaglesakura/agent-skills/packages/ohitorisama` |
 
 ```yaml
 dependencies:
@@ -41,15 +41,3 @@ dependencies:
     - eaglesakura/agent-skills/packages/machine
     - eaglesakura/agent-skills/packages/ohitorisama
 ```
-
-| パッケージ | 用途 | README |
-| --- | --- | --- |
-| `agent-creator` | SKILL・slash-command・Sub Agent の作成・改訂 | [packages/agent-creator/README.md](packages/agent-creator/README.md) |
-| `agentic-workspace` | AI Agent 協業向けワークスペースの構築・運用 | [packages/agentic-workspace/README.md](packages/agentic-workspace/README.md) |
-| `coding-xm3` | 要件定義・詳細設計・実施を効率的に行うAI Agentフロー | [packages/coding-xm3/README.md](packages/coding-xm3/README.md) |
-| `cursor-extensions` | Cursor 固有の運用（Claude Code CLI → Cursor Agent CLI 置換等） | [packages/cursor-extensions/README.md](packages/cursor-extensions/README.md) |
-| `flutter` | Flutter / Dart 向け SKILL（規約・Layered Architecture・デバッグ等） | [packages/flutter/README.md](packages/flutter/README.md) |
-| `github` | GitHub 運用（Actions 依存のセキュリティ等） | [packages/github/README.md](packages/github/README.md) |
-| `golang` | Go 向け SKILL（規約・fmt / lint / test 等） | [packages/golang/README.md](packages/golang/README.md) |
-| `machine` | ローカルマシン運用（ディスク占有・キャッシュ調査等） | [packages/machine/README.md](packages/machine/README.md) |
-| `ohitorisama` | 個人開発向け（PR 作成・ブランチ命名等） | [packages/ohitorisama/README.md](packages/ohitorisama/README.md) |
