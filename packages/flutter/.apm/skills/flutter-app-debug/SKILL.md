@@ -2,7 +2,7 @@
 name: flutter-app-debug
 description: >-
   Flutter アプリの実機／エミュ起動・DTD アタッチ・ランタイムデバッグ用 SKILL。 launch.json 読取、`flutter devices` /
-  `flutter run --print-dtd`（`mise exec --` 等の規定 prefix）、 Dart MCP（DTD）での
+  `flutter run --print-dtd`、 Dart MCP（DTD）での
   get_runtime_errors / widget_inspector / hot_reload / hot_restart / flutter_driver、
   「アプリ起動」「デバイスで動かす」「クラッシュ確認」「Widget ツリー」「DTD / ws:// に繋ぐ」「自律デバッグ」では必ず使う。 VM Service の
   http:// と DTD の ws:// を混同しないこと。 Maestro の黒箱 UI テスト、Dart コーディング規約だけの実装、画面
@@ -29,7 +29,7 @@ metadata:
 3. `flutter run --print-dtd` で起動する（または既存 DTD にアタッチ）
 4. Dart MCP の `dtd` で接続し、目的の検査・操作を行う
 
-コマンドは常にプロジェクト規定の prefix（本リポジトリでは `mise exec --`）を付ける。
+コマンド実行時は、プロジェクト規定のツールチェイン（あれば）に従う。
 
 ## Flutter の起動構成の把握
 
@@ -114,6 +114,6 @@ DTD URIを指定してください。
 
 ## ナレッジベース
 
-### DO: プロジェクト規定のコマンド prefix を付ける
+### DO: プロジェクト規定のツールチェインに従う
 
-* `mise` / `fvm` 等がある場合はそのルールに従う（例: `flutter ...`）
+* リポジトリにツールチェイン規定があればそれに従い、コマンド例はツール本体（例: `flutter ...`）として読む

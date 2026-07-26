@@ -25,17 +25,18 @@ metadata:
 * 対象ファイル、またはディレクトリ（配下のすべての `*.md`）
 
 ```bash
-mise exec -- find "path/to/directory/" -name "*.md"
+find "path/to/directory/" -name "*.md"
 ```
 
 ## 手順
 
-基本ツールは `npx markdownlint-cli2`（常に `mise exec --` 経由）。
+基本ツールは `npx markdownlint-cli2`。
+コマンド実行時は、プロジェクト規定のツールチェイン（あれば）に従う。
 
 ### ステップ1. 自動修正
 
 ```bash
-mise exec -- npx markdownlint-cli2 --fix path/to/markdown_file.md
+npx markdownlint-cli2 --fix path/to/markdown_file.md
 ```
 
 複数ファイル・ディレクトリも同様にパスを渡す。

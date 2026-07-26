@@ -19,11 +19,6 @@ metadata:
 
 計画の **立案** と **実装** は別である。シニアは抽象方針から詳細計画を書けるが、実装時に抽象指示のまま手を動かすことはできない。
 
-## アセットディレクトリ
-
-* `../../assets/`
-* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
-
 ---
 
 ## ジュニアエンジニア
