@@ -10,10 +10,6 @@ description: >-
 license: MIT License
 metadata:
   author: "@eaglesakura"
-  references:
-    - workspace-layout
-    - workspace-agent-memory-save
-    - workspace-resolve-file-path
 ---
 # Workspace / Agent Temporary
 

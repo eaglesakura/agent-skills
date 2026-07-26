@@ -14,11 +14,6 @@ description: >-
 license: MIT License
 metadata:
   author: "@eaglesakura"
-  references:
-    - skill-creator
-    - workspace-resolve-agent-assets
-    - tool-command-creator
-    - tool-sub-agent-creator
 ---
 # Tool / Skill Creator Extension
 

@@ -9,11 +9,6 @@ description: >-
 license: MIT License
 metadata:
   author: "@eaglesakura"
-  references:
-    - workspace-agent-temporary
-    - workspace-agent-memory-save
-    - workspace-resolve-file-path
-    - workspace-resolve-agent-assets
 ---
 # Workspace / Layout
 

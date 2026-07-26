@@ -9,12 +9,6 @@ description: >-
 license: MIT License
 metadata:
   author: "@eaglesakura"
-  references:
-    - tool-command-creator
-    - agent-call-sub-agent
-    - workspace-resolve-agent-assets
-    - markdown-documentation
-    - [subagent.md](./assets/subagent.md)
 ---
 # Tool / Cursor Sub Agent Creator
 
