@@ -16,3 +16,5 @@ dependencies:
   apm:
     - microsoft/apm/packages/apm-guide#v0.26.0
     - anthropics/skills/skills/skill-creator#main
+    # {assets}/ 解決など agentic-workspace 配下 SKILL を本文参照するため
+    - eaglesakura/agent-skills/packages/agentic-workspace
