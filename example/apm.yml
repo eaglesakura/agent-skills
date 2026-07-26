@@ -13,7 +13,7 @@ dependencies:
     - dart-lang/skills#main
     - anthropics/skills/skills/skill-creator#main
     - eaglesakura/agent-skills/packages/agent-creator
-    - eaglesakura/agent-skills/packages/armyknife
+    - eaglesakura/agent-skills/packages/agentic-workspace
     - eaglesakura/agent-skills/packages/coding-xm3
     - eaglesakura/agent-skills/packages/cursor-extensions
     - eaglesakura/agent-skills/packages/flutter

@@ -98,11 +98,11 @@ dependencies:
     .agents/skills/dart-use-primary-constructors/SKILL.md: sha256:598d2fcb7641f6715861827840698450c3e8d077b4e92326e8bffe87e5b23c0c
   content_hash: sha256:9a18b24d38ad47d88ac23869bb5939f28dba22b4633b65a53972e7e46cf077c3
 - repo_url: eaglesakura/agent-skills
-  name: armyknife
+  name: agentic-workspace
   host: github.com
   resolved_commit: f9ef44b93b6aa4b5a6e917753c74ad82d542c664
   version: 0.1.0
-  virtual_path: packages/armyknife
+  virtual_path: packages/agentic-workspace
   is_virtual: true
   package_type: apm_package
   deployed_files:
@@ -1126,8 +1126,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -1135,8 +1135,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:8971da6a601433d367e0576bbe5f179795f633b33d83669df66af489794de3b3
 - kind: project-relative
   target: cursor
@@ -1144,8 +1144,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:23b95072a8d17a58dd754eb475419d9216610ec0e96ababe626eebe07f8ad4f4
 - kind: project-relative
   target: cursor
@@ -2071,8 +2071,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -2080,8 +2080,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:efff3eafac1283e6996be36fc9f73530b8855a1f73e0bfa07db89a15484550de
 - kind: project-relative
   target: cursor
@@ -5212,8 +5212,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5221,8 +5221,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:6d3664edd6f72cae7ece3e76799a22cfafacd376c4239541a2ad150db604f354
 - kind: project-relative
   target: cursor
@@ -5230,8 +5230,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:c66e220a3d0caadba127edaabbf71d859f244cf5fb0f779fa8073cd93828cb02
 - kind: project-relative
   target: cursor
@@ -5239,8 +5239,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:e224490391b1b6d49e2dae60c3cdb8601697fd825bb7e786f83e49ec1fd8e2ff
 - kind: project-relative
   target: cursor
@@ -5248,8 +5248,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:dabeac22dd9048a9206c6cc582b8b0c78726d37285cbce6d82bd4839065be879
 - kind: project-relative
   target: cursor
@@ -5257,8 +5257,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:92a0f6c8e858efd1e4ba88d64b502cbb2d8354ded6c90f2afc92bd07e35bc831
 - kind: project-relative
   target: cursor
@@ -5266,8 +5266,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:faee335eb7a84a2d53f8d864b52cd20bfdcf75ddccb202f7151d52a8971a8b56
 - kind: project-relative
   target: cursor
@@ -5275,8 +5275,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5284,8 +5284,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:0b013385eade9fd915d05beb58a8093cb174944e91380a5bf1afa0960414e706
 - kind: project-relative
   target: cursor
@@ -5293,8 +5293,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:9a8c12cc025d576f7103f2e9fd5a362c0315fd7a7d063e117293b71e293c98ab
 - kind: project-relative
   target: cursor
@@ -5302,8 +5302,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:9cfd8a6f3936645a31f454875f03259e5aa0d3955097704be4eb3f15aa9f9b2f
 - kind: project-relative
   target: cursor
@@ -5311,8 +5311,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:c6edb9779a9508fdadc33c0190f49266e6e6fd482b8212e1cfce5fd9b1039ceb
 - kind: project-relative
   target: cursor
@@ -5320,8 +5320,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:a42b56aecd3b3bd2aa634e3ce603f3580c7ef65e651a2ed92b0d87bdb61b3715
 - kind: project-relative
   target: cursor
@@ -5329,8 +5329,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:5454b967e4d31eeca56871d012c23414b2baf3d484a624bcf8bcd4eb31df6114
 - kind: project-relative
   target: cursor
@@ -5338,8 +5338,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5347,8 +5347,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:b7c5d0dbb79137713dee4c1a0d1e6c447a60fc692a23bf56c908ed99223f97e6
 - kind: project-relative
   target: cursor
@@ -5356,8 +5356,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:3615d5902d94835eaff0542b4a744565f787b858cf129f995e3467b3cfebf307
 - kind: project-relative
   target: cursor
@@ -5365,8 +5365,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5374,8 +5374,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:a64d084ccd7f298ba16fadb73553455bf274e9a4e2d6013cad19a4e5fd7e0596
 - kind: project-relative
   target: cursor
@@ -5383,8 +5383,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:d02cbc721ffe5bed0fa115247d389d09af891880d8b86639b60c31bc09d6a491
 - kind: project-relative
   target: cursor
@@ -5392,8 +5392,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:afb999105426efdf78606b5c87ab978ab3ffb75dd004d5f4f76109cd7f4493c8
 - kind: project-relative
   target: cursor
@@ -5401,8 +5401,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:b9e741319e95cf2e1468cae1adad67b36529178cc2b11eab1797dbd15791dd9d
 - kind: project-relative
   target: cursor
@@ -5581,8 +5581,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5590,8 +5590,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:08203f530757a41584b6dd7345b661489527fe500f55b800675d35d2790df634
 - kind: project-relative
   target: cursor
@@ -5599,8 +5599,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:3363c5eed0bebc8f037b94dba1b568a18787e559c4b27645a4e62db9c9535a5a
 - kind: project-relative
   target: cursor
@@ -5608,8 +5608,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:d17ed386c0a4708ba1856ee01f22ff57f5f0f5026926c1a0648bd8b65a6d3fd0
 - kind: project-relative
   target: cursor
@@ -5617,8 +5617,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:03f18b6557d3dd51d17171f56049e8dbe3dfeea19ed58f3b7da81abecb7d373a
 - kind: project-relative
   target: cursor
@@ -5626,8 +5626,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:ff027da049158ad7dc58a5f5ba1a216cb1a5a86e8ebf84a6148cfd5b328d4bfa
 - kind: project-relative
   target: cursor
@@ -5635,8 +5635,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5644,8 +5644,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:4ffe7a1bcd30fba2076082fe396ee9dd70e89a3aff7692e6c70f22427e9dce61
 - kind: project-relative
   target: cursor
@@ -5653,8 +5653,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:e26f29229a7f5f6c498e65634328c127d7979399955831ef6d1f6c0ba4755aea
 - kind: project-relative
   target: cursor
@@ -5662,8 +5662,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5671,8 +5671,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:11a1a512d7f90e90bb9b2cb8f32f234e2459f2c49fbc83961e88e435268dc6fc
 - kind: project-relative
   target: cursor
@@ -5680,8 +5680,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:d65932673c9132913c3c5b5b63adf452afd5e28479ee6f3986d8c480efd0fe58
 - kind: project-relative
   target: cursor
@@ -5689,8 +5689,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:a5da45842376ca01ebdab97a65d5b4217b416b6f29a363d53449c23b1843f6fa
 - kind: project-relative
   target: cursor
@@ -5698,8 +5698,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5707,8 +5707,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:a4306c5973889ac0024b3c628a108f22fc59cfcb3b33ec65ebcf5b45e6679427
 - kind: project-relative
   target: cursor
@@ -5716,8 +5716,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:5015f184578613db993245e80b210d73b1e33d38f6a7aea056bfbcdb5c558b8c
 - kind: project-relative
   target: cursor
@@ -5725,8 +5725,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:56700dcd2c118ce3978ab1f9794410e59c294d891cf6505f06ad3dd150ba582b
 - kind: project-relative
   target: cursor
@@ -5734,8 +5734,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
 - kind: project-relative
   target: cursor
@@ -5743,8 +5743,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:956206e9f93b4a5d169c47d8a2c294448142ea01a6ccd9f483e1186f50c523eb
 - kind: project-relative
   target: cursor
@@ -5752,8 +5752,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5761,8 +5761,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:97a12d839be112efeb9956fc0941dc5028eef941cb6f1b50f17df7d52174a38f
 - kind: project-relative
   target: cursor
@@ -5770,8 +5770,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:c6dd25d2fa2c4061b004f38518d9f0f35b6c03aed559f34d7a4e0087bb5aafbc
 - kind: project-relative
   target: cursor
@@ -5779,8 +5779,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5788,8 +5788,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5797,8 +5797,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5806,8 +5806,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - kind: project-relative
   target: cursor
@@ -5815,8 +5815,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d
 - kind: project-relative
   target: cursor
@@ -5824,8 +5824,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:f1986aaf06f7b7b96a1f13c257682cd3594bf0bf8a3c5bd0e814d87e19419a80
 - kind: project-relative
   target: cursor
@@ -5833,8 +5833,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5842,8 +5842,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:697d1157ed002c98a44c259d96186eaf8b977026321ad1bd1a1f1d25f4e37b0e
 - kind: project-relative
   target: cursor
@@ -5851,8 +5851,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:054eafdc630a956147ae67847701cf4f0d6cccc707bcda9f7baac91ca9c1587b
 - kind: project-relative
   target: cursor
@@ -5860,8 +5860,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:d6fb680221be9d241d96d86cdea7c2675747cc65891164d55cfc2e09e4d4b9aa
 - kind: project-relative
   target: cursor
@@ -5869,8 +5869,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5878,8 +5878,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:2623ccaed5212ee6c1ae86e887974126921b08c2e358b8133e224bae04e6de88
 - kind: project-relative
   target: cursor
@@ -5887,8 +5887,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5896,8 +5896,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:2c50de60e4b00cee339e2f3054be8faac19c05dd43dd03b14453d187492df037
 - kind: project-relative
   target: cursor
@@ -5905,8 +5905,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:9c246fc0aaa2b8c04e5fb16735fc93ec81879c62442a83febdae6c80cd435c03
 - kind: project-relative
   target: cursor
@@ -5914,8 +5914,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5923,8 +5923,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:8fa68996728fd47b4e24652e133970220929053e5b03cf77a75ccc7c433623b6
 - kind: project-relative
   target: cursor
@@ -5932,8 +5932,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:2a9da180e3d3484ebd7f95ad6b1dbc0035c88eabbabc00a6163d199a9598b59e
 - kind: project-relative
   target: cursor
@@ -5941,8 +5941,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -5950,8 +5950,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:c7f2e9a67a1595b7480c8a5b478bbc1d5cef65a5e1fd348dc39f9eed25ed1be0
 - kind: project-relative
   target: cursor
@@ -5959,8 +5959,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:0a12519ec59f71fcac6966aad5dd18a8b52f16b11c2634d50539ab6c68cd9ec0
 - kind: project-relative
   target: cursor
@@ -6076,8 +6076,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife
-  active_owner: eaglesakura/agent-skills/packages/armyknife
+  - eaglesakura/agent-skills/packages/agentic-workspace
+  active_owner: eaglesakura/agent-skills/packages/agentic-workspace
   content_hash: sha256:1fd3b3e6cbcc4c906dda2e716472569668ecd35e89894e2c94e92fc79cf4f2f9
 - kind: project-relative
   target: cursor

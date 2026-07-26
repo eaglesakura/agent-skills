@@ -3,7 +3,7 @@ version: 0.1.0
 description: |
   Coding-Commands（要件→詳細設計→実施）と関連 Sub Agent / SKILL / 共有アセット。
   plan.init・コメント適正化も含む。
-  armyknife（markdown-search / workspace-agent-temporary 等）に依存する。
+  agentic-workspace（markdown-search / workspace-agent-temporary 等）に依存する。
 author: "@eaglesakura"
 license: MIT
 type: hybrid

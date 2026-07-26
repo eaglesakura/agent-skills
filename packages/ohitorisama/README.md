@@ -1,7 +1,7 @@
 # eaglesakura/ohitorisama
 
-個人開発（お一人様）向けの Slash Command / アセット集である。
-GitHub Pull Request 作成コマンドなどをまとめる。
+個人開発（お一人様）向けの Slash Command / SKILL / アセット集である。
+GitHub Pull Request 作成コマンド、ブランチ命名ルールなどをまとめる。
 
 ## Quick Start
 
@@ -13,15 +13,22 @@ dependencies:
 ```
 
 ```yaml
-# Command だけ導入（仮想ファイル）
+# SKILL / Command だけ導入（仮想サブディレクトリ / 仮想ファイル）
 dependencies:
   apm:
+    - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/workspace-git-branch-rule
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/prompts/github.create-pull-request.prompt.md
 ```
 
 ## SKILLS
 
-なし。
+※ `.apm/skills/` 配下（アルファベット順）。
+
+### workspace-git-branch-rule
+
+* `main`・`feature/id/...`・`release/...` などブランチ運用ルールを規定する。
+* ブランチ名から Issue との対応や作業種別を推測する際の参照とする。
+* `gh` でタスク内容を引くことと整合する命名規約を SKILL 本文で示す。
 
 ## Commands
 
@@ -58,7 +65,7 @@ base: feature/id/123/example
 
 ## 補助ファイル（テンプレート）
 
-Slash Command または SKILL から `{assets}/...` で参照する。正本は `.apm/assets/`。解決は `workspace-resolve-agent-assets`（`armyknife`）に従う。
+Slash Command または SKILL から `{assets}/...` で参照する。正本は `.apm/assets/`。解決は `workspace-resolve-agent-assets`（`agentic-workspace`）に従う。
 
 | ファイル | 参照元の例 |
 | --- | --- |

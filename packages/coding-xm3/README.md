@@ -3,7 +3,7 @@
 開発フローを最適化し、AI Agentが確実に開発を行うためのSKILL/Command/Sub Agentを提供する。
 
 Coding-Commands（要件 → 詳細設計 → 実施）と関連 Sub Agent / SKILL / 共有アセットである。
-`plan.init`・コメント適正化も含む。`armyknife`（`markdown-search` / `workspace-agent-temporary` 等）に依存する。
+`plan.init`・コメント適正化も含む。`agentic-workspace`（`markdown-search` / `workspace-agent-temporary` 等）に依存する。
 
 メインの 3 ステップ（要件 → 詳細設計 → 実施）の手順は [coding-command](docs/coding-command.md) を参照する。
 
@@ -12,7 +12,7 @@ Coding-Commands（要件 → 詳細設計 → 実施）と関連 Sub Agent / SKI
 ```yaml
 dependencies:
   apm:
-    - eaglesakura/agent-skills/packages/armyknife
+    - eaglesakura/agent-skills/packages/agentic-workspace
     - eaglesakura/agent-skills/packages/coding-xm3
 ```
 
@@ -286,7 +286,7 @@ XXXXをYYYYに変更
 
 ## 補助ファイル（テンプレート）
 
-Slash Command または SKILL から `{assets}/...` で参照する。正本は `.apm/assets/`。解決は `workspace-resolve-agent-assets`（`armyknife`）に従う。
+Slash Command または SKILL から `{assets}/...` で参照する。正本は `.apm/assets/`。解決は `workspace-resolve-agent-assets`（`agentic-workspace`）に従う。
 
 | ファイル | 参照元の例 |
 | --- | --- |

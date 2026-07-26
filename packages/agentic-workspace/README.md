@@ -1,11 +1,11 @@
-# armyknife
+# agentic-workspace
 
-汎用開発向けのユーティリティ SKILL 集である。
+AI Agent との協業に最適化したワークスペースを構築・運用するための SKILL 集である。
 Markdown 整備、ワークスペース運用などをまとめる。
 SKILL・slash-command・Sub Agent の作成手順は [`agent-creator`](../agent-creator) を参照する。
 ローカルマシンのキャッシュ調査は [`machine`](../machine) を参照する。
 GitHub Actions 依存のセキュリティは [`github`](../github) を参照する。
-GitHub Pull Request 作成コマンドは [`ohitorisama`](../ohitorisama) を参照する。
+GitHub Pull Request 作成コマンドは [`ohitorisama`](../ohitorisama) を参照する（ブランチ命名ルール含む）。
 
 ## Quick Start
 
@@ -13,15 +13,15 @@ GitHub Pull Request 作成コマンドは [`ohitorisama`](../ohitorisama) を参
 # 一括導入
 dependencies:
   apm:
-    - eaglesakura/agent-skills/packages/armyknife
+    - eaglesakura/agent-skills/packages/agentic-workspace
 ```
 
 ```yaml
 # SKILL だけ導入（仮想サブディレクトリ）
 dependencies:
   apm:
-    - eaglesakura/agent-skills/packages/armyknife/.apm/skills/markdown-search
-    - eaglesakura/agent-skills/packages/armyknife/.apm/skills/markdown-format
+    - eaglesakura/agent-skills/packages/agentic-workspace/.apm/skills/markdown-search
+    - eaglesakura/agent-skills/packages/agentic-workspace/.apm/skills/markdown-format
 ```
 
 ## SKILLS
@@ -65,12 +65,6 @@ dependencies:
 ### workspace-count-tokens
 
 * Cursor ワークスペースのデフォルト Context と、動的ロード時の SKILL.md / docs・references の最大トークンを概算する。
-
-### workspace-git-branch-rule
-
-* `main`・`feature/id/...`・`release/...` などブランチ運用ルールを規定する。
-* ブランチ名から Issue との対応や作業種別を推測する際の参照とする。
-* `gh` でタスク内容を引くことと整合する命名規約を SKILL 本文で示す。
 
 ### workspace-resolve-agent-assets
 

@@ -1,7 +1,7 @@
-name: armyknife
+name: agentic-workspace
 version: 0.1.0
 description: |
-  汎用開発向けのユーティリティ SKILL 集。
+  AI Agent との協業に最適化したワークスペースを構築・運用するための SKILL 集。
   Markdown 整備、ワークスペース運用などをまとめる。
 author: "@eaglesakura"
 license: MIT

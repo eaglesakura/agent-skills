@@ -41,7 +41,7 @@
       "files": [],
       "expectations": [
         "answer.md lists a path ending with packages/coding-xm3/.apm/assets",
-        "Does not claim armyknife assets as the package root",
+        "Does not claim agentic-workspace assets as the package root",
         "Mentions ## アセットディレクトリ or ../../assets/"
       ]
     }

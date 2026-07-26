@@ -14,7 +14,7 @@ dependencies:
     - dart-lang/skills#main
     - anthropics/skills/skills/skill-creator#main
     - path: ./packages/agent-creator
-    - path: ./packages/armyknife
+    - path: ./packages/agentic-workspace
     - path: ./packages/coding-xm3
     - path: ./packages/cursor-extensions
     - path: ./packages/flutter
