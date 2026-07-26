@@ -11,3 +11,7 @@ targets:
   - cursor
   - claude
   - copilot
+
+dependencies:
+  apm:
+    - microsoft/apm/packages/apm-guide#v0.26.0

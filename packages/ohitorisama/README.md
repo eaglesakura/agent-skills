@@ -20,6 +20,10 @@ dependencies:
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/prompts/github.create-pull-request.prompt.md
 ```
 
+## 依存APM Package
+
+* `eaglesakura/agentic-workspace`
+
 ## SKILLS
 
 ※ `.apm/skills/` 配下（アルファベット順）。

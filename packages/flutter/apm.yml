@@ -11,3 +11,7 @@ targets:
   - cursor
   - claude
   - copilot
+
+dependencies:
+  apm:
+    - samber/cc-skills-flutter#v1.9.0

@@ -11,6 +11,10 @@ dependencies:
     - eaglesakura/agent-skills/packages/flutter
 ```
 
+## 依存APM Package
+
+* `eaglesakura/agentic-workspace`
+
 ## SKILLS
 
 ※ `.apm/skills/` 配下（アルファベット順）。

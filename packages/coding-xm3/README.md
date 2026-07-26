@@ -16,6 +16,10 @@ dependencies:
     - eaglesakura/agent-skills/packages/coding-xm3
 ```
 
+## 依存APM Package
+
+* `eaglesakura/agentic-workspace`
+
 ## ユースケース
 
 ### 小規模タスク

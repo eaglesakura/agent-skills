@@ -10,9 +10,6 @@ targets:
 dependencies:
   apm:
     - microsoft/apm/packages/apm-guide#v0.26.0
-    - samber/cc-skills-golang#v1.9.0
-    - dart-lang/skills#main
-    - anthropics/skills/skills/skill-creator#main
     - path: ./packages/agent-creator
     - path: ./packages/agentic-workspace
     - path: ./packages/coding-xm3
