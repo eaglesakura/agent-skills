@@ -27,7 +27,7 @@ Sub Agent はクリーンコンテキストで動く特化 Agent である。
 * プロジェクト共有のみ: `.cursor/agents/{agent-name}.md`
 * ファイル名（拡張子除く）と frontmatter `name` を一致させる
 * 命名は `{領域}.{役割}` のドット区切りを推奨する
-  * 例: `coding-assistant.junior-engineer`、`coding-assistant.plan-reviewer`
+  * 例: `docs-assistant.writer`、`docs-assistant.plan-reviewer`
 * 本文 H1 はファイル名ではなく `{ロール} / {職能} / {実施するタスク}` の三段とする
   * 例: `ジュニアエンジニア / 実装アシスタント / 承認済み計画ステップの実装`
 
@@ -117,7 +117,7 @@ description: >-
 ## アセットディレクトリ
 
 * `../assets/`
-* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/agent-creator/.apm/assets/`
 ```
 
 ## 親 Agent・SKILL との関係

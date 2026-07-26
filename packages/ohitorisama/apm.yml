@@ -11,3 +11,7 @@ targets:
   - cursor
   - claude
   - copilot
+
+dependencies:
+  apm:
+    - eaglesakura/agent-skills/packages/agentic-workspace

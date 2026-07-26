@@ -7,7 +7,7 @@ description: >-
   インターフェース／実装分離、詳細設計前のアーキテクチャ確認では必ず使う。
   Usecase/Repository の定番実装パターン詳細は flutter-layered-architecture-design-patterns、
   画面 MVVM 実装は screen-mvvm、所在調査は code-search、Dart 言語規約のみは
-  flutter-coding-rules、汎用の実装差分設計のみは engineer-software-design を使う。
+  flutter-coding-rules を使う。レイヤー非依存の汎用詳細設計ドキュメント化だけなら本 SKILL は使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -32,7 +32,7 @@ metadata:
 * 画面の MVVM 実装手順 → `flutter-layered-architecture-screen-mvvm`
 * 既存コードの所在調査 → `flutter-layered-architecture-code-search`
 * Dart のコーディング規約だけ → `flutter-coding-rules`
-* レイヤー非依存の汎用詳細設計ドキュメント化だけ → `engineer-software-design`（必要なら本 SKILL を併用）
+* レイヤー非依存の汎用詳細設計ドキュメント化だけ（本アーキテクチャ前提が不要なとき）
 
 ## 作業手順
 

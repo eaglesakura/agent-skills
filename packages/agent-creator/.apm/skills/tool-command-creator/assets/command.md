@@ -50,8 +50,8 @@ description: >-
 * 各行は「このファイルからの相対パス」または「リポジトリルートからの相対パス」
 * 開発時（ソース相対）と install 後（ルート相対）の両方を並べると解決が安定する
   例:
-  * `../assets/github.create-pull-request/`
-  * `apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/`
+  * `../assets/example.command/`
+  * `apm_modules/eaglesakura/agent-skills/packages/agent-creator/.apm/assets/example.command/`
  -->
 
 ## 入力

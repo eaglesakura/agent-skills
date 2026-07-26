@@ -6,7 +6,7 @@ description: >-
   「Go を書く」「コメント規約どおり」「独自型にして」「errors.As」「DTO / 構造体の型」
   「*.go の実装・修正」では必ずロードし、該当 `references/` だけ読む。 fmt/lint/test
   の実行手順は golang-analyze、ConnectRPC/Repository/Usecase 設計は
-  golang.architecture.*、Dart 規約は flutter-coding-rules では使わない。
+  golang.architecture.* を使う。Dart / Flutter の言語規約には使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -25,7 +25,7 @@ metadata:
 
 * `go fmt` / `golangci-lint` / `go test` の実行手順だけ → `golang-analyze`
 * ConnectRPC / Repository / Usecase 等のアーキテクチャ設計 → 該当 `golang.architecture.*`
-* Dart / Flutter の言語規約 → `flutter-coding-rules`
+* Dart / Flutter の言語規約（他言語向けの規約 SKILL がある場合はそちら）
 
 ## 作業手順
 

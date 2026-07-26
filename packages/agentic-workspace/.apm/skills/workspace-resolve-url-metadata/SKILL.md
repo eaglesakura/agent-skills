@@ -5,8 +5,7 @@ description: >-
   SKILL。ホストやサービス（GitHub、Notion 等）ごとに取得手段は違うが、まず URL 種別を
   判別し、実データで ID／タイトルを正規化する。「この URL の ID/タイトル」
   「URL からメタデータ」「チケット URL をパース」「タスクID を URL から」では必ず使う。
-  feature ブランチ名から Issue を推測するだけは workspace-git-branch-rule、ローカルパス解決は
-  workspace-resolve-file-path、実装そのものでは使わない。
+  feature ブランチ名から Issue を推測するだけや、ローカルパス解決、実装そのものでは使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -25,7 +24,7 @@ metadata:
 
 ## いつ使わないか
 
-* ブランチ名 `feature/id/{n}/...` から Issue を辿るだけ → `workspace-git-branch-rule`（必要なら本 SKILL と併用可）
+* ブランチ名 `feature/id/{n}/...` から Issue を辿るだけ（ブランチ規約向けの SKILL がある場合はそちら。必要なら本 SKILL と併用可）
 * PR レビュー・CI 失敗調査そのもの（URL パースが必要なら入口だけ本 SKILL）
 * ローカルファイルパスの解決 → `workspace-resolve-file-path`
 
@@ -80,4 +79,4 @@ GitHub では owner/repo を `--repo` で明示する（カレントのデフォ
 
 ### DO NOT: ブランチ命名ルールの説明だけでチケット中身の取得を済ませようとする
 
-* ブランチ解釈は `workspace-git-branch-rule`、URL→メタデータは本 SKILL
+* ブランチ解釈はブランチ規約向け SKILL、URL→メタデータは本 SKILL

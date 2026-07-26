@@ -83,16 +83,16 @@ Sub Agent はクリーンコンテキストで起動し、親の Skills カタ�
 
 * 記載されたDescriptionから、必要に応じてApplyすること
 
-### agent-job-description
+### example-domain-rules
 
-* Path: /path/to/repo/.agents/skills/agent-job-description
+* Path: /path/to/repo/.agents/skills/example-domain-rules
 
-ジュニア／シニア等の職能ごとの技能範囲を定義する SKILL。
-「ジュニアエンジニアが作業可能」…（description全文）
+ドメイン固有の規約を定義する SKILL。
+「この領域のルールに従って」…（description全文）
 
-### engineer-software-design
+### example-workflow-design
 
-* Path: /path/to/repo/.agents/skills/engineer-software-design
+* Path: /path/to/repo/.agents/skills/example-workflow-design
 
 （description全文）
 ```

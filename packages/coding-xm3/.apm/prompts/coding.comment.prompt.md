@@ -15,8 +15,8 @@ metadata:
 指定範囲のコードコメントの粒度を、プロジェクト方針に合わせて適正化する。
 `/coding.execute` の品質フォローアップ等から参照される補助コマンドである。
 
-対象言語のコーディング規約 SKILL（例: `golang-coding-rules` / `flutter-coding-rules`）と、
-各 `references/code_comment.md` を適用したうえで、コメントの追加・更新を行う。
+対象言語のコーディング規約 SKILL（ワークスペースに導入済みのもの）と、
+各規約が指すコメント参照ドキュメントを適用したうえで、コメントの追加・更新を行う。
 
 ### Example
 
@@ -40,8 +40,7 @@ metadata:
 
 * `/coding.*`
 * `/coding.execute`
-* `golang-coding-rules`
-* `flutter-coding-rules`
+* 対象言語のコーディング規約 SKILL（導入済みのもの）
 
 ## 入力
 
@@ -132,10 +131,9 @@ flowchart TD
 
 ### ステップ1: 規約 SKILL のロード
 
-* 対象コードの言語・拡張子から、必要なコーディング規約 SKILL をロードする
-  * Go（`*.go`）: `golang-coding-rules` と [code_comment](../../.agents/skills/golang-coding-rules/references/code_comment.md)
-  * Dart（`*.dart`）: `flutter-coding-rules` と [code_comment](../../.agents/skills/flutter-coding-rules/references/code_comment.md)
-  * 上記以外: 対象リポジトリに存在する同種のコメント規約・コーディング規約をロードする
+* 対象コードの言語・拡張子から、ワークスペースに導入済みのコーディング規約 SKILL をロードする
+  * 拡張子・言語に対応する規約 SKILL と、その SKILL が案内するコメント参照（例: `references/code_comment.md`）を使う
+  * 該当言語向けの規約が無い場合は、対象リポジトリに存在する同種のコメント規約・コーディング規約をロードする
 * 言語または適用すべき規約が特定できない場合は、次の文言で終了する
 
 ```markdown

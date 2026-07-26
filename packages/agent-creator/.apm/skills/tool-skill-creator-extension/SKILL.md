@@ -104,7 +104,7 @@ Agent / パッケージが共有するテンプレートや雛形を SKILL か�
 ## アセットディレクトリ
 
 * `../../assets/`
-* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
+* `apm_modules/eaglesakura/agent-skills/packages/agent-creator/.apm/assets/`
 ```
 
 本文での参照例:

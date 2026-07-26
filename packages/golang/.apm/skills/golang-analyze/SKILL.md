@@ -6,8 +6,8 @@ description: >-
   破壊的変更のユーザー確認、テスト失敗時はエラー提示のみ（勝手に直さない）を適用する。
   「fmt して」「lint 回して」「テスト実行」「コーディング後の品質チェック」
   「golangci-lint」「go test の tags」では必ず使う。 規約どおりに *.go を書くだけは
-  golang-coding-rules、アーキテクチャ設計は golang.architecture.*、Dart/Flutter 解析は
-  flutter.* では使わない。
+  golang-coding-rules、アーキテクチャ設計は golang.architecture.* を使う。
+  Dart/Flutter の analyze・format や CI ワークフロー YAML 編集には使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -28,8 +28,8 @@ Go 実装のあと（または途中の節目）に、**フォーマット → �
 
 * `*.go` の書き方・コメント・データオブジェクト規約だけ → `golang-coding-rules`
 * ConnectRPC / Repository / Usecase 等の設計そのもの → 該当 `golang.architecture.*`
-* CI ワークフロー YAML の書き方 → `github-actions-dependencies-security`
-* Dart / Flutter の analyze・format → `flutter.*` 側
+* CI ワークフロー YAML の書き方（GitHub Actions 等の専用 SKILL がある場合はそちら）
+* Dart / Flutter の analyze・format（該当言語向けの品質 SKILL がある場合はそちら）
 
 ## 作業手順
 

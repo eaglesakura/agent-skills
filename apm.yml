@@ -10,12 +10,12 @@ targets:
 dependencies:
   apm:
     - microsoft/apm/packages/apm-guide#v0.26.0
-    - path: ./packages/agent-creator
     - path: ./packages/agentic-workspace
-    - path: ./packages/coding-xm3
     - path: ./packages/cursor-extensions
-    - path: ./packages/flutter
-    - path: ./packages/github
-    - path: ./packages/golang
+    - path: ./packages/agent-creator
     - path: ./packages/machine
+    - path: ./packages/github
+    - path: ./packages/flutter
+    - path: ./packages/golang
+    - path: ./packages/coding-xm3
     - path: ./packages/ohitorisama

@@ -65,15 +65,15 @@ APM などでインストール先が変わっても参照を保てるよう、�
 * ヒットが複数 → すべて示し、利用側が選べるようにする。非対話で 1 つに決める必要がある場合は、候補の列挙順で最初にヒットしたものを採用する（文書相対とルート相対の両方ヒットした同一エントリでは文書相対を先とする）
 * ヒットが 0 件 → 試した候補パス一覧とルールを報告し、推測読みはしない
 
-## 実例（`github.create-pull-request`）
+## 実例（自 package 内の架空コマンド）
 
 本文（要約）:
 
 ```markdown
 ## アセットディレクトリ
 
-* `../assets/github.create-pull-request/`
-* `apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/`
+* `../assets/example.command/`
+* `apm_modules/eaglesakura/agent-skills/packages/agentic-workspace/.apm/assets/example.command/`
 ```
 
 互換の frontmatter がある場合（任意）:
@@ -81,32 +81,32 @@ APM などでインストール先が変わっても参照を保てるよう、�
 ```yaml
 metadata:
   assets:
-    - "[github.create-pull-request/](../assets/github.create-pull-request/)"
-    - apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/
+    - "[example.command/](../assets/example.command/)"
+    - apm_modules/eaglesakura/agent-skills/packages/agentic-workspace/.apm/assets/example.command/
 ```
 
 本文参照: `{assets}/template.md`
 
-基準ファイルがパッケージソースの `.apm/prompts/github.create-pull-request.prompt.md` のとき、主な候補は次になる。
+基準ファイルがパッケージソースの `.apm/prompts/example.command.prompt.md` のとき、主な候補は次になる。
 
 ```text
 # 文書相対 × 1件目
-.apm/prompts/../assets/github.create-pull-request/template.md
-  → .apm/assets/github.create-pull-request/template.md
+.apm/prompts/../assets/example.command/template.md
+  → .apm/assets/example.command/template.md
 
 # ルート相対 × 2件目（利用者が apm install した場合）
-apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/template.md
+apm_modules/eaglesakura/agent-skills/packages/agentic-workspace/.apm/assets/example.command/template.md
 ```
 
 ```bash
 ROOT="$(git rev-parse --show-toplevel)"
-SOURCE_MD="path/to/github.create-pull-request.prompt.md"  # または展開後の .cursor/commands/...
+SOURCE_MD="path/to/example.command.prompt.md"  # または展開後の .cursor/commands/...
 SUFFIX="template.md"
 
 # ## アセットディレクトリ または metadata.assets から取り出した DIR 候補ごとに:
 for DIR in \
-  "../assets/github.create-pull-request" \
-  "apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request"
+  "../assets/example.command" \
+  "apm_modules/eaglesakura/agent-skills/packages/agentic-workspace/.apm/assets/example.command"
 do
   for CAND in \
     "$(dirname "$SOURCE_MD")/${DIR}/${SUFFIX}" \
@@ -128,7 +128,8 @@ done
 * 探索先は本文の `## アセットディレクトリ` に **ソース相対**（開発時）と **install 後ルート相対**（利用者ワークスペース）を並べる
 * 新規・改訂では `metadata.assets` に寄せず、本文セクションを正とする（APM が frontmatter の `metadata` を落とすターゲットでも本文が残る）
 * 旧文書の `metadata.assets` だけでも本 SKILL は解決できる
-* slash-command の書き方は `tool-command-creator` を参照する
+* install 後パス例の package 名は、その文書が属する package（または許可された依存）に合わせる
+* slash-command 本体の書き方は、各プロジェクトの command 作成用 SKILL / テンプレートに従う
 
 ## ナレッジベース
 
