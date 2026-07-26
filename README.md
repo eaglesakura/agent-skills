@@ -1,4 +1,4 @@
-# ai-agent-headquarters
+# eaglesakura/agent-skills
 
 ## このリポジトリについて
 
@@ -29,10 +29,10 @@ dependencies:
     - eaglesakura/agent-skills/packages/golang
 ```
 
-| パッケージ | README |
-| --- | --- |
-| `armyknife` | [packages/armyknife/README.md](packages/armyknife/README.md) |
-| `armyknife-cursor` | [packages/armyknife-cursor/README.md](packages/armyknife-cursor/README.md) |
-| `coding-xm3` | [packages/coding-xm3/README.md](packages/coding-xm3/README.md) |
-| `flutter` | [packages/flutter/README.md](packages/flutter/README.md) |
-| `golang` | [packages/golang/README.md](packages/golang/README.md) |
+| パッケージ | 用途 | README |
+| --- | --- | --- |
+| `armyknife` | 汎用開発向けユーティリティ（Markdown・ワークスペース・ツール作成等） | [packages/armyknife/README.md](packages/armyknife/README.md) |
+| `armyknife-cursor` | Cursor 固有の運用（Claude Code CLI → Cursor Agent CLI 置換等） | [packages/armyknife-cursor/README.md](packages/armyknife-cursor/README.md) |
+| `coding-xm3` | 要件定義・詳細設計・実施を効率的に行うAI Agentフロー | [packages/coding-xm3/README.md](packages/coding-xm3/README.md) |
+| `flutter` | Flutter / Dart 向け SKILL（規約・Layered Architecture・デバッグ等） | [packages/flutter/README.md](packages/flutter/README.md) |
+| `golang` | Go 向け SKILL（規約・fmt / lint / test 等） | [packages/golang/README.md](packages/golang/README.md) |

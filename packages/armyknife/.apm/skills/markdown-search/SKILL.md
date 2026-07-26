@@ -29,10 +29,12 @@ metadata:
 
 リポジトリルート（`.git` があるディレクトリ）からの相対パス:
 
-* `docs/`
-* `README.md`
-* `.cursor/skills/` / `.agents/skills/`（APM インストール先）
-* `packages/*/.apm/skills/`（本リポジトリの APM ソース）
+* `AGENTS.md` やRuleによって指定されたプロジェクト固有ディレクトリ
+* `docs/`: 標準ドキュメントディレクトリ
+* `README.md`: 標準README
+* `.cursor/skills/`
+* `.agents/skills/`
+* `apm_modules/`
 * `.ai-agent/memory/`（場所は `workspace-agent-temporary` に従う）
 
 ## 同梱スクリプト

@@ -1,9 +1,11 @@
 # coding-xm3
 
+開発フローを最適化し、AI Agentが確実に開発を行うためのSKILL/Command/Sub Agentを提供する。
+
 Coding-Commands（要件 → 詳細設計 → 実施）と関連 Sub Agent / SKILL / 共有アセットである。
 `plan.init`・コメント適正化も含む。`armyknife`（`markdown-search` / `workspace-agent-temporary` 等）に依存する。
 
-メインの 3 ステップ（要件 → 詳細設計 → 実施）の手順は [coding-command](../../docs/coding-command.md) を参照する。
+メインの 3 ステップ（要件 → 詳細設計 → 実施）の手順は [coding-command](docs/coding-command.md) を参照する。
 
 ## Quick Start
 
@@ -13,6 +15,86 @@ dependencies:
     - eaglesakura/agent-skills/packages/armyknife
     - eaglesakura/agent-skills/packages/coding-xm3
 ```
+
+## ユースケース
+
+### 小規模タスク
+
+* `/plan.init` + Planモードを使用する
+
+```mermaid
+flowchart TD
+    Start["/plan.init + 要件情報"] --> PlanMode
+
+    subgraph PlanMode["Planモードとして動作"]
+        Ask["AI Agent: 要件の確認・質問"] --> Answer["ユーザー: 回答・修正指示"]
+        Answer --> Decide{"要件が確定したか"}
+        Decide -->|いいえ| Ask
+        Decide -->|はい| Build["Build"]
+    end
+```
+
+* 推奨するタスク規模
+  * クラスリネーム + コメント追従等、IDE機能を代替するタスク
+  * メソッド / クラス単位の実装
+  * 単一レイヤー内の実装
+  * 5ファイル以内の編集
+  * 参考実装が存在する・テンプレートが存在する場合の実装タスク
+
+### 中規模タスク もしくは AI Agentの詳細な制御を行いたい場合
+
+1. `/coding.requirement` + Agentモードで要件定義
+    * プロンプトとして、次の内容を与えると精度が上がる（例）
+      * 対象のpackage/module/アーキテクチャレイヤー等、AI Agentの作業スコープを小さくできる要素
+      * 対象画面デザイン
+      * （存在するならば）既存コード
+      * 参考実装
+    * 実行すると、計画ファイルが1つ作成される
+      * 要件が確定するまで、AI Agentと対話して改善を繰り返す
+2. `/coding.design` + Agentモードで詳細設計
+    * 実行すると、計画ファイルに具体的なコード差分が提案される
+    * 問題のある設計や具体実装がないか等、実装前に十分に検討する
+    * 要件の間違いが見つかったら、 `/coding.requirement` に戻って要件定義をやり直す
+3. `/coding.execute` + Agentモードで実装とフォローアップ
+    * 詳細設計時に実装順が提案されるため、細かく区切りながら実装させることが可能
+    * 実行すると、計画ファイルを元に差分が実装される
+
+```mermaid
+flowchart TD
+    Start["/coding.requirement + 要件情報"] --> Req
+
+    subgraph Req["1. 要件定義（Agentモード）"]
+        ReqAsk["計画更新・レビュー・質問"] --> ReqAnswer["ユーザー: 回答・修正指示"]
+        ReqAnswer --> ReqDecide{"ユーザーが承認したか"}
+        ReqDecide -->|いいえ| ReqAsk
+    end
+
+    ReqDecide -->|はい| Design
+
+    subgraph Design["2. 詳細設計（Agentモード）"]
+        DesAsk["計画更新・並列レビュー・実現性確認"] --> DesAnswer["ユーザー: 修正指示／承認"]
+        DesAnswer --> DesDecide{"ユーザーが承認したか"}
+        DesDecide -->|いいえ| DesAsk
+    end
+
+    DesDecide -->|はい| Execute
+
+    subgraph Execute["3. 実装とフォローアップ（Agentモード）"]
+        Impl["/coding.execute（任意でステップ指定）"] --> Follow["実装・品質フォローアップ"]
+        Follow --> Summary["実行結果サマリ"]
+    end
+```
+
+詳細なシーケンスは [coding-command](docs/coding-command.md) を参照する。
+
+* 推奨するタスク規模
+  * 実装内容を事前に制御したい場合
+  * 複数クラス・レイヤーにまたがる実装
+  * 5ファイルを超える範囲の実装
+  * 抽象的な要件の実装
+  * 参考実装がない場合の実装
+
+---
 
 ## SKILLS
 
@@ -73,15 +155,15 @@ dependencies:
 ```
 
 ```text
-/coding.design .ai-agent/plan/login-home.md
+/coding.design
+
+XXXXの箇所をYYYYに変更する
 ```
 
 ```text
-/coding.design .ai-agent/plan/login-home.md 実装修正を行い、再レビュー
-```
+/coding.design
 
-```text
-/coding.design .ai-agent/plan/login-home.md レビューのみ
+全体整合性の確認と反映後に再レビュー
 ```
 
 ### coding.execute
@@ -94,15 +176,11 @@ dependencies:
 ```
 
 ```text
-/coding.execute .ai-agent/plan/login-home.md
+/coding.execute すべてのステップを実行してください
 ```
 
 ```text
-/coding.execute .ai-agent/plan/login-home.md すべてのステップを実行してください
-```
-
-```text
-/coding.execute .ai-agent/plan/login-home.md ステップ3まで完了させてください
+/coding.execute ステップ3まで完了させてください
 ```
 
 ### coding.format-plan
@@ -117,14 +195,6 @@ dependencies:
 
 ```text
 /coding.format-plan .ai-agent/plan/login-home.md
-```
-
-```text
-/coding.format-plan .ai-agent/plan/login-home.md を要件定義モードで整形
-```
-
-```text
-/coding.format-plan .ai-agent/plan/login-home.md を詳細設計モードで整形
 ```
 
 ### coding.requirement
@@ -143,11 +213,22 @@ dependencies:
 ```
 
 ```text
-/coding.requirement .ai-agent/plan/login-home.md の要件を修正し再レビュー
+/coding.requirement 
+
+質問への返答
+1. A
+2. B
+3. XXXXです
 ```
 
 ```text
-/coding.requirement 要件の修正を行い、再レビュー
+/coding.requirement 
+
+XXXXをYYYYに変更
+```
+
+```text
+/coding.requirement 再レビュー
 ```
 
 ### plan.init
