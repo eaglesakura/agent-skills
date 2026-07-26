@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-25T15:55:00.581474+00:00'
+generated_at: '2026-07-26T04:06:12.883509+00:00'
 apm_version: 0.26.0
 dependencies:
 - repo_url: _local/armyknife
@@ -114,7 +114,7 @@ dependencies:
     .agents/skills/markdown-documentation/references/lint-and-validation.md: sha256:5454b967e4d31eeca56871d012c23414b2baf3d484a624bcf8bcd4eb31df6114
     .agents/skills/markdown-fix/SKILL.md: sha256:b7c5d0dbb79137713dee4c1a0d1e6c447a60fc692a23bf56c908ed99223f97e6
     .agents/skills/markdown-fix/evals/evals.json: sha256:3615d5902d94835eaff0542b4a744565f787b858cf129f995e3467b3cfebf307
-    .agents/skills/markdown-search/SKILL.md: sha256:27040c176df843812d71b49063b1216bbe5da46b457c2bbe5eb0df14a9431d76
+    .agents/skills/markdown-search/SKILL.md: sha256:a64d084ccd7f298ba16fadb73553455bf274e9a4e2d6013cad19a4e5fd7e0596
     .agents/skills/markdown-search/evals/evals.json: sha256:d02cbc721ffe5bed0fa115247d389d09af891880d8b86639b60c31bc09d6a491
     .agents/skills/markdown-search/references/context-loading.md: sha256:afb999105426efdf78606b5c87ab978ab3ffb75dd004d5f4f76109cd7f4493c8
     .agents/skills/markdown-search/scripts/md_section.py: sha256:b9e741319e95cf2e1468cae1adad67b36529178cc2b11eab1797dbd15791dd9d
@@ -5460,7 +5460,7 @@ deployments:
   owners:
   - ./packages/armyknife
   active_owner: ./packages/armyknife
-  content_hash: sha256:27040c176df843812d71b49063b1216bbe5da46b457c2bbe5eb0df14a9431d76
+  content_hash: sha256:a64d084ccd7f298ba16fadb73553455bf274e9a4e2d6013cad19a4e5fd7e0596
 - kind: project-relative
   target: cursor
   value: .agents/skills/markdown-search/evals/evals.json
