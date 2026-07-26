@@ -1,0 +1,13 @@
+name: machine
+version: 0.1.0
+description: |
+  ローカルマシン運用向け SKILL 集。
+  ディスク占有調査など、開発マシンのメンテナンス手順をまとめる。
+author: "@eaglesakura"
+license: MIT
+type: skill
+includes: auto
+targets:
+  - cursor
+  - claude
+  - copilot

@@ -1,4 +1,4 @@
-# armyknife-cursor
+# cursor-extensions
 
 Cursor 向け専用 SKILL 集である。
 Claude Code CLI 提案を Cursor Agent CLI へ置き換えるなど、Cursor 固有の運用をまとめる。
@@ -8,7 +8,7 @@ Claude Code CLI 提案を Cursor Agent CLI へ置き換えるなど、Cursor 固
 ```yaml
 dependencies:
   apm:
-    - eaglesakura/agent-skills/packages/armyknife-cursor
+    - eaglesakura/agent-skills/packages/cursor-extensions
 ```
 
 ## SKILLS

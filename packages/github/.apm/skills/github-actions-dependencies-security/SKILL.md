@@ -1,5 +1,5 @@
 ---
-name: github-actions-workflow-build
+name: github-actions-dependencies-security
 description: >-
   GitHub Actions ワークフロー（`.github/workflows/**/*.{yml,yaml}`）構築・編集用 SKILL。
   外部 Action の **コミット SHA ピン留め**、`# owner/repo@version` コメント、

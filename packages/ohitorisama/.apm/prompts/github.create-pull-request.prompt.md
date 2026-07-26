@@ -48,7 +48,7 @@ base: feature/id/123/example
 ## アセットディレクトリ
 
 * `../assets/github.create-pull-request/`
-* `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/`
+* `apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/`
 
 ## 入力
 

@@ -109,8 +109,8 @@ dependencies:
   - .agents/skills/agent-call-sub-agent
   - .agents/skills/agent-call-sub-agent/SKILL.md
   - .agents/skills/agent-call-sub-agent/evals/evals.json
-  - .agents/skills/github-actions-workflow-build
-  - .agents/skills/github-actions-workflow-build/SKILL.md
+  - .agents/skills/github-actions-dependencies-security
+  - .agents/skills/github-actions-dependencies-security/SKILL.md
   - .agents/skills/maintenance-measure-cache-size
   - .agents/skills/maintenance-measure-cache-size/SKILL.md
   - .agents/skills/maintenance-measure-cache-size/evals/.gitignore
@@ -180,7 +180,7 @@ dependencies:
   deployed_file_hashes:
     .agents/skills/agent-call-sub-agent/SKILL.md: sha256:8971da6a601433d367e0576bbe5f179795f633b33d83669df66af489794de3b3
     .agents/skills/agent-call-sub-agent/evals/evals.json: sha256:23b95072a8d17a58dd754eb475419d9216610ec0e96ababe626eebe07f8ad4f4
-    .agents/skills/github-actions-workflow-build/SKILL.md: sha256:f68a5695a9f96b37dd340a870d2e3c7c7c3fd87818917e3b6f4cbb6580669d26
+    .agents/skills/github-actions-dependencies-security/SKILL.md: sha256:efff3eafac1283e6996be36fc9f73530b8855a1f73e0bfa07db89a15484550de
     .agents/skills/maintenance-measure-cache-size/SKILL.md: sha256:6d3664edd6f72cae7ece3e76799a22cfafacd376c4239541a2ad150db604f354
     .agents/skills/maintenance-measure-cache-size/evals/.gitignore: sha256:c66e220a3d0caadba127edaabbf71d859f244cf5fb0f779fa8073cd93828cb02
     .agents/skills/maintenance-measure-cache-size/evals/README.md: sha256:e224490391b1b6d49e2dae60c3cdb8601697fd825bb7e786f83e49ec1fd8e2ff
@@ -236,11 +236,11 @@ dependencies:
   content_hash: sha256:7b0d597e3fe14791247e10984d253ab6e5480b0589a71c873d592cdc8a572786
   declared_license: MIT
 - repo_url: eaglesakura/agent-skills
-  name: armyknife-cursor
+  name: cursor-extensions
   host: github.com
   resolved_commit: f9ef44b93b6aa4b5a6e917753c74ad82d542c664
   version: 0.1.0
-  virtual_path: packages/armyknife-cursor
+  virtual_path: packages/cursor-extensions
   is_virtual: true
   package_type: apm_package
   deployed_files:
@@ -1270,8 +1270,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife-cursor
-  active_owner: eaglesakura/agent-skills/packages/armyknife-cursor
+  - eaglesakura/agent-skills/packages/cursor-extensions
+  active_owner: eaglesakura/agent-skills/packages/cursor-extensions
   content_hash: null
 - kind: project-relative
   target: cursor
@@ -1279,8 +1279,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife-cursor
-  active_owner: eaglesakura/agent-skills/packages/armyknife-cursor
+  - eaglesakura/agent-skills/packages/cursor-extensions
+  active_owner: eaglesakura/agent-skills/packages/cursor-extensions
   content_hash: sha256:46e4146d0b3fdac765904428935228399484427894dbac31129976f574246076
 - kind: project-relative
   target: cursor
@@ -1288,8 +1288,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife-cursor
-  active_owner: eaglesakura/agent-skills/packages/armyknife-cursor
+  - eaglesakura/agent-skills/packages/cursor-extensions
+  active_owner: eaglesakura/agent-skills/packages/cursor-extensions
   content_hash: sha256:21fb8129b91876701dd277f816ff92f0fd06c8b8281918718323b26ed0e94fbb
 - kind: project-relative
   target: cursor
@@ -1297,8 +1297,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife-cursor
-  active_owner: eaglesakura/agent-skills/packages/armyknife-cursor
+  - eaglesakura/agent-skills/packages/cursor-extensions
+  active_owner: eaglesakura/agent-skills/packages/cursor-extensions
   content_hash: sha256:c6e253e71a2e582396a19fcd4940078fb10fd9bdbf0e43db2e8b512de631850a
 - kind: project-relative
   target: cursor
@@ -1306,8 +1306,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - eaglesakura/agent-skills/packages/armyknife-cursor
-  active_owner: eaglesakura/agent-skills/packages/armyknife-cursor
+  - eaglesakura/agent-skills/packages/cursor-extensions
+  active_owner: eaglesakura/agent-skills/packages/cursor-extensions
   content_hash: sha256:8ac3065b6b7a650742f8c96fc690bd4b7e62921163c7c7c4bb3e2c53bbddb170
 - kind: project-relative
   target: cursor
@@ -2067,7 +2067,7 @@ deployments:
   content_hash: sha256:2c86a9ccb60f63673886350f42d5335b03c624e71ecfbf7d9ae98e59b756609e
 - kind: project-relative
   target: cursor
-  value: .agents/skills/github-actions-workflow-build
+  value: .agents/skills/github-actions-dependencies-security
   runtime: null
   scope: project
   owners:
@@ -2076,13 +2076,13 @@ deployments:
   content_hash: null
 - kind: project-relative
   target: cursor
-  value: .agents/skills/github-actions-workflow-build/SKILL.md
+  value: .agents/skills/github-actions-dependencies-security/SKILL.md
   runtime: null
   scope: project
   owners:
   - eaglesakura/agent-skills/packages/armyknife
   active_owner: eaglesakura/agent-skills/packages/armyknife
-  content_hash: sha256:f68a5695a9f96b37dd340a870d2e3c7c7c3fd87818917e3b6f4cbb6580669d26
+  content_hash: sha256:efff3eafac1283e6996be36fc9f73530b8855a1f73e0bfa07db89a15484550de
 - kind: project-relative
   target: cursor
   value: .agents/skills/golang-analyze

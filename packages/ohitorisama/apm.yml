@@ -1,0 +1,13 @@
+name: ohitorisama
+version: 0.1.0
+description: |
+  個人開発向けの Slash Command / アセット集。
+  GitHub Pull Request 作成コマンドなどをまとめる。
+author: "@eaglesakura"
+license: MIT
+type: hybrid
+includes: auto
+targets:
+  - cursor
+  - claude
+  - copilot

@@ -1,0 +1,13 @@
+name: agent-creator
+version: 0.1.0
+description: |
+  AI Agent 向けアセット作成 SKILL 集。
+  SKILL・slash-command・Sub Agent の新規作成・改訂手順をまとめる。
+author: "@eaglesakura"
+license: MIT
+type: skill
+includes: auto
+targets:
+  - cursor
+  - claude
+  - copilot

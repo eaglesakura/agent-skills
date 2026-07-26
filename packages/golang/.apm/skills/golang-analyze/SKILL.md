@@ -28,7 +28,7 @@ Go 実装のあと（または途中の節目）に、**フォーマット → �
 
 * `*.go` の書き方・コメント・データオブジェクト規約だけ → `golang-coding-rules`
 * ConnectRPC / Repository / Usecase 等の設計そのもの → 該当 `golang.architecture.*`
-* CI ワークフロー YAML の書き方 → `github-actions-workflow-build`
+* CI ワークフロー YAML の書き方 → `github-actions-dependencies-security`
 * Dart / Flutter の analyze・format → `flutter.*` 側
 
 ## 作業手順

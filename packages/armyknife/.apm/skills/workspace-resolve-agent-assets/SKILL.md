@@ -73,7 +73,7 @@ APM などでインストール先が変わっても参照を保てるよう、�
 ## アセットディレクトリ
 
 * `../assets/github.create-pull-request/`
-* `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/`
+* `apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/`
 ```
 
 互換の frontmatter がある場合（任意）:
@@ -82,7 +82,7 @@ APM などでインストール先が変わっても参照を保てるよう、�
 metadata:
   assets:
     - "[github.create-pull-request/](../assets/github.create-pull-request/)"
-    - apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/
+    - apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/
 ```
 
 本文参照: `{assets}/template.md`
@@ -95,7 +95,7 @@ metadata:
   → .apm/assets/github.create-pull-request/template.md
 
 # ルート相対 × 2件目（利用者が apm install した場合）
-apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/template.md
+apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/template.md
 ```
 
 ```bash
@@ -106,7 +106,7 @@ SUFFIX="template.md"
 # ## アセットディレクトリ または metadata.assets から取り出した DIR 候補ごとに:
 for DIR in \
   "../assets/github.create-pull-request" \
-  "apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request"
+  "apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request"
 do
   for CAND in \
     "$(dirname "$SOURCE_MD")/${DIR}/${SUFFIX}" \

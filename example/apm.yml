@@ -12,8 +12,12 @@ dependencies:
     - samber/cc-skills-golang#v1.9.0
     - dart-lang/skills#main
     - anthropics/skills/skills/skill-creator#main
+    - eaglesakura/agent-skills/packages/agent-creator
     - eaglesakura/agent-skills/packages/armyknife
-    - eaglesakura/agent-skills/packages/armyknife-cursor
     - eaglesakura/agent-skills/packages/coding-xm3
+    - eaglesakura/agent-skills/packages/cursor-extensions
     - eaglesakura/agent-skills/packages/flutter
+    - eaglesakura/agent-skills/packages/github
     - eaglesakura/agent-skills/packages/golang
+    - eaglesakura/agent-skills/packages/machine
+    - eaglesakura/agent-skills/packages/ohitorisama

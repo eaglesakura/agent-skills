@@ -38,7 +38,7 @@ Sub Agentは、個々に適切な「職能」と「実施するタスク」を�
 * 開発時（ソース相対）と install 後（ルート相対）の両方を並べると解決が安定する
   例:
   * `../assets/github.create-pull-request/`
-  * `apm_modules/eaglesakura/agent-skills/packages/armyknife/.apm/assets/github.create-pull-request/`
+  * `apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/github.create-pull-request/`
  -->
 
 ## 実施タスク
