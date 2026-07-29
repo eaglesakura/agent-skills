@@ -51,7 +51,7 @@ slash-command は Agent が実行する再利用可能な手順書である。
   * 例: `{assets}/template.md`
 * `{assets}/` を使う場合は、本文の `## アセットディレクトリ` に実ディレクトリ候補を列挙する（正本）
   * ソース相対（開発時）: `../assets/example.command/`
-  * install 後ルート相対: `apm_modules/eaglesakura/agent-skills/packages/agent-creator/.apm/assets/example.command/`
+  * install 後ルート相対: `apm_modules/**/agent-creator/.apm/assets/example.command/`
 * 旧来の `metadata.assets` だけがある文書も `workspace-resolve-agent-assets` は読めるが、新規・改訂では本文セクションへ書く
 * 実行時の実体解決は `workspace-resolve-agent-assets` に従う（文書相対とワークスペースルート相対の両方を試し、ヒットを示す）
 
@@ -197,7 +197,7 @@ metadata:
 ## アセットディレクトリ
 
 * `../assets/example.command/`
-* `apm_modules/eaglesakura/agent-skills/packages/agent-creator/.apm/assets/example.command/`
+* `apm_modules/**/agent-creator/.apm/assets/example.command/`
 ```
 
 ## バリデーションステップ（入力がある場合は必須）

@@ -10,18 +10,18 @@
         "Mentions reading metadata.assets and treating {assets}/ as a metavariable (not a literal folder)",
         "Tries both document-relative and workspace/repo-root-relative bases for each assets candidate",
         "Includes a candidate path under .apm/assets/github.create-pull-request/template.md (via ../assets from prompts/)",
-        "Includes a candidate under apm_modules/eaglesakura/agent-skills/packages/ohitorisama/.apm/assets/...",
+        "Includes a candidate under apm_modules/.../ohitorisama/.apm/assets/...",
         "Explains hit handling: list hits; if one use it; if multiple show them / first-hit for non-interactive"
       ]
     },
     {
       "id": 2,
-      "prompt": "次のコマンド断片がある。`{assets}/coding/design.md` を解決するとき、候補ディレクトリはどこから何の順で読む？短く答えて。\n\n```markdown\n## アセットディレクトリ\n\n* `../assets/`\n* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`\n```",
-      "expected_output": "## アセットディレクトリ を先に読む。metadata.assets は互換で後続。",
+      "prompt": "次のコマンド断片がある。`{assets}/coding/design.md` を解決するとき、候補ディレクトリはどこから何の順で読む？短く答えて。\n\n```markdown\n## アセットディレクトリ\n\n* `../assets/`\n* `apm_modules/**/coding-xm3/.apm/assets/`\n```",
+      "expected_output": "## アセットディレクトリ を先に読む。2件目は glob 展開。metadata.assets は互換で後続。",
       "files": [],
       "assertions": [
         "Says to read ## アセットディレクトリ (body section) first",
-        "Mentions metadata.assets only as optional/compat fallback if at all",
+        "Mentions that the apm_modules/**/... line is a glob/wildcard to expand",
         "Treats listed paths as directories to join with coding/design.md suffix"
       ]
     },
@@ -33,6 +33,29 @@
       "assertions": [
         "Says not to guess-read a different file",
         "Says to report tried candidate paths / resolution rules"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "次の文書がある。ワークスペースのリポジトリルートには次の2ディレクトリが実在するとする。`{assets}/coding/design.md` を非対話で1つに決めるとき、手順と採用パス（ルート相対）を短く答えて。\n\n文書:\n```markdown\n## アセットディレクトリ\n\n* `apm_modules/**/coding-xm3/.apm/assets/`\n```\n\n実在ディレクトリ（ルート相対）:\n- `apm_modules/_local/coding-xm3/.apm/assets/coding/design.md`\n- `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/coding/design.md`\n\n基準ファイルはルート直下の架空パス `docs/example.prompt.md`（文書相対の glob はヒットしない想定でよい）。",
+      "expected_output": "glob をルート相対で展開し辞書順。先勝ちなら apm_modules/_local/... を採用（_ が e より先）。両方ヒットとして列挙してもよいが非対話は先勝ち。",
+      "files": [],
+      "assertions": [
+        "Expands the ** wildcard against repo-root-relative apm_modules paths",
+        "Lists or implies both _local and eaglesakura/... matches as hits",
+        "For non-interactive single choice, picks first in enumeration order (lexical: _local before eaglesakura)",
+        "Does not invent a third path outside the glob matches"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "新しい SKILL を書くとき、`## アセットディレクトリ` の install 後パスはどう書くべき？固定の `apm_modules/eaglesakura/agent-skills/packages/foo/.apm/assets/` とワイルドカードのどちらを勧めるか、理由つきで短く答えて。",
+      "expected_output": "ワイルドカード推奨。apm install / fork / _local でレイアウトが揺れるため。",
+      "files": [],
+      "assertions": [
+        "Recommends wildcard form such as apm_modules/**/foo/.apm/assets/",
+        "Explains layout can vary with apm install, fork, or _local",
+        "Does not insist that only the fixed eaglesakura/... path is correct"
       ]
     }
   ]

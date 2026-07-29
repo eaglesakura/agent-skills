@@ -29,7 +29,7 @@ metadata:
 
 リポジトリルート（`.git` があるディレクトリ）からの相対パス:
 
-* `AGENTS.md` やRuleによって指定されたプロジェクト固有ディレクトリ
+* `AGENTS.md` やRule/Instructionによって指定されたプロジェクト固有ディレクトリ
 * `docs/`: 標準ドキュメントディレクトリ
 * `README.md`: 標準README
 * `.cursor/skills/`
@@ -46,9 +46,14 @@ metadata:
 SCRIPT="$SKILL_DIR/scripts/md_section.py"
 
 # Stage 1: 見出し + 行範囲（子見出しを含む終端）
+# 内容 SHA-256 が同一のファイルは、先に現れた 1 件だけ対象にする（コピー二重ロード防止）
 python3 "$SCRIPT" toc path/to/file.md
-python3 "$SCRIPT" toc --max-level 2 path/to/dir/*.md
+python3 "$SCRIPT" toc --max-level 2 path/to/dir
 python3 "$SCRIPT" toc --grep 'DO NOT' path/to/file.md
+
+# 内容重複を落とした path 一覧だけ欲しいとき
+python3 "$SCRIPT" unique path/to/directory
+python3 "$SCRIPT" unique -v path/a.md path/b.md   # 除外した path を stderr に出す
 
 # Stage 2: 指定範囲だけ出力
 python3 "$SCRIPT" print path/to/file.md 629 637
@@ -59,6 +64,7 @@ python3 "$SCRIPT" print path/to/file.md --title '循環参照'
 `path:start-end` が既に分かっているときは `sed -n 'start,endp' file` でもよい。
 
 コードフェンス内の `#` は見出し扱いにしない。終端は同レベル以上の次見出しの直前（末尾空行は trim）。
+`toc` / `unique` は既定で内容ハッシュ重複を除外する。意図的に全コピーを見たいときだけ `toc --keep-duplicates` を使う。
 
 ## 把握手順（3 段階）
 
@@ -67,13 +73,17 @@ python3 "$SCRIPT" print path/to/file.md --title '循環参照'
 * 対象 path（ファイルまたは少数の候補）を決め、TOC を取る
 * 複数ファイル横断の当たり付けは `--max-level 2` から始め、必要ならレベルを下げる
 * 出力の `path:start-end` と見出しテキストだけで関連性を判断する（この時点で本文を読まない）
+* HQ / APM で同内容が複数 path にコピーされていることがある。**内容ハッシュが一致するファイルは先頭 1 件だけ**を候補にし、以降の Stage でも同じ本文を二重ロードしない
 
-DO / DO NOT を探すときも、まず TOC か見出し grep で当たりを付ける:
+DO / DO NOT を探すときも、まず TOC か見出し grep で当たりを付ける。
+横断検索の前に `unique` で重複を落とし、一致する内容は最初の 1 ファイルだけを対象にする:
 
 ```bash
-rg -n '^### DO( NOT)?:' --glob '*.md' path/to/directory
-# または
-python3 "$SCRIPT" toc --grep '### DO' path/to/file.md
+# 内容ハッシュが同一なら先頭 1 ファイルだけ残してから見出し検索
+python3 "$SCRIPT" unique path/to/directory \
+  | while IFS= read -r f; do rg -n '^### DO( NOT)?:' "$f"; done
+# または（toc も同一内容は先頭ファイルのみ出力）
+python3 "$SCRIPT" toc --grep '### DO' path/to/directory
 ```
 
 ### Stage 2 — 指定範囲だけロードする

@@ -46,7 +46,7 @@ Plan モード開始前に、本コマンドの内容を遵守して AI Agent �
 ## アセットディレクトリ
 
 * `../assets/`
-* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
+* `apm_modules/**/coding-xm3/.apm/assets/`
 
 ## 入力
 

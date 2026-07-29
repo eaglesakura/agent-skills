@@ -117,7 +117,7 @@ description: >-
 ## アセットディレクトリ
 
 * `../assets/`
-* `apm_modules/eaglesakura/agent-skills/packages/agent-creator/.apm/assets/`
+* `apm_modules/**/agent-creator/.apm/assets/`
 ```
 
 ## 親 Agent・SKILL との関係

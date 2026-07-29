@@ -25,7 +25,7 @@ is_background: false
 ## アセットディレクトリ
 
 * `../assets/`
-* `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/`
+* `apm_modules/**/coding-xm3/.apm/assets/`
 
 ## 実施タスク
 

@@ -3,17 +3,72 @@
 
 コードフェンス内の `#` 行は見出しとして扱わない。
 終端は「同レベル以上の次見出しの直前」。既定で末尾空行を trim する。
+同一内容（SHA-256）のファイルは、先に現れた 1 件だけを対象にする。
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 import sys
 from pathlib import Path
 
 HEADING = re.compile(r"^(#{1,6}) (.+)$")
 FENCE = re.compile(r"^(`{3,}|~{3,})")
+
+
+def content_digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def collect_files(paths: list[str], *, pattern: str = "*.md") -> list[Path]:
+    """ファイルはそのまま、ディレクトリは pattern で再帰収集（パス順）。"""
+    out: list[Path] = []
+    seen_path: set[Path] = set()
+    for raw in paths:
+        path = Path(raw)
+        if path.is_file():
+            resolved = path.resolve()
+            if resolved not in seen_path:
+                seen_path.add(resolved)
+                out.append(path)
+            continue
+        if path.is_dir():
+            for child in sorted(path.rglob(pattern)):
+                if not child.is_file():
+                    continue
+                resolved = child.resolve()
+                if resolved in seen_path:
+                    continue
+                seen_path.add(resolved)
+                out.append(child)
+            continue
+        print(f"skip (not found): {path}", file=sys.stderr)
+    return out
+
+
+def filter_unique_by_digest(
+    paths: list[Path],
+    *,
+    report_skips: bool,
+) -> list[Path]:
+    """内容ハッシュが同一なら先頭の 1 ファイルだけ残す。"""
+    unique: list[Path] = []
+    seen_digest: set[str] = set()
+    for path in paths:
+        try:
+            digest = content_digest(path.read_bytes())
+        except OSError as exc:
+            print(f"skip (unreadable): {path}: {exc}", file=sys.stderr)
+            continue
+        if digest in seen_digest:
+            if report_skips:
+                print(f"skip (duplicate content): {path}", file=sys.stderr)
+            continue
+        seen_digest.add(digest)
+        unique.append(path)
+    return unique
 
 
 def parse_headings(lines: list[str]) -> list[dict]:
@@ -72,14 +127,17 @@ def assign_ends(
 
 
 def load(path: Path) -> tuple[list[str], list[dict]]:
-    text = path.read_text(encoding="utf-8")
+    data = path.read_bytes()
+    text = data.decode("utf-8")
     lines = text.splitlines()
     return lines, parse_headings(lines)
 
 
 def cmd_toc(args: argparse.Namespace) -> int:
-    for raw in args.paths:
-        path = Path(raw)
+    files = collect_files(args.paths, pattern=args.glob)
+    if not args.keep_duplicates:
+        files = filter_unique_by_digest(files, report_skips=True)
+    for path in files:
         if not path.is_file():
             print(f"skip (not a file): {path}", file=sys.stderr)
             continue
@@ -91,6 +149,13 @@ def cmd_toc(args: argparse.Namespace) -> int:
             if args.grep and args.grep not in h["title"]:
                 continue
             print(f'{path}:{h["start"]}-{h["end"]}\t{h["title"]}')
+    return 0
+
+
+def cmd_unique(args: argparse.Namespace) -> int:
+    files = collect_files(args.paths, pattern=args.glob)
+    for path in filter_unique_by_digest(files, report_skips=args.verbose):
+        print(path)
     return 0
 
 
@@ -146,7 +211,16 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
 
     toc = sub.add_parser("toc", help="List headings with path:start-end")
-    toc.add_argument("paths", nargs="+", help="Markdown files")
+    toc.add_argument(
+        "paths",
+        nargs="+",
+        help="Markdown files and/or directories (dirs are scanned with --glob)",
+    )
+    toc.add_argument(
+        "--glob",
+        default="*.md",
+        help="When a path is a directory, collect matching files recursively (default: *.md)",
+    )
     toc.add_argument(
         "--max-level",
         type=int,
@@ -163,7 +237,34 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Keep trailing blank lines in ranges",
     )
+    toc.add_argument(
+        "--keep-duplicates",
+        action="store_true",
+        help="Do not skip files whose content SHA-256 matches an earlier file",
+    )
     toc.set_defaults(func=cmd_toc)
+
+    uniq = sub.add_parser(
+        "unique",
+        help="Print paths after dropping content-duplicate files (first wins)",
+    )
+    uniq.add_argument(
+        "paths",
+        nargs="+",
+        help="Markdown files and/or directories (dirs are scanned with --glob)",
+    )
+    uniq.add_argument(
+        "--glob",
+        default="*.md",
+        help="When a path is a directory, collect matching files recursively (default: *.md)",
+    )
+    uniq.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Report skipped duplicate-content paths on stderr",
+    )
+    uniq.set_defaults(func=cmd_unique)
 
     pr = sub.add_parser("print", help="Print a section by range or title")
     pr.add_argument("path", help="Markdown file")

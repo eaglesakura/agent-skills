@@ -35,7 +35,7 @@ Agent と人間が同じ地図を共有できるよう、リポジトリルー�
 ひな形の探索先（`{assets}/...` を解決するとき `workspace-resolve-agent-assets` に従う）:
 
 * `./assets/`
-* `apm_modules/eaglesakura/agent-skills/packages/agentic-workspace/.apm/skills/workspace-layout/assets/`
+* `apm_modules/**/workspace-layout/assets/`
 
 ## 推奨レイアウト
 
