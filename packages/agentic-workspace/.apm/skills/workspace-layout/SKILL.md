@@ -78,7 +78,7 @@ Agent と人間が同じ地図を共有できるよう、リポジトリルー�
 ### `.ai-agent/` の場所
 
 * ディレクトリ名は **`.ai-agent/`（単数形）** のみ
-* 実パスの解決順は `workspace-resolve-file-path` に従う（HQ では `headquarters/.ai-agent` を優先）
+* 実パスの候補順は本 SKILL が持つ（HQ では `headquarters/.ai-agent` を優先）
 * 配下の使い分け（`tmp` / `plan` / `memory`）の運用は `workspace-agent-temporary` に委譲する
 * Memory の書き方は `workspace-agent-memory-save` に委譲する
 
@@ -96,7 +96,7 @@ Agent と人間が同じ地図を共有できるよう、リポジトリルー�
 
 ```bash
 ROOT="$(git rev-parse --show-toplevel)"
-# HQ 優先の候補例（詳細は workspace-resolve-file-path）
+# HQ 優先の候補例（本 SKILL の正本）
 for candidate in \
   "${ROOT}/headquarters/.ai-agent" \
   "${ROOT}/.ai-agent"; do
@@ -111,11 +111,11 @@ done
 
 | SKILL | 責務 |
 | --- | --- |
-| **本 SKILL** | ルート全体の推奨地図・必要時の不足パス提案 |
+| **本 SKILL** | ルート全体の推奨地図・必要時の不足パス提案・`.ai-agent/` 実パス候補順 |
 | `workspace-agent-temporary` | 一時ファイルが必要な作業での配置先提案 |
 | `workspace-agent-memory-save` | Memory の保存フォーマット |
 | `markdown-search` / `markdown-documentation` | `docs/` 等の探索・文書作成 |
-| `workspace-resolve-file-path` | `.ai-agent/` 実パス解決 |
+| `workspace-resolve-file-path` | 文書内の通常パス / Markdown リンク解決 |
 
 ## ナレッジベース
 

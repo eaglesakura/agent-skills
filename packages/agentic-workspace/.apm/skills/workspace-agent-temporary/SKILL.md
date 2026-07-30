@@ -34,7 +34,7 @@ metadata:
 
 * ディレクトリ名は **`.ai-agent/`（単数形）** のみ
 * 無ければ `workspace-layout` に従いひな形を導入する（本 SKILL はひな形アセットを持たない）
-* 実パスの解決順は `workspace-resolve-file-path`（HQ では `headquarters/.ai-agent` を優先）
+* 実パスの候補順は `workspace-layout`（HQ では `headquarters/.ai-agent` を優先）。本 SKILL でも同じ順で探してよい
 
 ```bash
 ROOT="$(git rev-parse --show-toplevel)"

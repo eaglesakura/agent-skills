@@ -28,7 +28,7 @@ dependencies:
 
 `workspace-layout` / `workspace-agent-temporary` / `workspace-agent-memory-save` / `markdown-search` 等に基づく。
 `.ai-agent/` はコミット対象外（ひな形は `workspace-layout` の `assets/.ai-agent/`）。
-HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優先する（`workspace-resolve-file-path`）。
+HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優先する（`workspace-layout`）。
 
 ```text
 .
@@ -102,7 +102,11 @@ HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優
 ### workspace-resolve-file-path
 
 * ドキュメントの通常パス表記を実ファイルへ解決する。
-* クォート path、Markdown リンク、`.ai-agent/` 候補順などを扱う。
+* クォート path、Markdown リンクを扱う（`.ai-agent/` 置き場は `workspace-layout` / `workspace-agent-temporary`）。
+
+### workspace-resolve-root-directory
+
+* `folder:{name}/...` / `repo:{name}/...` を Multi-Root / 単一ルートに応じて実パスへ解決する。
 
 ### workspace-resolve-url-metadata
 

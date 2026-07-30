@@ -3,10 +3,12 @@ name: workspace-resolve-file-path
 description: >-
   ドキュメントの通常パス表記を実ファイルへ解決する SKILL。
   クォート `path/to/file`（リポジトリルート相対）、Markdown リンク `[text](rel)`
-  （リンク元相対）、`.ai-agent/` 候補順（`headquarters/.ai-agent` → ルート）を扱う。
-  「この MD のリンク先はどこ？」「path/to/file の実体」「.ai-agent はどれ？」
+  （リンク元相対）を扱う。
+  「この MD のリンク先はどこ？」「path/to/file の実体」
   「相対パスを解決してから読んで」では必ず使う。
   `{assets}/...` は絶対にこの SKILL では解かず workspace-resolve-agent-assets を使う。
+  `folder:{name}/...` / `repo:{name}/...` は workspace-resolve-root-directory。
+  `.ai-agent/` の置き場・実パスは workspace-layout / workspace-agent-temporary。
   URL→Issue は workspace-resolve-url-metadata、整形のみは markdown.format では使わない。
 license: MIT License
 metadata:
@@ -20,19 +22,20 @@ metadata:
 ## いつ使うか
 
 * Markdown / 文書内の `path/to/file` や `[label](path)` の実体を探すとき
-* `.ai-agent/` 配下へ一時ファイルを書く／読む場所を決めるとき
 * 「ドキュメントの参照先を開いて」と言われ、表記が相対・リンク混在のとき
 
 ## いつ使わないか
 
 * `{assets}/...` メタ変数の実体解決 → `workspace-resolve-agent-assets`
+* `folder:{name}/...` / `repo:{name}/...`（ルート解決）→ `workspace-resolve-root-directory`
+* `.ai-agent/` の導入・実パス・`tmp`/`plan`/`memory` の置き場 → `workspace-layout` / `workspace-agent-temporary`
 * GitHub Issue URL から ID/タイトルを取る → `workspace-resolve-url-metadata`
 * Markdown の体裁整形だけ → `markdown.format`
 * キーワードで文書を探すだけ（パス表記の解決が不要）→ `markdown-search`
 
 ## 作業手順
 
-1. 表記がどれかを判別する（クォート相対 / Markdown リンク / `.ai-agent`）。`{assets}/` なら本 SKILL ではなく `workspace-resolve-agent-assets` を使う
+1. 表記がどれかを判別する（クォート相対 / Markdown リンク）。`{assets}/` なら `workspace-resolve-agent-assets`、`folder:`/`repo:` なら `workspace-resolve-root-directory`、`.ai-agent/` の置き場なら `workspace-layout` / `workspace-agent-temporary`
 2. 対応ルールで候補パスを組み立てる
 3. 存在確認してから読む・書く（無ければ候補と解決ルールを報告する）
 
@@ -44,38 +47,6 @@ metadata:
 # リポジトリルートからの相対パス
 cat "$(git rev-parse --show-toplevel)/path/to/file"
 ```
-
-## 特殊ルール / `.ai-agent/`
-
-AI Agent の一時ファイルは `.ai-agent/` 配下に出す。解決は **次の順番**で、最初に存在するディレクトリを採用する。
-
-1. `$(git rev-parse --show-toplevel)/headquarters/.ai-agent/`
-2. `$(git rev-parse --show-toplevel)/.ai-agent`
-
-```bash
-ROOT="$(git rev-parse --show-toplevel)"
-
-for candidate in \
-  "${ROOT}/headquarters/.ai-agent" \
-  "${ROOT}/.ai-agent"; do
-  ls -ld "$candidate" 2>/dev/null || echo "not found: $candidate"
-done
-
-AI_AGENT_DIR=""
-for candidate in \
-  "${ROOT}/headquarters/.ai-agent" \
-  "${ROOT}/.ai-agent"; do
-  if [ -d "$candidate" ]; then
-    AI_AGENT_DIR="$candidate"
-    break
-  fi
-done
-
-# 例: 一時ファイルを出力する
-# mkdir -p "${AI_AGENT_DIR}/tmp"
-```
-
-HQ モノレポでは `headquarters/.ai-agent` が先に来る点に注意する（ルート直下より優先）。
 
 ## `[リンク](path/to/file)` 形式
 
@@ -93,11 +64,7 @@ cat "$(dirname "$SOURCE_MD")/$RELATIVE_PATH"
 ### DO: 表記の種類を先に分けてから解決する
 
 * ルート相対とリンク元相対を混ぜると、別ファイルを開いてしまう
-* `{assets}/` を見つけたら本 SKILL で無理に解かず `workspace-resolve-agent-assets` へ渡す
-
-### DO: `.ai-agent` は候補順を守り、存在する最初のものを使う
-
-* HQ 構成では `headquarters/.ai-agent` がルート `.ai-agent` より優先
+* `{assets}/`・`folder:`/`repo:`・`.ai-agent/` 置き場は本 SKILL で無理に解かず、対応 SKILL へ渡す
 
 ### DO NOT: Markdown リンクをリポジトリルート相対だと決めつける
 
