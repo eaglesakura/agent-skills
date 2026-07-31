@@ -2,7 +2,7 @@ name: github
 version: 0.1.0
 description: |
   GitHub 運用向け SKILL 集。
-  Actions 依存のセキュリティ（SHA ピン留め等）をまとめる。
+  Actions 依存のセキュリティ（SHA ピン留め等）、Issue URL からのメタデータ取得をまとめる。
 author: "@eaglesakura"
 license: MIT
 type: skill

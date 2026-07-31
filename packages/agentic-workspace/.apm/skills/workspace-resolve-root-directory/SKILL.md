@@ -12,8 +12,8 @@ description: >-
   「単一ルートで folder:」「マルチルートの名前でパス解決」では必ず使う。
   通常の path/to/file・Markdown リンクは workspace-resolve-file-path、
   `.ai-agent/` の置き場は workspace-layout / workspace-agent-temporary、
-  `{assets}/...` は workspace-resolve-agent-assets、URL メタデータは
-  workspace-resolve-url-metadata を使う（混同しない）。
+  `{assets}/...` は workspace-resolve-agent-assets を使う。
+  URL メタデータ取得は本 SKILL では扱わない（混同しない）。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -48,7 +48,7 @@ Multi-Root では通常の `{name}` は **ディレクトリ名ではなく** `f
 * クォート相対 `path/to/file`（Git リポジトリルート相対が意図）・Markdown リンク → `workspace-resolve-file-path`
 * `.ai-agent/` の導入・置き場 → `workspace-layout` / `workspace-agent-temporary`
 * `{assets}/...` または `folder:`/`repo:` 付き `{assets}/...` → `workspace-resolve-agent-assets`（スコープは本 SKILL の規則で決める）
-* URL → タスクID / タイトル → `workspace-resolve-url-metadata`
+* URL → タスクID / タイトル（本 SKILL の範囲外）
 
 ## 作業手順
 
@@ -318,4 +318,4 @@ TARGET="$REPO_ROOT/README.md"
 * 通常パス / リンク: `workspace-resolve-file-path`
 * `.ai-agent/` 置き場: `workspace-layout` / `workspace-agent-temporary`
 * `{assets}/...`: `workspace-resolve-agent-assets`
-* URL メタデータ: `workspace-resolve-url-metadata`
+* URL → タスクID / タイトル（本 SKILL の範囲外）

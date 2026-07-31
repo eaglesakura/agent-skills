@@ -11,7 +11,7 @@ description: >-
   「apm_modules の glob でアセットを探して」では必ず使う。
   通常の path/to/file・Markdown リンクは workspace-resolve-file-path、
   `.ai-agent/` の置き場は workspace-layout / workspace-agent-temporary、
-  URL メタデータは workspace-resolve-url-metadata を使う（混同しない）。
+  URL メタデータ取得は本 SKILL では扱わない（混同しない）。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -35,7 +35,7 @@ APM などでインストール先が変わっても参照を保てるよう、�
 * クォート相対 `path/to/file`、Markdown リンク `[text](rel)` → `workspace-resolve-file-path`
 * `{assets}/` を含まない純粋な `folder:` / `repo:` パスだけ → `workspace-resolve-root-directory`
 * `.ai-agent/` の導入・置き場 → `workspace-layout` / `workspace-agent-temporary`
-* GitHub Issue URL から ID/タイトルを取る → `workspace-resolve-url-metadata`
+* GitHub Issue URL から ID/タイトルを取る（本 SKILL の範囲外）
 * キーワードで文書を探すだけ → `markdown-search`
 
 ## 作業手順

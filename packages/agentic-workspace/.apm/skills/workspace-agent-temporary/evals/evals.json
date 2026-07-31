@@ -3,36 +3,44 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。依存ライブラリ一覧を出す使い捨て Python スクリプトを1つ書いて実行準備までしてください。プロダクションコードや docs には置かないでください。",
-      "expected_output": ".ai-agent/tmp/ 配下にスクリプトが作成され、.ai-agents 等の誤パスを使っていない",
+      "prompt": "Multi-Root（pocket-kosodate.code-workspace）で、作業対象は app folder（repo/pocket_kosodate）配下の調査。使い捨てスクリプト probe.sh をどこに置く？絶対パスまたは folder:this 表記で短く答えて。HQ の headquarters/.ai-agent には置かない。",
+      "expected_output": "folder:this/.ai-agent/tmp/probe.sh → .../repo/pocket_kosodate/.ai-agent/tmp/probe.sh。headquarters/.ai-agent ではない。",
       "files": [],
-      "expectations": [
-        "Created file under .ai-agent/tmp/ (singular), not .ai-agents or repo root",
-        "Did not place the disposable script under docs/ or production source paths",
-        "Report or transcript states the final script path"
+      "assertions": [
+        "Places under pocket_kosodate/.ai-agent/tmp (or folder:this/.ai-agent/tmp with this=app)",
+        "Does not choose headquarters/.ai-agent as the destination",
+        "Uses singular .ai-agent and tmp/ for disposable script"
       ]
     },
     {
       "id": 2,
-      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。.ai-agent は既にある想定です。実行計画メモ plan/sample-feature.md と、調査下書き用の短いメモを適切な場所に置いてください（計画は進行中、下書きは使い捨て）。",
-      "expected_output": "進行中の計画は .ai-agent/plan/、使い捨て下書きは .ai-agent/tmp/（または用途が明確なら memory）。ルートや docs に置かない",
+      "prompt": "workspace-agent-temporary で一時ファイルのベースパスは何？旧ルールの headquarters/.ai-agent 優先はまだ有効？短く。",
+      "expected_output": "常に folder:this/.ai-agent。HQ 優先の Git ルート走査は無効。",
       "files": [],
-      "expectations": [
-        "Active plan markdown is under .ai-agent/plan/",
-        "Disposable draft is under .ai-agent/tmp/ (or memory only if framed as reusable)",
-        "Directory name is .ai-agent (singular)",
-        "Did not place files under docs/ or repository root"
+      "assertions": [
+        "States base is always folder:this/.ai-agent",
+        "Says HQ-priority / git-root headquarters/.ai-agent scan is no longer used"
       ]
     },
     {
       "id": 3,
-      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。認証リファクタの実装計画を Markdown で残したいです。ファイル名は auth-refactor-design.md で、完了済みではなく進行中の計画として保存してください。",
-      "expected_output": ".ai-agent/plan/auth-refactor-design.md が作成され、tmp やリポジトリ直下に置かれない",
+      "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。.ai-agent は既にある想定です。実行計画メモ plan/sample-feature.md と、調査下書き用の短いメモを適切な場所に置いてください（計画は進行中、下書きは使い捨て）。",
+      "expected_output": "進行中の計画は .ai-agent/plan/、使い捨て下書きは .ai-agent/tmp/。ルートや docs に置かない。folder:this 基準。",
       "files": [],
-      "expectations": [
-        "Plan file exists at .ai-agent/plan/auth-refactor-design.md",
-        "Plan was not placed under .ai-agent/tmp/ or .ai-agent/plan/done/",
+      "assertions": [
+        "Active plan markdown is under .ai-agent/plan/",
+        "Disposable draft is under .ai-agent/tmp/",
         "Directory name is .ai-agent (singular)"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "agent-skills folder で作業中。folder:this/.ai-agent/tmp/notes.md の実体はどの絶対パス？code-workspace は headquarters/pocket-kosodate.code-workspace。短く。",
+      "expected_output": ".../repo/agent-skills/.ai-agent/tmp/notes.md",
+      "files": [],
+      "assertions": [
+        "Resolves to repo/agent-skills/.ai-agent/tmp/notes.md",
+        "Does not resolve to headquarters/.ai-agent/tmp/notes.md"
       ]
     }
   ]

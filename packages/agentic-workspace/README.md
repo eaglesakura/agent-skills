@@ -4,7 +4,7 @@ AI Agent との協業に最適化したワークスペースを構築・運用�
 Markdown 整備、ワークスペース運用などをまとめる。
 SKILL・slash-command・Sub Agent の作成手順は [`agent-creator`](../agent-creator) を参照する。
 ローカルマシンのキャッシュ調査は [`machine`](../machine) を参照する。
-GitHub Actions 依存のセキュリティは [`github`](../github) を参照する。
+GitHub Actions 依存のセキュリティや Issue URL メタデータは [`github`](../github) を参照する。
 GitHub Pull Request 作成コマンドは [`ohitorisama`](../ohitorisama) を参照する（ブランチ命名ルール含む）。
 
 ## Quick Start
@@ -107,12 +107,6 @@ HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優
 ### workspace-resolve-root-directory
 
 * `folder:{name}/...` / `repo:{name}/...` を Multi-Root / 単一ルートに応じて実パスへ解決する。
-
-### workspace-resolve-url-metadata
-
-* Issue URL 等からタスク ID・タイトルなど取得可能なメタデータを整理する。
-* `gh issue view ... --json number,title` など CLI での取得例と JSON の読み方を示す。
-* GitHub Issues の URL パターンごとのフィールド対応を SKILL 本文で規定する。
 
 ## Commands
 

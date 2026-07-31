@@ -23,7 +23,7 @@
 | [`coding-xm3`](packages/coding-xm3/README.md) | 要件定義・詳細設計・実施を効率的に行うAI Agentフロー | `eaglesakura/agent-skills/packages/coding-xm3` |
 | [`cursor-extensions`](packages/cursor-extensions/README.md) | Cursor 固有の運用（Claude Code CLI → Cursor Agent CLI 置換等） | `eaglesakura/agent-skills/packages/cursor-extensions` |
 | [`flutter`](packages/flutter/README.md) | Flutter / Dart 向け SKILL（規約・Layered Architecture・デバッグ等） | `eaglesakura/agent-skills/packages/flutter` |
-| [`github`](packages/github/README.md) | GitHub 運用（Actions 依存のセキュリティ等） | `eaglesakura/agent-skills/packages/github` |
+| [`github`](packages/github/README.md) | GitHub 運用（Actions 依存のセキュリティ、Issue URL メタデータ等） | `eaglesakura/agent-skills/packages/github` |
 | [`golang`](packages/golang/README.md) | Go 向け SKILL（規約・fmt / lint / test 等） | `eaglesakura/agent-skills/packages/golang` |
 | [`machine`](packages/machine/README.md) | ローカルマシン運用（ディスク占有・キャッシュ調査等） | `eaglesakura/agent-skills/packages/machine` |
 | [`ohitorisama`](packages/ohitorisama/README.md) | 個人開発向け（PR 作成・ブランチ命名等） | `eaglesakura/agent-skills/packages/ohitorisama` |

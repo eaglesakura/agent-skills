@@ -1,5 +1,5 @@
 ---
-name: workspace-resolve-url-metadata
+name: github-resolve-url-metadata
 description: >-
   タスク／チケット／ページ等を指す URL からメタデータ（タスクID・タイトル等）を取り出す
   SKILL。ホストやサービス（GitHub、Notion 等）ごとに取得手段は違うが、まず URL 種別を
@@ -10,7 +10,7 @@ license: MIT License
 metadata:
   author: "@eaglesakura"
 ---
-# Workspace / Resolve URL Metadata
+# GitHub / Resolve URL Metadata
 
 タスクやチケット、ページを指す **URL** から、後続作業で使うメタデータ（主にタスクID・タイトル）を取得する。
 推測で埋めず、可能な限り各サービスの API / CLI 等で実データを取る。
@@ -26,7 +26,7 @@ metadata:
 
 * ブランチ名 `feature/id/{n}/...` から Issue を辿るだけ（ブランチ規約向けの SKILL がある場合はそちら。必要なら本 SKILL と併用可）
 * PR レビュー・CI 失敗調査そのもの（URL パースが必要なら入口だけ本 SKILL）
-* ローカルファイルパスの解決 → `workspace-resolve-file-path`
+* ローカルファイルパスの解決（本 SKILL の範囲外）
 
 ## メタデータ一覧
 

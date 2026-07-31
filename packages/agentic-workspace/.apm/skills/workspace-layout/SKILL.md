@@ -4,6 +4,7 @@ description: >-
   AI Agent 協業向けの推奨ワークスペース・レイアウト（ルート構成）を伝える SKILL。
   リポジトリ整備・新規プロジェクト・「どこにディレクトリを置く？」「レイアウトの推奨は？」
   「AGENTS.md / docs / .ai-agent が無い」「不足ディレクトリを揃えたい」では必ず使う。
+  `.ai-agent/` ひな形の導入先は `folder:this/.ai-agent`（特定サブディレクトリ優先の Git ルート走査はしない）。
   一時ファイルを今すぐ書く置き場の提案だけなら workspace-agent-temporary、
   Memory 本文の書き方は workspace-agent-memory-save を使う。
 license: MIT License
@@ -12,7 +13,7 @@ metadata:
 ---
 # Workspace / Layout
 
-Agent と人間が同じ地図を共有できるよう、リポジトリルートの **推奨レイアウト** を定義する。
+Agent と人間が同じ地図を共有できるよう、ワークスペース（`folder:this/`）の **推奨レイアウト** を定義する。
 散在した規約・ドキュメント・一時領域は発見コストと ignore 漏れを増やすため、ここに揃える。
 
 一時成果物を **いまのタスクでどこに書くか** は `workspace-agent-temporary` の責務である。
@@ -39,11 +40,11 @@ Agent と人間が同じ地図を共有できるよう、リポジトリルー�
 
 ## 推奨レイアウト
 
-リポジトリルート（`.git` があるディレクトリ）を基準とする。
+`folder:this/` 直下を基準とする。
 本 SKILL は APM 配布を前提とするため、`apm.yml` / `apm_modules/` は構成上そろっている想定である。
 
 ```text
-.
+folder:this/
 ├── AGENTS.md                      # Agent 向けプロジェクト規約（常時 Context）
 ├── README.md
 ├── apm.yml                        # APM 依存定義
@@ -71,14 +72,15 @@ Agent と人間が同じ地図を共有できるよう、リポジトリルー�
 
 ### `AGENTS.md` / `README.md`
 
-* 置く場所はリポジトリルート（上表）である
+* 置く場所は `folder:this/` 直下（上表）である
 * **中身・見出し・テンプレートは本 SKILL の対象外**である
-* 無いまま規約や README が必要になったら、ルートへの作成を提案する（本文はユーザー方針や他ドキュメントに任せる）
+* 無いまま規約や README が必要になったら、`folder:this/` への作成を提案する（本文はユーザー方針や他ドキュメントに任せる）
 
 ### `.ai-agent/` の場所
 
 * ディレクトリ名は **`.ai-agent/`（単数形）** のみ
-* 実パスの候補順は本 SKILL が持つ（HQ では `headquarters/.ai-agent` を優先）
+* **一時ファイル・計画・Memory の運用ベース**は `folder:this/.ai-agent`（`workspace-agent-temporary` / `workspace-resolve-root-directory`）。Git ルート相対で特定サブディレクトリの `.ai-agent` を優先する旧候補順は使わない
+* ひな形を導入するときも、導入先は **いまの `folder:this/.ai-agent`** とする（別 Multi-Root folder へ勝手に作らない）
 * 配下の使い分け（`tmp` / `plan` / `memory`）の運用は `workspace-agent-temporary` に委譲する
 * Memory の書き方は `workspace-agent-memory-save` に委譲する
 
@@ -89,30 +91,25 @@ Agent と人間が同じ地図を共有できるよう、リポジトリルー�
 1. いま書こうとしている成果物（技術文書・一時ファイル・規約など）を特定する
 2. 推奨レイアウト上の配置先を決める
 3. 配置先が無ければ、その場で作成・移行を提案する（同意が取れる運用なら作成してよい）
-4. `.ai-agent/` が必要になったときだけ `{assets}/.ai-agent/` を採用パスへコピーする
+4. `.ai-agent/` が必要になったときだけ `{assets}/.ai-agent/` を **`folder:this/.ai-agent`** へコピーする
 5. `docs/` が必要になったときだけ導入する（ひな形は `{assets}/docs/`）
 6. `AGENTS.md` / `README.md` はパス案内に留め、本文は書かない（他 SKILL・ユーザー方針へ）
 7. `apm.yml` / `apm_modules/` は APM 前提として地図に含める。欠落に気づいたら「APM ワークスペースとして揃える」旨を短く触れる
 
 ```bash
-ROOT="$(git rev-parse --show-toplevel)"
-# HQ 優先の候補例（本 SKILL の正本）
-for candidate in \
-  "${ROOT}/headquarters/.ai-agent" \
-  "${ROOT}/.ai-agent"; do
-  if [ -d "$candidate" ]; then
-    AI_AGENT_DIR="$candidate"
-    break
-  fi
-done
+# SCOPE = folder:this（workspace-resolve-root-directory で絶対パス化）
+SCOPE="$(...)"  # いまのワークスペース folder
+AI_AGENT_DIR="${SCOPE}/.ai-agent"
+# 無ければ {assets}/.ai-agent/ を AI_AGENT_DIR へコピー（workspace-resolve-agent-assets）
 ```
 
 ## 他 SKILL との境界
 
 | SKILL | 責務 |
 | --- | --- |
-| **本 SKILL** | ルート全体の推奨地図・必要時の不足パス提案・`.ai-agent/` 実パス候補順 |
-| `workspace-agent-temporary` | 一時ファイルが必要な作業での配置先提案 |
+| **本 SKILL** | ルート全体の推奨地図・必要時の不足パス提案・`folder:this/.ai-agent` へのひな形導入 |
+| `workspace-agent-temporary` | 一時ファイルが必要な作業での配置先提案（常に `folder:this/.ai-agent`） |
+| `workspace-resolve-root-directory` | `folder:this` 等のルート解決 |
 | `workspace-agent-memory-save` | Memory の保存フォーマット |
 | `markdown-search` / `markdown-documentation` | `docs/` 等の探索・文書作成 |
 | `workspace-resolve-file-path` | 文書内の通常パス / Markdown リンク解決 |
@@ -123,13 +120,14 @@ done
 
 * ドキュメント作成なら `docs/`、Agent 一時作業なら `.ai-agent/`、というようにトリガーと導入を結びつける
 
-### DO: `AGENTS.md` / `README.md` はルート配置のみ案内する
+### DO: `AGENTS.md` / `README.md` は `folder:this/` 配置のみ案内する
 
 * 本文テンプレートまで抱え込むと、プロジェクト固有の規約と衝突しやすい
 
-### DO: `.ai-agent` は単数形・ignore 済みひな形を使う
+### DO: `.ai-agent` は単数形・ignore 済みひな形を `folder:this` へ置く
 
 * `{assets}/.ai-agent/` をコピーすれば `tmp` / `plan` / `memory` と `.gitignore` が揃う
+* 導入先は常に `folder:this/.ai-agent`（`workspace-resolve-root-directory`）
 
 ### DO NOT: 本 SKILL で一時ファイルの中身や Memory 本文ルールまで抱え込む
 

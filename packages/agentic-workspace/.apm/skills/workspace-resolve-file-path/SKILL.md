@@ -9,7 +9,7 @@ description: >-
   `{assets}/...` は絶対にこの SKILL では解かず workspace-resolve-agent-assets を使う。
   `folder:{name}/...` / `repo:{name}/...` は workspace-resolve-root-directory。
   `.ai-agent/` の置き場・実パスは workspace-layout / workspace-agent-temporary。
-  URL→Issue は workspace-resolve-url-metadata、整形のみは markdown.format では使わない。
+  GitHub Issue URL のメタデータ取得や、整形のみは markdown.format では使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -29,7 +29,7 @@ metadata:
 * `{assets}/...` メタ変数の実体解決 → `workspace-resolve-agent-assets`
 * `folder:{name}/...` / `repo:{name}/...`（ルート解決）→ `workspace-resolve-root-directory`
 * `.ai-agent/` の導入・実パス・`tmp`/`plan`/`memory` の置き場 → `workspace-layout` / `workspace-agent-temporary`
-* GitHub Issue URL から ID/タイトルを取る → `workspace-resolve-url-metadata`
+* GitHub Issue URL から ID/タイトルを取る（本 SKILL の範囲外）
 * Markdown の体裁整形だけ → `markdown.format`
 * キーワードで文書を探すだけ（パス表記の解決が不要）→ `markdown-search`
 
