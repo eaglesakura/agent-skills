@@ -1,0 +1,14 @@
+name: connect-rpc
+version: 0.1.0
+description: |
+  Connect RPC 向け SKILL 集。
+  Unary HTTP サービスの `buf curl` による検証手順をまとめる。
+author: "@eaglesakura"
+license: MIT
+type: skill
+includes: auto
+targets:
+  - cursor
+  - claude
+  - copilot
+  - codex

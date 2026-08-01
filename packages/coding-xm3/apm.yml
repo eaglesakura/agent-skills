@@ -12,6 +12,7 @@ targets:
   - cursor
   - claude
   - copilot
+  - codex
 
 dependencies:
   apm:
