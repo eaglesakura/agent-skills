@@ -1,13 +1,15 @@
 ---
 name: claude-alias-cursor
 description: >-
-  Claude Code CLI（`claude` / `claude -p` 等）の提案・記述・スクリプトを、未契約環境向けに
-  Cursor Agent CLI（`agent` または `cursor agent`）へ置き換える SKILL。
-  他 SKILL・ドキュメント・eval・CI・skill-creator の `run_loop` / `run_eval` が
-  `claude` を出したら必ずロードし、実行前にバインディングへ変換する。
-  「claude の代わり」「cursor agent」「agent -p」「Claude 未契約」「トリガー最適化」でも使う。
-  IDE 起動だけの `cursor`（agent サブコマンドなし）、純粋な Cursor SDK 実装のみ、
-  Claude 契約済みで本物の `claude` を使う明示指示がある場合は使わない。
+  skill-creator の description 最適化（`run_loop` / `run_eval` / `improve_description` /
+  「description を最適化」）や、手順・スクリプト・CI・他 SKILL が `claude` / `claude -p` を
+  出すときは必ずロードする。この環境は Claude Code 未契約のため `claude` は実行せず、
+  Cursor Agent CLI（`agent` / `cursor agent`）へ置換する。`python -m scripts.run_loop` は
+  動かない——代わりに本 SKILL の `scripts/trigger_opt_cursor.py` を実行する。
+  「claude が無いので手動最適化」「CLI 未導入なのでスキップ」も禁止で、先にこの SKILL を読む。
+  「claude の代わり」「agent -p」「cursor agent」「トリガー最適化」「Claude 未契約」でも使う。
+  素の `cursor`（agent なし＝IDE 起動）だけ、Claude 契約済みで本物の `claude` を使う明示指示、
+  Cursor SDK 実装のみでは使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -16,7 +18,47 @@ metadata:
 
 この環境では Claude Code（`claude`）は未契約である。他 SKILL や手順が `claude` を提案しても、**実行せず** [Cursor CLI](https://cursor.com/ja/cli) の Agent CLI に置き換える。
 
-## エントリポイント（重要）
+## 最優先（skill-creator / description 最適化）
+
+transcript で起きやすい失敗: skill-creator が `run_loop` を指示 → `claude` が無いと気づく → **手動最適化やスキップ**に落ちる。これは誤り。
+
+| skill-creator が言うこと | この環境でやること |
+| --- | --- |
+| `python -m scripts.run_loop …` | **実行しない**（内部が `claude -p`。`FileNotFoundError`） |
+| `run_eval` / `improve_description` | 同上。`claude -p` 依存 |
+| description 最適化を進める | 本 SKILL の `scripts/trigger_opt_cursor.py` を使う |
+| 「claude CLI が無いので手動で」 | **禁止**。代替スクリプトがある |
+
+```bash
+# skill-creator の run_loop 相当（Cursor Agent CLI）
+python path/to/claude-alias-cursor/scripts/trigger_opt_cursor.py \
+  --eval-set /path/to/trigger-eval.json \
+  --skill-path /path/to/target-skill \
+  --results-out /path/to/results.json \
+  --max-iterations 5 \
+  --verbose
+# 最良 description を SKILL.md に書き戻すなら --apply-best
+```
+
+* エントリポイント: 環境変数 `CURSOR_AGENT_BIN`（既定 `cursor` → `cursor agent …`、`agent` なら直呼び）
+* eval set: `[{"query":"…","should_trigger":true}, …]`
+* コマンド置換だけでは足りないことがある（Claude の stream-json Skill 発火検知は Cursor と非互換）。TRIGGER/SKIP 分類が本スクリプトの近似プロトコルである
+
+## いつ使うか
+
+* skill-creator の description 最適化・`run_loop` / `run_eval` / `improve_description` が出たとき（**最優先**）
+* 他 SKILL / スクリプト / ドキュメントが `claude` や `claude -p` を指示したとき
+* headless / CI / eval で Claude Code 相当の呼び出しが必要なとき
+* ユーザーが「claude の代わりに cursor / cursor-cli / agent」と明示したとき
+* `claude: command not found` / Authentication 以前に CLI 自体が無いとき
+
+## いつ使わないか
+
+* IDE 起動だけの `cursor`（`agent` サブコマンドなし）を代替にしようとする誤解を正す以外の、純粋な IDE 操作
+* Claude 契約済みで、ユーザーが本物の `claude` を使うと明示しているとき
+* Cursor SDK の実装だけが対象で、CLI 置換が不要なとき
+
+## エントリポイント
 
 次の **どちらも Agent CLI** である（同等に使ってよい）。
 
@@ -26,15 +68,6 @@ metadata:
 | `cursor agent …` | `cursor agent -p "…"` |
 
 IDE を開くだけの `cursor`（サブコマンドなし）は Agent CLI **ではない**。置き換え先にしない。
-
-スクリプトでは `CURSOR_AGENT_BIN`（未設定なら `cursor` または `agent`）を使うとよい。`cursor agent` を選ぶ場合は引数に `agent` サブコマンドを付ける。
-
-## いつ使うか
-
-* 他 SKILL / スクリプト / ドキュメントが `claude` や `claude -p` を指示したとき
-* skill-creator の description 最適化（`scripts/run_loop` / `run_eval` / `improve_description`）が `claude -p` を呼ぶとき
-* headless / CI / eval で Claude Code 相当の呼び出しが必要なとき
-* ユーザーが「claude の代わりに cursor / cursor-cli / agent」と明示したとき
 
 ## 前提
 
@@ -113,37 +146,6 @@ agent -p --trust --force "Refactor …"
 CURSOR_API_KEY=… agent -p --trust -f "…"
 ```
 
-## skill-creator / `claude -p` スクリプトの扱い
-
-skill-creator の `scripts/run_eval.py`・`run_loop.py`・`improve_description.py` は内部で `claude -p` を呼ぶ。
-
-* **コマンド置換だけ**では足りないことがある。Claude 側は stream-json 上の Skill / Read ツール呼び出しで「スキルが発火したか」を検知する。Cursor Agent のイベント形・ツール名は同じではない
-* description トリガー最適化では、次の **近似プロトコル** が実用的である
-  1. `cursor agent -p --mode ask --trust -f`（または `agent -p …`）に、スキル名＋ description ＋ユーザークエリを渡し `TRIGGER` / `SKIP` だけ答えさせる
-  2. 失敗例を同じ headless 呼び出しで description 改善プロンプトに渡す
-  3. train / holdout test で再評価し最良を SKILL.md に適用する
-* 本 SKILL の [scripts/trigger_opt_cursor.py](./scripts/trigger_opt_cursor.py) がその実装である。`python -m scripts.run_loop` の代わりにこれを使う。新規に `claude -p` 依存スクリプトを書くときも、最初から Agent CLI 版にする
-
-### `scripts/trigger_opt_cursor.py` の使い方
-
-skill-creator の description 最適化（`run_loop`）相当を、Cursor Agent CLI で行う。
-
-```bash
-# 例: 対象 SKILL の description を TRIGGER/SKIP 評価で改善する
-python path/to/claude-alias-cursor/scripts/trigger_opt_cursor.py \
-  --eval-set /path/to/trigger-eval.json \
-  --skill-path /path/to/target-skill \
-  --results-out /path/to/results.json \
-  --max-iterations 5 \
-  --verbose
-
-# 最良 description を SKILL.md に書き戻す場合
-# …同じ引数に --apply-best を追加
-```
-
-* エントリポイントは環境変数 `CURSOR_AGENT_BIN`（既定 `cursor` → `cursor agent …`、`agent` なら直呼び）
-* eval set は `[{"query":"…","should_trigger":true}, …]` 形式
-
 ## 近似対応（完全 1:1 ではない）
 
 | Claude Code | Cursor 側の現実的な代替 | 注意 |
@@ -178,6 +180,7 @@ python path/to/claude-alias-cursor/scripts/trigger_opt_cursor.py \
 ## やってはいけないこと
 
 * `claude` バイナリのインストールや契約を前提にした手順を進めること
+* skill-creator の `run_loop` を「claude が無いから」とスキップし、手動 description 最適化に落ちること（`trigger_opt_cursor.py` を使う）
 * **サブコマンドなしの** `cursor`（IDE 起動）を Agent CLI の代替として使うこと（`cursor agent` は可）
 * バインディング不能なフラグを黙って落とすこと（必ず明示する）
 * Claude 専用のモデル alias（`sonnet` / `opus` / `haiku` 等）をそのまま `--model` に渡すこと → `agent --list-models` または `agent models` で実際の ID を使う
