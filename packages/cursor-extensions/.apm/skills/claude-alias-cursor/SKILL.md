@@ -1,15 +1,14 @@
 ---
 name: claude-alias-cursor
 description: >-
-  skill-creator の description 最適化（`run_loop` / `run_eval` / `improve_description` /
-  「description を最適化」）や、手順・スクリプト・CI・他 SKILL が `claude` / `claude -p` を
-  出すときは必ずロードする。この環境は Claude Code 未契約のため `claude` は実行せず、
-  Cursor Agent CLI（`agent` / `cursor agent`）へ置換する。`python -m scripts.run_loop` は
-  動かない——代わりに本 SKILL の `scripts/trigger_opt_cursor.py` を実行する。
-  「claude が無いので手動最適化」「CLI 未導入なのでスキップ」も禁止で、先にこの SKILL を読む。
-  「claude の代わり」「agent -p」「cursor agent」「トリガー最適化」「Claude 未契約」でも使う。
-  素の `cursor`（agent なし＝IDE 起動）だけ、Claude 契約済みで本物の `claude` を使う明示指示、
-  Cursor SDK 実装のみでは使わない。
+  skill-creator による自動的な description 最適化（`run_loop` / `run_eval` /
+  `improve_description` / 「description を最適化」）や、手順・スクリプトが `claude` /
+  `claude -p` を出すときは必ずロードする。Claude Code 未契約のため `agent` /
+  `cursor agent` へ置換し、本 SKILL の `scripts/trigger_opt_cursor.py` を実行する。
+  「手動最適化」「CLI 未導入でスキップ」は禁止。他 SKILL の description 文言を短くする・直すだけの
+  手動編集依頼（自動ループや評価ツールの文脈が無い場合）では使わない。
+  「claude の代わり」「agent -p」「トリガー最適化」「Claude 未契約」でも使う。
+  素の `cursor`（Agent なし＝IDE 起動）や Cursor SDK 実装のみでは使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
