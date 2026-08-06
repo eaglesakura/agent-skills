@@ -11,9 +11,6 @@ description: >-
   `mise exec --` / `fvm` / `asdf` 等のツールチェイン wrapper を SKILL 本文に埋め込まない。
   実際のシェル実行そのものだけ（SKILL を書かない）では使わない。
   `{assets}/` の実行時解決は workspace-resolve-agent-assets を使う。
-license: MIT License
-metadata:
-  author: "@eaglesakura"
 ---
 # Tool / Skill Creator Extension
 
@@ -42,6 +39,13 @@ prefix・wrapper は **プロジェクト固有の実行規約** であり、SKI
 * `apm.yml` の依存と SKILL 参照の整合・未宣言依存・逆依存を点検・修正するとき
 
 ## コアルール
+
+### frontmatter（`license` / `metadata`）
+
+* `name` / `description` 以外の frontmatter は **Optional**
+* `license` と `metadata`（`metadata.author` 含む）は、**ユーザーが明示指定したときだけ**書く
+* 既定値（例: `MIT License`、`author: "@eaglesakura"`）で勝手に埋め込まない
+* 指定が無い新規・改訂では、これらのキーを frontmatter に残さない（削除してよい）
 
 ### SKILL に書くコマンド（portable）
 
@@ -198,18 +202,20 @@ SKILL 改善用ワークスペースでは複数 package が並列に見える�
 
 ## 適用手順（SKILL 作成・改訂時）
 
-1. 手順に出すコマンド列を列挙する
-2. 各コマンドからツールチェイン wrapper を剥がし、ツール本体だけ残す
-3. 「このプロジェクトでは `mise exec --` が必須」のような **環境固有の断言** を SKILL 本文に書かない
-4. 実行時の wrapper が必要なら、上記の汎用一文に留めるか、実行 Agent が `AGENTS.md` を読む前提にする
-5. 共有アセットが必要なら、本文参照を `{assets}/...` にし、`## アセットディレクトリ` に解決候補を列挙する
-6. 実行時に `{assets}/` を読む手順があるなら、`workspace-resolve-agent-assets` で解決する旨を手順または関連に残す
-7. 所属 package の `apm.yml` を読み、本文の SKILL / command 明示参照と他 package パスが許可集合内か点検する
-8. 未宣言・逆依存があれば、依存追加か参照を閉じるかをユーザーに選ばせる（確定前に勝手に決めない）
-9. 例示は DO / DO NOT が対になるようにすると読み手が迷いにくい
+1. `license` / `metadata` はユーザー指定があるときだけ frontmatter に含める（無指定なら書かない・既定値で埋めない）
+2. 手順に出すコマンド列を列挙する
+3. 各コマンドからツールチェイン wrapper を剥がし、ツール本体だけ残す
+4. 「このプロジェクトでは `mise exec --` が必須」のような **環境固有の断言** を SKILL 本文に書かない
+5. 実行時の wrapper が必要なら、上記の汎用一文に留めるか、実行 Agent が `AGENTS.md` を読む前提にする
+6. 共有アセットが必要なら、本文参照を `{assets}/...` にし、`## アセットディレクトリ` に解決候補を列挙する
+7. 実行時に `{assets}/` を読む手順があるなら、`workspace-resolve-agent-assets` で解決する旨を手順または関連に残す
+8. 所属 package の `apm.yml` を読み、本文の SKILL / command 明示参照と他 package パスが許可集合内か点検する
+9. 未宣言・逆依存があれば、依存追加か参照を閉じるかをユーザーに選ばせる（確定前に勝手に決めない）
+10. 例示は DO / DO NOT が対になるようにすると読み手が迷いにくい
 
 ### 自己レビュー（追加）
 
+* [ ] `license` / `metadata` はユーザー指定時のみ（無指定の既定埋め込みが無い）
 * [ ] コマンド例に `mise` / `fvm` / `asdf` 等の wrapper が無い
 * [ ] `{assets}/` を使う場合: `## アセットディレクトリ` に探索先が列挙されている（使わないならセクション無し）
 * [ ] `{assets}/` がある成果物に、文書相対と（可能なら）install 後ルート相対の両方がある
@@ -229,6 +235,7 @@ SKILL 改善用ワークスペースでは複数 package が並列に見える�
 
 ## やってはいけないこと
 
+* ユーザー指定なしに `license` や `metadata.author` を既定値で埋め込むこと
 * 「この HQ / このリポジトリでは常に `mise exec --`」を SKILL の必須手順として固定すること
 * コマンド例だけ portable にして、説明文で特定 wrapper を必須と書くこと（実質同じ漏れ）
 * portable 化のために、ツール本体のサブコマンドやフラグまで省略すること（`dart -h` の `-h` は残す）
