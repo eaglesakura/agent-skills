@@ -19,14 +19,19 @@ description: >-
 ## 作業手順
 
 1. [assets/project.yml.crashlytics-fragment.yml](./assets/project.yml.crashlytics-fragment.yml) を読む
-2. `targets.Runner.dependencies` に `FirebaseCrashlytics` product を追加する
-3. `postBuildScripts` に Crashlytics `run` スクリプトを追加する（Thin Binary の後でよい）
-4. `xcodegen` を再実行する
+2. [assets/xcodegen/scripts/preBuildFirebaseCrashlyticsRun.sh](./assets/xcodegen/scripts/preBuildFirebaseCrashlyticsRun.sh) を `ios/xcodegen/scripts/` へ配置し、実行ビットを付ける
+3. `targets.Runner.dependencies` に `FirebaseCrashlytics` product を追加する
+4. `postBuildScripts` に Crashlytics Upload Phase を追加する（Thin Binary の後でよい）。`script` はインラインではなく `${PROJECT_DIR}/xcodegen/scripts/preBuildFirebaseCrashlyticsRun.sh` を指す
+5. `xcodegen` を再実行する
 
 ## 注意
 
 * `basedOnDependencyAnalysis: false` を付け、入力ファイル一覧をテンプレから落とさない
 * GoogleService-Info がバンドルに無いとアップロードが失敗しやすい → firebase SKILL 側を先に直す
+* Crashlytics `run` の配置先はビルド経路で異なる
+  * `flutter build` / `flutter ipa`: `build/ios/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run`
+  * Xcode IDE: DerivedData 配下の `SourcePackages/checkouts/.../Crashlytics/run`
+  * `${BUILD_DIR%/Build/*}/SourcePackages/...` のみだと Flutter CLI アーカイブで `No such file or directory` になり得る。同梱スクリプトは両方を探索する
 
 ## 関連
 
