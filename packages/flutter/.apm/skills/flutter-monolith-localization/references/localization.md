@@ -12,8 +12,9 @@
 
 1. 各パッケージの `res/strings.csv` に翻訳データを定義する。
 2. `dart run monolith_runner:localization` コマンドを実行する。
-3. 全パッケージの CSV が集約され、Flutter 標準の `*.arb` ファイルが生成される。
+3. 全パッケージの CSV が集約され、Flutter 標準の `*.arb` ファイルが生成される（出力先: `localization.app.package_name`。現行は `app_runner`）。
 4. 同時に、各パッケージに `lib/gen/strings.dart` が生成され、型安全なアクセサ (`L10nStringsMixin`) が提供される。
+5. 出力先 package（`app_runner`）の `flutter: generate: true` により `l10n.dart` 等が生成され、`L10nHelper` も同ディレクトリに出力される。
 
 ## 実装手順
 

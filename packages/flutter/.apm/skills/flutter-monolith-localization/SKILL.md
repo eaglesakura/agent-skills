@@ -48,6 +48,10 @@ path/to/package
 └── test
 ```
 
+集約言語の正本（ARB / gen-l10n / L10nHelper）は **`app_runner`（`app/runner`）** に出力される。
+feature アプリは `package:app_runner/app_runner.dart` 経由で `L10nHelper` を利用する。
+`.secrets/monolith.secrets.yaml` に `localization.app.package_name` がある場合は `app_runner` に揃える（secrets が優先）。
+
 ## 作業手順
 
 1. `res/strings.csv` を編集する（ヘッダー `id,{言語コード},description`）
