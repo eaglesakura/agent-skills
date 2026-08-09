@@ -1,0 +1,23 @@
+{
+  "skill_name": "coding.loop",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/loop /coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer が Success し、login 関連 Unit Test がすべて Success\nタイムアウト: 30分",
+      "expected_output": "要件計画を特定し、login-home_1.md を作成して design → `/coding.design … レビューのみ` を DO NOT0 まで → execute を1ステップずつ（各ステップ後 git diff → 自動 commit）回す。完了条件または30分で停止する。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/loop /coding.loop .ai-agent/plan/settings-theme.md\n（完了条件の記載なし。計画にも受け入れ条件が無い想定）",
+      "expected_output": "次の固定文言のみで緊急停止する: 「タスクの完了条件が不明確です。\\n実装ループを緊急停止します。」 design/execute は行わない。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "/coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer Success",
+      "expected_output": "coding.loop を起動しない（/loop 接頭辞が無い）。単体 /coding.loop は不正形式。",
+      "files": []
+    }
+  ]
+}

@@ -62,6 +62,10 @@ flowchart TD
 3. `/coding.execute` + Agentモードで実装とフォローアップ
     * 詳細設計時に実装順が提案されるため、細かく区切りながら実装させることが可能
     * 実行すると、計画ファイルを元に差分が実装される
+4. （オプション）`/loop /coding.loop` で詳細設計〜実装を完了条件まで自律反復
+    * `/loop` に続けて SKILL `coding.loop` を指定する形式のみ（Prompt は無し・単体呼び出し不可）
+    * 要件定義済みが前提。完了条件不明・規定時間超過は緊急停止
+    * 手順正本は SKILL `coding.loop`
 
 ```mermaid
 flowchart TD

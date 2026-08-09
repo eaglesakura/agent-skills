@@ -134,3 +134,19 @@ sequenceDiagram
     Senior-->>Main: 指摘・修正反映
     Main-->>U: 実行結果サマリ
 ```
+
+### オプション: `/loop` + SKILL `coding.loop`（ループエンジニアリング）
+
+* `/coding.requirement` 済みの計画に対し、完了条件達成まで design → DO NOT 監査クリア → execute を自律反復する
+* **呼び出し形式は必ず** `/loop /coding.loop …`（`/loop` に続けて SKILL `coding.loop` を指定。単体の skill 名だけ・slash-command 化はしない）
+* タイムアウト監視の既定は 120分
+* 手順の正本は SKILL [`coding.loop`](../.apm/skills/coding.loop/SKILL.md)
+* 各外側ループで計画を `{要件名}_{N}.md` に分割する
+* **Prompt（`.apm/prompts/coding.loop`）は置かない** — 重複回避のため SKILL のみ
+
+利用例:
+
+```text
+/loop /coding.loop .ai-agent/plan/login-home.md
+完了条件: Analyzer Success かつ対象 Unit Test Success
+```
