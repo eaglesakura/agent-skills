@@ -1,7 +1,7 @@
 ---
 name: coding.loop
 description: >-
-  要件定義済み計画に対し、詳細設計→DO NOT監査クリア→実装を完了条件達成まで自律ループする SKILL。
+  要件定義済み計画に対し、詳細設計→DO NOT監査クリア→実装（各ステップ後は必ず /coding.comment）を完了条件達成まで自律ループする SKILL。
   呼び出し形式は必ず `/loop /coding.loop`（Cursor `/loop` に SKILL `coding.loop` を続ける。例: `/loop /coding.loop .ai-agent/plan/x.md`）。
   単体の skill 名だけ・`/loop` 無し・本 SKILL 名無しの雑な依頼では起動しない。
   slash-command（`.apm/prompts`）は持たない。通常の単発 `/coding.design`・`/coding.execute`・要件未完了・ライブラリ更新だけの `/loop` でも使わない。
@@ -9,7 +9,7 @@ description: >-
 
 # Coding / ループエンジニアリング
 
-要件定義済み計画を起点に、**完了条件を満たすまで** `/coding.design` と `/coding.execute` を自律反復する。
+要件定義済み計画を起点に、**完了条件を満たすまで** `/coding.design` と `/coding.execute`（各ステップ後は必ず `/coding.comment`）を自律反復する。
 Coding-Commands のステップ2〜3を外側ループで束ねる。ステップ1（`/coding.requirement`）は前提として完了済みであること。
 正本はこの SKILL のみ（同名 Prompt は置かない）。
 
@@ -90,11 +90,12 @@ flowchart TD
 
 ## 関連コマンド / SKILL / Agent
 
-本 SKILL は次を **コマンド経路経由** で使うのが原則である（design / execute / レビューは `/coding.design`・`/coding.execute` に任せる）。
+本 SKILL は次を **コマンド経路経由** で使うのが原則である（design / execute / comment / レビューは各 slash-command に任せる）。
 
 * `/coding.requirement`（前提。本ループでは実行しない）
 * `/coding.design`（詳細設計 / `レビューのみ`。対象は分割計画）
 * `/coding.execute`（実装。1ステップずつ）
+* `/coding.comment`（各 execute 直後のコメント充足。省略不可）
 * `engineer-software-design` / `agent-job-description` / `{assets}/coding/design.md`
 * `{assets}/coding.execute/work-orders.md`
 * Cursor `/loop`（必須接頭辞、かつタイムアウト監視の武装）
@@ -136,7 +137,8 @@ flowchart TD
 ### Required: 実装差分とステップ単位 commit
 
 * `/coding.execute` によるプロダクション変更
-* 各実装ステップ後の `git commit`（差分がある場合）
+* 各実装ステップ直後の `/coding.comment` によるコメント充足
+* 各実装ステップ後の `git commit`（差分がある場合。execute + comment をまとめる）
 
 ### Required: 終了サマリ
 
@@ -165,7 +167,8 @@ flowchart TD
     ReviewOnly --> AuditOk{"DO NOT 残<br/>= 0 か"}
     AuditOk -->|いいえ| ReviewOnly
     AuditOk -->|はい| ExecStep["/coding.execute<br/>1ステップのみ"]
-    ExecStep --> Diff["git diff で確認"]
+    ExecStep --> Comment["/coding.comment<br/>当該差分のコメント充足"]
+    Comment --> Diff["git diff で確認"]
     Diff --> HasDiff{"commit 対象の<br/>差分があるか"}
     HasDiff -->|はい| Commit["git commit<br/>メッセージ=作業内容"]
     HasDiff -->|いいえ| NextStep
@@ -179,7 +182,7 @@ flowchart TD
 
 1. 初回は `/coding.design`（既定＝詳細設計＋1回分のレビュー経路）
 2. その後 DO NOT 残が 0 になるまで **`/coding.design … レビューのみ`** のみ再実行（大規模な設計作り直しは外側で `{stem}_{N+1}` を切る）
-3. execute は **1ステップ → diff →（あれば）commit** を計画の全ステップ分繰り返す
+3. execute は **1ステップ → `/coding.comment` → diff →（あれば）commit** を計画の全ステップ分繰り返す（comment は差分の有無にかかわらず必ず実施）
 4. 外側は完了条件未達かつタイムアウト前のあいだ 2〜3 を繰り返す
 
 ## 緊急停止メッセージ（固定文言）
@@ -251,7 +254,7 @@ do {
 * 内側の収束より外側のタイムアウト判定が優先される
 * 「レビューのみ」は詳細設計の書き直し（design のステップ1）をスキップする。大幅な作り直しが必要なら外側で `N` を進め新しい分割計画を切る
 
-### ステップ5: 実装（1ステップごと + commit）
+### ステップ5: 実装（1ステップごと + comment + commit）
 
 対象は同じ `{stem}_{N}.md`。**全ステップを一度に execute しない**。
 
@@ -261,7 +264,12 @@ do {
 2. ジュニア →（失敗時）シニア引き継ぎ → 品質確認の順を守る
 3. Formatter / Analyzer を省略しない
 4. 計画チェックリストを更新する
-5. 差分確認と自動 commit
+5. **必ず** `/coding.comment` でコメント充足する（省略・スキップ不可）
+   * 対象スコープは当該ステップで触ったプロダクションコード（変更ファイル・新規シンボル・編集した関数／型など）。テスト専用ファイルのみの変更でも、コメント規約の対象なら同様に実施する
+   * 操作方針は既定のまま（追加・更新のみ。削除しない）でよい
+   * execute 側の品質フォローアップでコメントに触れていても、本ステップの `/coding.comment` は省略しない（ループ側のゲートとして独立させる）
+   * コメント変更が不要と判断できる場合でもコマンドを実行し、規約に照らして確認したうえで「変更なし」でよい
+6. 差分確認と自動 commit（execute + comment の結果をまとめて）
    * `git status` と `git diff` で当該ステップの変更を確認する
    * 対象があれば関連パスを stage し、作業内容に沿ったメッセージで `git commit` する
    * メッセージは HEREDOC。計画ステップ名や要点を含め、なぜ・何をしたかが分かる 1〜2 文にする
@@ -297,7 +305,7 @@ EOF
 * 本ループ内で `/coding.requirement` をやり直さない（要件不足なら緊急停止）
 * 完了条件を推測で補完しない（未決は「解決優先度」1→2→3で埋める。それでも完了条件が検証不能なら緊急停止）
 * DO NOT 残があるまま execute しない
-* execute のまとめ実行や commit 省略をしない（1ステップ → diff → commit）
+* execute のまとめ実行・`/coding.comment` 省略・commit 省略をしない（1ステップ → comment → diff → commit）
 * 計画外の大規模リファクタへ広げない
 * タイムアウト後に続行しない
 * 自動 commit を `git push` まで拡張しない
@@ -321,9 +329,9 @@ EOF
 
 DO NOT 残の解消は `/coding.design … レビューのみ` に任せる。未決解消の合議と混同しない。
 
-### DO: execute は1ステップごとに diff して commit する
+### DO: execute は1ステップごとに `/coding.comment` → diff → commit する
 
-まとめて commit すると切り戻しとレビューが難しい。空 commit は作らない。
+コメント不足のまま次ステップへ進むと、後から一括で直すコストとレビュー負荷が増える。execute 直後に充足し、同じ commit に含める。まとめて commit すると切り戻しとレビューが難しい。空 commit は作らない。
 
 ### DO NOT: 要件未完了のまま開始する
 

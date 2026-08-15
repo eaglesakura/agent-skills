@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "/loop /coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer が Success し、login 関連 Unit Test がすべて Success\nタイムアウト: 30分",
-      "expected_output": "要件計画を特定し、login-home_1.md を作成して design → `/coding.design … レビューのみ` を DO NOT0 まで → execute を1ステップずつ（各ステップ後 git diff → 自動 commit）回す。完了条件または30分で停止する。",
+      "expected_output": "要件計画を特定し、login-home_1.md を作成して design → `/coding.design … レビューのみ` を DO NOT0 まで → execute を1ステップずつ（各ステップ後は必ず `/coding.comment` → git diff → 自動 commit）回す。完了条件または30分で停止する。",
       "files": []
     },
     {

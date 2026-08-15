@@ -137,7 +137,7 @@ sequenceDiagram
 
 ### オプション: `/loop` + SKILL `coding.loop`（ループエンジニアリング）
 
-* `/coding.requirement` 済みの計画に対し、完了条件達成まで design → DO NOT 監査クリア → execute を自律反復する
+* `/coding.requirement` 済みの計画に対し、完了条件達成まで design → DO NOT 監査クリア → execute（各ステップ後は必ず `/coding.comment`）を自律反復する
 * **呼び出し形式は必ず** `/loop /coding.loop …`（`/loop` に続けて SKILL `coding.loop` を指定。単体の skill 名だけ・slash-command 化はしない）
 * タイムアウト監視の既定は 120分
 * 手順の正本は SKILL [`coding.loop`](../.apm/skills/coding.loop/SKILL.md)
