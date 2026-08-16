@@ -322,3 +322,23 @@ const factory SettingsScreenState({
 
 static final provider = Provider.autoDispose<SettingsScreenViewModel>(...);
 ```
+
+### DO NOT: ViewModel に可変値を保存し State の外で管理する
+
+* 理由: 初期化済みフラグ・リトライ回数・購読開始済みなど、画面の可変状態を ViewModel の mutable フィールドに置くと単一の State ストリーム原則が崩れる
+* 理由: 可変値は ScreenState のプロパティとして保持し、Delegate が現在 State を見て判断できるようにする（[mvvm-viewmodel-design.md](./mvvm-viewmodel-design.md)）
+
+```dart
+// 非推奨パターン
+// DO NOT: ViewModel 側の _initialized 等
+bool _initialized = false;
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: loading 等の State に isInitialized を載せる
+const factory AccountScreenState.loading({
+  required bool isInitialized,
+  required AccountScreenEvent event,
+}) = AccountScreenStateLoading;
+```

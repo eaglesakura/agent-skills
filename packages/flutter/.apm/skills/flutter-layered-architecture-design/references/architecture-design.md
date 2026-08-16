@@ -657,6 +657,11 @@ await DataInjection.inject(builder);
 await UsecaseInjection.inject(builder);
 ```
 
+### DO: 外部入力のパース失敗は Data 層で吸収する
+
+* Firestore / リモート JSON などの信頼できない入力のデシリアライズ失敗は、Repository / Delegate 境界で empty や Result に落とす
+* 詳細は `flutter-layered-architecture-design-patterns` の repository-pattern と `flutter-coding-rules` の try-catch / data_object を参照する
+
 ### DO NOT: 下位レイヤーが上位レイヤーに依存する
 
 * 理由: 依存の向きが逆転し、基盤の独立性が崩れる

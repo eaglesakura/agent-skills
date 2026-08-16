@@ -91,3 +91,19 @@ Screen 層の画面を **Model–View–ViewModel** で組む。状態は ViewMo
 ### DO NOT: 新規で `@riverpod` 生成や ViewModel の mutable フィールドを増やす
 
 * provider 手書き + 状態は `state` ストリームに閉じる
+
+### DO NOT: ViewModel の Action を Delegate 分割せずに直接実装する
+
+* ViewModel 肥大化と Stateful プロパティを防ぐ。詳細は [mvvm-viewmodel-design-action.md](./references/mvvm-viewmodel-design-action.md)
+
+### DO NOT: ViewModel に可変値を保存する
+
+* 可変値は ScreenState（`MutableStateStream`）に保持する。詳細は [mvvm-viewmodel-design.md](./references/mvvm-viewmodel-design.md)
+
+### DO NOT: ViewModel の非同期初期化をコンストラクタや Provider から呼ぶ
+
+* `onInitialize()` 等の Action とし、ルート Screen の `useEffect` から呼ぶ。詳細は [mvvm-widget.md](./references/mvvm-widget.md)
+
+### DO NOT: StatefulWidget を作成する
+
+* Widget は Stateless（`HookConsumerWidget` / `ConsumerWidget` / `HookWidget` 等）。状態は Hooks または ViewModel の State に寄せる。詳細は [mvvm-widget.md](./references/mvvm-widget.md)

@@ -324,6 +324,11 @@ class OnInputTextChangedDelegate {
 }
 ```
 
+### DO: Datasource パースを担う Delegate は try-catch / DTO 境界規約に従う
+
+* `execute()` 内で外部由来 Map の `fromJson` を行う場合、失敗を親へ投げっぱなしにして watch ストリームを壊さない。
+* 詳細は [try-catch.md](./try-catch.md) と [data_object.md](./data_object.md)、Repository 側は `flutter-layered-architecture-design-patterns` の repository-pattern を参照する。
+
 ### DO NOT: 親クラスに複雑な処理を直書きする
 
 * 理由: クラスが肥大化し、テストが困難になる。

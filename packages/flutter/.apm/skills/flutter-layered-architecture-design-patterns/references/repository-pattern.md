@@ -506,6 +506,23 @@ final DatabaseSyncDelegate databaseSyncDelegate;
 final DatabaseEditDelegate databasePutDelegate;
 ```
 
+### DO: watch 系は Datasource 不正データでストリームを落とさない
+
+* Firestore / リモート JSON はスキーマ逸脱がありうる
+* freezed DTO の `fromJson` 失敗時は empty / 既存 Result の failure 相当へフォールバックする
+* ログは `runtimeType` のみとし、PII（nickname / uid / email 等）を出さない
+* `on Object catch` する場合は `flutter-coding-rules` の [try-catch.md](../../flutter-coding-rules/references/try-catch.md) に従い、理由コメントを必須とする
+
+```dart
+// data_repository_account_impl, watch_profile_delegate.dart
+} on Object catch (e) {
+  // json_serializable 生成コードは型不一致時に TypeError（Error）を投げうる。
+  // Firestore の不正ドキュメントで watch ストリームを落とさないため Object を catch する。
+  _log.w("public profile parse error: ${e.runtimeType}");
+  return const WatchProfileResult.empty();
+}
+```
+
 ### DO: テスト用実装は本番 Impl と別クラス・別パッケージ（`_testing`）に分離する
 
 * Fake / Testing 実装は `data_repository_*_testing` 等に置き、DI で差し替える
@@ -572,6 +589,11 @@ Future<FirestoreDocument> getDocument(...);
 // DO: Repository 専用の Result で返す
 Future<GetKanjiEntriesResult> getKanjiEntries(GetKanjiEntriesRequest request);
 ```
+
+### DO NOT: 信頼できない Map を as キャストだけでパースし失敗処理を省略する
+
+* 理由: `data?["nickname"] as String?` のような直キャストは型不一致やスキーマ逸脱に弱く、DTO 化と境界での失敗吸収を省略しがちである
+* 可能なら freezed DTO + `fromJson` とし、失敗時は empty / failure へ落とす（上記 DO 参照）
 
 ### DO NOT: Repository 同士で循環参照する
 

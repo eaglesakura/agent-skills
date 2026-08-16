@@ -204,3 +204,53 @@ Stream<SettingsScreenEvent> get event =>
 
 * 理由: part 分割が散漫になり、責務境界が不明確になる
 * 理由: `{viewmodel}.action.dart` 以外の part 分割は非推奨である
+
+### DO NOT: ViewModel に可変値を保存する
+
+* 理由: ViewModel インスタンスが Stateful になり、ライフサイクル・テスト・二重呼び出しの追跡が困難になる
+* 理由: 画面の可変状態は `MutableStateStream<ScreenState>`（ScreenState）に閉じる。初期化済みフラグ等も State のプロパティとする
+* 例外: フィールドはすべて `final` の依存参照（Repository、StateStream、StateToEntityDelegate 等）に限る
+
+```dart
+// 非推奨パターン
+// DO NOT: ViewModel に mutable フィールドを持つ
+bool _initialized = false;
+int _retryCount = 0;
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: 可変値は ScreenState に載せる
+const factory AccountScreenState.loading({
+  required bool isInitialized,
+  required AccountScreenEvent event,
+}) = AccountScreenStateLoading;
+```
+
+### DO NOT: ViewModel の非同期初期化処理をコンストラクタや Provider からコールする
+
+* 理由: ViewModel は Widget ライフサイクルに紐づく。Provider 生成時に非同期初期化を始めると、Unit Test で「初期化待ち」や明示的な開始がしづらい
+* 理由: 二重生成・再入時の購読開始タイミングが不明瞭になる
+* 対応: 初期化は `onInitialize()` 等の Action とし、ルート Screen の `useEffect` から呼ぶ（[mvvm-widget.md](./mvvm-widget.md)）
+* 例外の扱い: ストリーム購読開始をコンストラクタに置く既存パターンは [mvvm-viewmodel-usecase.md](./mvvm-viewmodel-usecase.md) を参照するが、**Unit Test で初期化を明示したい画面では `onInitialize` を優先**する
+
+```dart
+// 非推奨パターン
+// DO NOT: provider / コンストラクタから非同期初期化や watch 開始を呼ぶ
+static final provider = Provider.autoDispose<AccountScreenViewModel>(
+  (ref) {
+    final vm = AccountScreenViewModel._(...);
+    vm.onInitialize(); // NG
+    return vm;
+  },
+);
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Screen の useEffect から onInitialize を呼ぶ
+useEffect(() {
+  viewModel.onInitialize();
+  return null;
+}, [viewModel]);
+```

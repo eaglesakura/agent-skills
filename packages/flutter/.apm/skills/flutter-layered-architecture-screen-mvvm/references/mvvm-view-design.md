@@ -468,6 +468,12 @@ final class ExampleScreenProviders {
 }
 ```
 
+### DO NOT: StatefulWidget を作成する
+
+* 理由: 画面 Widget は Stateless（`HookConsumerWidget` / `ConsumerWidget` / `HookWidget` 等）とし、ローカル UI 状態は Hooks、画面ドメイン状態は ViewModel の ScreenState に寄せる
+* 理由: `StatefulWidget` / `ConsumerStatefulWidget` は状態の所在を二重化し、Golden・Unit Test を難しくする
+* 対応の詳細は [mvvm-widget.md](./mvvm-widget.md)
+
 ## 参考リンク
 
 * flutter_riverpod（状態管理）: <https://pub.dev/packages/flutter_riverpod>

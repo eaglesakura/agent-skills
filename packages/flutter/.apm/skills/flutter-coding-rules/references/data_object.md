@@ -362,6 +362,13 @@ sealed class ExampleResult with _$ExampleResult {
   }) = _EndUserLicenseAgreementDto;
 ```
 
+### DO: 外部由来 Map の DTO fromJson は呼び出し側で失敗を想定する
+
+* DTO の `fromJson` 自体は薄いデシリアライズに留め、throw してよい。
+* Firestore / リモート JSON など信頼できない `Map` を渡す呼び出し側（Repository / Delegate）で失敗を想定する。
+* `json_serializable` は型不一致時に `TypeError`（`Error`）を投げうるため、境界での catch は [try-catch.md](./try-catch.md) に従い理由コメントを書く。
+* 失敗時は empty / failure Result など、呼び出し契約上のフォールバックへ落とす。
+
 ### DO: パッケージ内部専用には @internal を付与する
 
 * パッケージ外に公開しないデータオブジェクトには `@internal` を付ける。
@@ -399,6 +406,11 @@ switch (result) {
 ### DO NOT: JSON DTO で @JsonKey を省略する
 
 * 理由: キー名の変更やリネーム時の不整合を防ぐため、必ずキー名を明示する。
+
+### DO NOT: fromJson を常に成功する前提で watch の map に直書きする
+
+* 理由: 不正ドキュメントや型不一致で `TypeError` 等が飛び、watch ストリームが落ちる。
+* 理由: 外部入力の失敗吸収は Repository / Delegate 境界の責務である（[try-catch.md](./try-catch.md)）。
 
 ## 参考リンク
 

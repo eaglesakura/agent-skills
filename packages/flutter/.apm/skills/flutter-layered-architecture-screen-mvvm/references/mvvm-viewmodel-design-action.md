@@ -351,3 +351,31 @@ await delegate.execute();
 * 理由: 共通ロジックが Delegate 層に閉じ、Mock 注入・単体テストが困難になる
 * 理由: コールバック（関数型引数・クロージャ）はテスタビリティが低い
 * 対応: `@internal` 画面固有 Usecase に抽出し、各 Delegate は Usecase をコンストラクタ注入する
+
+### DO NOT: ViewModel の Action を Delegate 分割せずに直接実装する
+
+* 理由: `onXXXX()` に処理本体を直書きすると ViewModel / action.dart が肥大化する
+* 理由: 処理中の一時フラグや購読管理を ViewModel の mutable フィールドに逃がしやすくなる
+* 対応: オーケストレーション（Usecase `new` → Delegate `new` → `execute`）のみを `onXXXX()` に残し、本体は `OnXxxxxDelegate.execute` に置く
+
+```dart
+// 非推奨パターン
+// DO NOT: action.dart に処理本体を直書きする
+Future<void> onSave() async {
+  await state.updateWithLock((old, emitter) async {
+    // バリデーション・API・イベント発火をすべてここに書く
+  });
+}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Delegate に委譲する
+Future<void> onSave() async {
+  final delegate = OnSaveDelegate(
+    state: state,
+    accountRepository: accountRepository,
+  );
+  await delegate.execute();
+}
+```

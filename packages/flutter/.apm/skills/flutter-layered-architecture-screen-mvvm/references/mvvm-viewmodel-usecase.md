@@ -125,63 +125,40 @@ Future<void> onInitialize() async {
 
 ### StateStream を操作する Usecase の実装例
 
-認証状態や他リポジトリのストリームを購読し、ViewModel の `MutableStateStream` を更新する。Delegate 経由ではなく、**ViewModel のコンストラクタ内** で画面固有 Usecase を `new` し、`start()` 等で購読を開始する。外部 Repository は ViewModel の provider で `ref.watch` し、ViewModel のフィールドとして保持する。
+認証状態や他リポジトリのストリームを購読し、ViewModel の `MutableStateStream` を更新する画面固有 Usecase がある。
+
+**推奨（Unit Test で初期化を明示したい画面）**: `onInitialize()` 内で Usecase を `new` し、`OnInitializeDelegate` 経由で `start()` する。ルート Screen の `useEffect` から `onInitialize()` を呼ぶ。Provider / コンストラクタから開始しない（[mvvm-widget.md](./mvvm-widget.md)、[mvvm-viewmodel-design.md](./mvvm-viewmodel-design.md)）。
 
 ```dart
-// screen_feature_settings2, usecase/settings_sync_usecase.dart
-/// 設定画面のデータ同期Usecase.
-@internal
-class SettingsSyncUsecase {
-  final AuthenticationRepository2 authenticationRepository;
-
-  SettingsSyncUsecase({
-    required this.authenticationRepository,
-  });
-
-  /// 認証状態の変更を監視する.
-  void start(MutableStateStream<SettingsScreenState> dataStream) {
-    // ...
-  }
+// onInitialize → Delegate → AccountProfileSyncUsecase.start(state)
+Future<void> onInitialize() async {
+  final profileSyncUsecase = AccountProfileSyncUsecase(...);
+  final delegate = OnInitializeDelegate(
+    state: state,
+    profileSyncUsecase: profileSyncUsecase,
+  );
+  delegate.execute();
 }
 ```
 
-ViewModel の provider では外部依存のみ DI し、コンストラクタ内で画面固有 Usecase を `new` する:
+**既存パターン（コンストラクタ開始）**: 歴史的には ViewModel コンストラクタ内で Usecase を `new` し `start()` する例もある。新規画面やテスタビリティを優先する場合は上記の `onInitialize` を選ぶ。
 
 ```dart
-// screen_feature_settings2, settings_screen_view_model.dart
-static final provider = Provider.autoDispose<SettingsScreenViewModel>(
-  (ref) {
-    final authenticationRepository = ref.watch(
-      AuthenticationRepository2.provider,
-    );
-    final preferencesRepository = ref.watch(
-      PreferencesRepository.provider,
-    );
-    final stateStream = MutableStateStream<SettingsScreenState>(/* ... */);
-    return SettingsScreenViewModel._(
-      data: stateStream,
-      authenticationRepository: authenticationRepository,
-      preferencesRepository: preferencesRepository,
-    );
-  },
-  dependencies: [
-    AuthenticationRepository2.provider,
-    PreferencesRepository.provider,
-  ],
-);
-
+// screen_feature_settings2, settings_screen_view_model.dart（既存例）
 SettingsScreenViewModel._({
   required this.data,
   required this.authenticationRepository,
   required this.preferencesRepository,
 }) {
+  // 既存パターン: コンストラクタで購読開始。
+  // 新規では onInitialize + useEffect を優先する。
   SettingsSyncUsecase(
     authenticationRepository: authenticationRepository,
   ).start(data);
 }
 ```
 
-このパターンは ViewModel 初期化時のストリーム購読開始であり、**Delegate 経由のアクションとは別** である。Delegate 経由で画面固有 Usecase を使う場合は、パターン1に従い `onXXXX()` 内で `new` する。
+Delegate 経由で画面固有 Usecase を使う場合は、パターン1に従い `onXXXX()` 内で `new` する。
 
 ### 複数 Delegate で共有する Usecase の実装例
 
@@ -246,7 +223,7 @@ app_packages/screen/feature/home2/lib/src/viewmodel/
 app_packages/screen/feature/settings2/lib/src/viewmodel/
 ├── settings_screen_view_model.dart
 └── usecase/
-    └── settings_sync_usecase.dart   # 認証状態の監視・State 更新（コンストラクタで start）
+    └── settings_sync_usecase.dart   # 認証状態の監視・State 更新（既存例はコンストラクタ start。新規は onInitialize 優先）
 ```
 
 ## 関連文書
@@ -313,4 +290,9 @@ final delegate = OnInitializeDelegate(schoolGradeSortLoadUsecase: usecase);
 ### DO NOT: ViewModel の provider で画面固有 Usecase をフィールドとして保持する
 
 * 理由: Delegate 経由で使う場合、未使用の Usecase が ViewModel に残る
-* 理由: `onXXXX()` 内で `new` し、Delegate のコンストラクタへ渡す（ライフサイクル購読開始のパターン2は例外）
+* 理由: `onXXXX()` 内で `new` し、Delegate のコンストラクタへ渡す（ライフサイクル購読開始も、新規では `onInitialize` 経由を優先）
+
+### DO NOT: 新規画面でストリーム購読開始をコンストラクタや Provider から行う
+
+* 理由: Unit Test で初期化を明示できず、初期化待ちが不安定になる
+* 理由: `onInitialize()` + ルート Screen の `useEffect` に寄せる（[mvvm-widget.md](./mvvm-widget.md)）

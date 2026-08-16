@@ -187,6 +187,9 @@ useEffect(() {
 
 `onInitialize()` は ViewModel アクション設計に従う（`onXXXX()` 拡張メソッド）。
 
+* ViewModel のコンストラクタや `provider` コールバックから非同期初期化・watch 開始を呼んではならない。
+* ViewModel は Widget ライフサイクルに紐づくため、初期化は Action として扱い、Unit Test では `onInitialize()` を明示呼び出しできる。
+
 ### イベント購読
 
 Snackbar 表示・画面遷移等のワンショットイベントは、`{画面名}Screen` で購読する。`useEventStream()` の利用を推奨する。
@@ -285,3 +288,56 @@ onPressed: () {
 
 * 理由: build 副作用となり、再描画で意図しない呼び出しが起きうる
 * 理由: `onTap()` 等のコールバック内で呼ぶ
+
+### DO NOT: ViewModel の非同期初期化処理をコンストラクタや Provider からコールする
+
+* 理由: Provider 生成時に初期化を始めると、Unit Test で初期化待ち・明示開始ができずテストの確実性が下がる
+* 理由: ViewModel は Widget ライフサイクルに紐づく。初期化は `onInitialize()` 等の Action とし、ルート Screen の `useEffect` から呼ぶ
+* 対応: `useEffect(() { viewModel.onInitialize(); return null; }, [viewModel]);`
+
+```dart
+// 非推奨パターン
+// DO NOT: provider 内で初期化を開始する
+(ref) {
+  final vm = AccountScreenViewModel._(...);
+  unawaited(vm.onInitialize());
+  return vm;
+}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Screen の useEffect から呼ぶ
+useEffect(() {
+  viewModel.onInitialize();
+  return null;
+}, [viewModel]);
+```
+
+### DO NOT: StatefulWidget を作成する
+
+* 理由: 画面 Widget はすべて Stateless とし、ローカル UI 状態は Hooks（`useState` / `useTextEditingController` 等）、画面ドメイン状態は ViewModel の ScreenState に寄せる
+* 理由: `ConsumerStatefulWidget` / `StatefulWidget` を増やすと、MVVM の状態の所在が二重化し Golden・Unit Test が難しくなる
+* 対応: ルートは `HookConsumerWidget`、Entity のみ watch する子は `ConsumerWidget` / `HookWidget` 等
+
+```dart
+// 非推奨パターン
+// DO NOT: ConsumerStatefulWidget でコントローラやフラグを持つ
+class _BodyState extends ConsumerState<_Body> {
+  late final TextEditingController _controller;
+  bool _edited = false;
+}
+```
+
+```dart
+// 推奨される書き換えパターン
+// DO: Hooks でローカル UI 状態を持つ
+class AccountScreenBody extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final controller = useTextEditingController(text: entity.nicknameInput);
+    final isUserEdited = useState(false);
+    // ...
+  }
+}
+```
