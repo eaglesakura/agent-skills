@@ -99,6 +99,7 @@ Screen 層の画面を **Model–View–ViewModel** で組む。状態は ViewMo
 ### DO NOT: ViewModel に可変値を保存する
 
 * 可変値は ScreenState（`MutableStateStream`）に保持する。詳細は [mvvm-viewmodel-design.md](./references/mvvm-viewmodel-design.md)
+* 画面ライフサイクル用 `FutureContext` も State に載せる（ViewModel の単独フィールドにしない）
 
 ### DO NOT: ViewModel の非同期初期化をコンストラクタや Provider から呼ぶ
 
