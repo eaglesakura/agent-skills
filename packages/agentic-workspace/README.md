@@ -106,7 +106,7 @@ HQ 構成では `headquarters/.ai-agent/` をルートの `.ai-agent/` より優
 
 ### workspace-resolve-root-directory
 
-* `folder:{name}/...` / `repo:{name}/...` を Multi-Root / 単一ルートに応じて実パスへ解決する。
+* `@{name}/...` / `repo:{name}/...` を Multi-Root / 単一ルートに応じて実パスへ解決する。
 
 ## Commands
 

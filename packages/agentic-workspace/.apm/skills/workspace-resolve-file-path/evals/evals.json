@@ -45,7 +45,7 @@
     },
     {
       "id": 5,
-      "prompt": "ドキュメントに `folder:docs/README.md` とある。workspace-resolve-file-path で解くべき？短く。",
+      "prompt": "ドキュメントに `@docs/README.md` とある。workspace-resolve-file-path で解くべき？短く。",
       "expected_output": "いいえ。workspace-resolve-root-directory へ。",
       "files": [],
       "assertions": [

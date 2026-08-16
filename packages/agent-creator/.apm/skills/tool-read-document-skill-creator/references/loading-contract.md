@@ -32,7 +32,7 @@
 
 * 対象 path（解決可能な表記）のみの一覧
   * リンク / クォート相対 → `workspace-resolve-file-path`
-  * `folder:` / `repo:` → `workspace-resolve-root-directory`
+  * `@` / `repo:` → `workspace-resolve-root-directory`
 * 「いつ読むか」を `description` に集約したトリガー
 * 「読み方は `markdown-search`」「path 解決は `workspace-resolve-*`」という誘導
 

@@ -7,7 +7,7 @@ description: >-
   「この MD のリンク先はどこ？」「path/to/file の実体」
   「相対パスを解決してから読んで」では必ず使う。
   `{assets}/...` は絶対にこの SKILL では解かず workspace-resolve-agent-assets を使う。
-  `folder:{name}/...` / `repo:{name}/...` は workspace-resolve-root-directory。
+  `@{name}/...` / `repo:{name}/...` は workspace-resolve-root-directory。
   `.ai-agent/` の置き場・実パスは workspace-layout / workspace-agent-temporary。
   GitHub Issue URL のメタデータ取得や、整形のみは markdown.format では使わない。
 license: MIT License
@@ -27,7 +27,7 @@ metadata:
 ## いつ使わないか
 
 * `{assets}/...` メタ変数の実体解決 → `workspace-resolve-agent-assets`
-* `folder:{name}/...` / `repo:{name}/...`（ルート解決）→ `workspace-resolve-root-directory`
+* `@{name}/...` / `repo:{name}/...`（ルート解決）→ `workspace-resolve-root-directory`
 * `.ai-agent/` の導入・実パス・`tmp`/`plan`/`memory` の置き場 → `workspace-layout` / `workspace-agent-temporary`
 * GitHub Issue URL から ID/タイトルを取る（本 SKILL の範囲外）
 * Markdown の体裁整形だけ → `markdown.format`
@@ -35,7 +35,7 @@ metadata:
 
 ## 作業手順
 
-1. 表記がどれかを判別する（クォート相対 / Markdown リンク）。`{assets}/` なら `workspace-resolve-agent-assets`、`folder:`/`repo:` なら `workspace-resolve-root-directory`、`.ai-agent/` の置き場なら `workspace-layout` / `workspace-agent-temporary`
+1. 表記がどれかを判別する（クォート相対 / Markdown リンク）。`{assets}/` なら `workspace-resolve-agent-assets`、`@` / `repo:` なら `workspace-resolve-root-directory`、`.ai-agent/` の置き場なら `workspace-layout` / `workspace-agent-temporary`
 2. 対応ルールで候補パスを組み立てる
 3. 存在確認してから読む・書く（無ければ候補と解決ルールを報告する）
 
@@ -64,7 +64,7 @@ cat "$(dirname "$SOURCE_MD")/$RELATIVE_PATH"
 ### DO: 表記の種類を先に分けてから解決する
 
 * ルート相対とリンク元相対を混ぜると、別ファイルを開いてしまう
-* `{assets}/`・`folder:`/`repo:`・`.ai-agent/` 置き場は本 SKILL で無理に解かず、対応 SKILL へ渡す
+* `{assets}/`・`@` / `repo:`・`.ai-agent/` 置き場は本 SKILL で無理に解かず、対応 SKILL へ渡す
 
 ### DO NOT: Markdown リンクをリポジトリルート相対だと決めつける
 

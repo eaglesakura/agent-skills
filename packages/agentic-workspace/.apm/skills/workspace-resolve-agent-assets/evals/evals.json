@@ -37,7 +37,7 @@
     },
     {
       "id": 4,
-      "prompt": "次の文書がある。スコープルート（暗黙 folder:this）には次の2ディレクトリが実在するとする。`{assets}/coding/design.md` を非対話で1つに決めるとき、手順と採用パス（スコープ相対）を短く答えて。\n\n文書:\n```markdown\n## アセットディレクトリ\n\n* `apm_modules/**/coding-xm3/.apm/assets/`\n```\n\n実在ディレクトリ（スコープルート相対）:\n- `apm_modules/_local/coding-xm3/.apm/assets/coding/design.md`\n- `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/coding/design.md`\n\n基準ファイルはルート直下の架空パス `docs/example.prompt.md`（文書相対の glob はヒットしない想定でよい）。",
+      "prompt": "次の文書がある。スコープルート（暗黙 @this）には次の2ディレクトリが実在するとする。`{assets}/coding/design.md` を非対話で1つに決めるとき、手順と採用パス（スコープ相対）を短く答えて。\n\n文書:\n```markdown\n## アセットディレクトリ\n\n* `apm_modules/**/coding-xm3/.apm/assets/`\n```\n\n実在ディレクトリ（スコープルート相対）:\n- `apm_modules/_local/coding-xm3/.apm/assets/coding/design.md`\n- `apm_modules/eaglesakura/agent-skills/packages/coding-xm3/.apm/assets/coding/design.md`\n\n基準ファイルはルート直下の架空パス `docs/example.prompt.md`（文書相対の glob はヒットしない想定でよい）。",
       "expected_output": "glob をスコープルート相対で展開し辞書順。先勝ちなら apm_modules/_local/... を採用（_ が e より先）。両方ヒットとして列挙してもよいが非対話は先勝ち。",
       "files": [],
       "assertions": [
@@ -60,22 +60,22 @@
     },
     {
       "id": 6,
-      "prompt": "Multi-Root の Pocket Kosodate HQ（`headquarters/pocket-kosodate.code-workspace`）を開いている。基準ファイルは `agent-skills` folder 配下の SKILL とする。参照 `folder:this/{assets}/template.md` のとき、スコープルートは何を意味し、サフィックスは何か？短く答えて。",
-      "expected_output": "folder:this = インストール先／基準ファイルが属する workspace folder（agent-skills）。サフィックスは template.md。アセット探索はその SCOPE_ROOT 相対で行う。",
+      "prompt": "Multi-Root の Pocket Kosodate HQ（`headquarters/pocket-kosodate.code-workspace`）を開いている。基準ファイルは `agent-skills` folder 配下の SKILL とする。参照 `@this/{assets}/template.md` のとき、スコープルートは何を意味し、サフィックスは何か？短く答えて。",
+      "expected_output": "@this = インストール先／基準ファイルが属する workspace folder（agent-skills）。サフィックスは template.md。アセット探索はその SCOPE_ROOT 相対で行う。",
       "files": [],
       "assertions": [
-        "Identifies folder:this as the installed/source workspace folder containing the skill (agent-skills), not a random cwd",
+        "Identifies @this as the installed/source workspace folder containing the skill (agent-skills), not a random cwd",
         "Extracts suffix template.md after {assets}/",
         "Says assets search uses that SCOPE_ROOT (via workspace-resolve-root-directory rules)"
       ]
     },
     {
       "id": 7,
-      "prompt": "Multi-Root（`pocket-kosodate.code-workspace`）で、プロジェクト専用 SKILL から参照 `folder:app/{assets}/example-skill/assets` を解決する。手順と最終パス（存在しなければ miss）を短く答えて。推測読みはしない。",
-      "expected_output": "folder:app を root-directory で FOLDER_ROOT（repo/pocket_kosodate）へ。サフィックス example-skill/assets。SCOPE_ROOT 相対で試し、無ければ miss。",
+      "prompt": "Multi-Root（`pocket-kosodate.code-workspace`）で、プロジェクト専用 SKILL から参照 `@app/{assets}/example-skill/assets` を解決する。手順と最終パス（存在しなければ miss）を短く答えて。推測読みはしない。",
+      "expected_output": "@app を root-directory で FOLDER_ROOT（repo/pocket_kosodate）へ。サフィックス example-skill/assets。SCOPE_ROOT 相対で試し、無ければ miss。",
       "files": [],
       "assertions": [
-        "Resolves folder:app via workspace-resolve-root-directory / folders[].name app to pocket_kosodate path",
+        "Resolves @app via workspace-resolve-root-directory / folders[].name app to pocket_kosodate path",
         "Treats example-skill/assets as the {assets}/ suffix (or equivalent candidate join)",
         "Reports miss if path does not exist; does not invent another folder name"
       ]
@@ -83,10 +83,10 @@
     {
       "id": 8,
       "prompt": "参照が `{assets}/template.md` だけで `folder:` が無いとき、ルート相対のベースは何扱い？`git rev-parse` だけに依存してよいか？短く答えて。",
-      "expected_output": "暗黙の folder:this（インストール先ワークスペース）。cwd の偶然の Git ルートだけに依存しない。folder: スコープと異なる場合は REPO_OF_SCOPE も試してよい。",
+      "expected_output": "暗黙の @this（インストール先ワークスペース）。cwd の偶然の Git ルートだけに依存しない。folder: スコープと異なる場合は REPO_OF_SCOPE も試してよい。",
       "files": [],
       "assertions": [
-        "Says bare {assets}/ implies folder:this / installed workspace as scope root",
+        "Says bare {assets}/ implies @this / installed workspace as scope root",
         "Warns against relying only on accidental cwd git toplevel",
         "May mention REPO_OF_SCOPE as additional base when folder scope differs from git root"
       ]

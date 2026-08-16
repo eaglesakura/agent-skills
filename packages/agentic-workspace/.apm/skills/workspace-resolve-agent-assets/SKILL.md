@@ -4,10 +4,10 @@ description: >-
   ドキュメント内の `{assets}/...` メタ変数を実ファイルパスへ解決する SKILL。
   本文 `## アセットディレクトリ`（`## assets` / `### assets` も可）と互換の
   `metadata.assets` から候補を集め、文書相対とスコープルート相対の両方で探す。
-  スコープは暗黙の `folder:this`（インストール先ワークスペース）か、明示の
-  `folder:app/` / `repo:backend/` 等（workspace-resolve-root-directory で解決）。
+  スコープは暗黙の `@this`（インストール先ワークスペース）か、明示の
+  `@app/` / `repo:backend/` 等（workspace-resolve-root-directory で解決）。
   候補に `*` / `**` があれば glob 展開する。
-  「`{assets}/template.md`」「folder:app/{assets}/...」「アセットを解決してからロード」
+  「`{assets}/template.md`」「@app/{assets}/...」「アセットを解決してからロード」
   「apm_modules の glob でアセットを探して」では必ず使う。
   通常の path/to/file・Markdown リンクは workspace-resolve-file-path、
   `.ai-agent/` の置き場は workspace-layout / workspace-agent-temporary、
@@ -20,60 +20,60 @@ metadata:
 
 APM などでインストール先が変わっても参照を保てるよう、アセットは **メタ変数** `{assets}/` で書く。
 本 SKILL はその表記を、文書に書かれた候補ディレクトリから実パスへ落とす。
-探索の **スコープルート** は、暗黙ではインストール先ワークスペース（`folder:this`）、明示では `folder:app/` 等で切り替える（解決は `workspace-resolve-root-directory` に従う）。
+探索の **スコープルート** は、暗黙ではインストール先ワークスペース（`@this`）、明示では `@app/` 等で切り替える（解決は `workspace-resolve-root-directory` に従う）。
 `apm install`・fork・`_local` 展開などで `apm_modules/` 配下が揺れる場合は、候補にワイルドカードを書いて複数レイアウトを一度に拾う。
 
 ## いつ使うか
 
 * コマンド / SKILL 本文や関連ファイルに `{assets}/template.md` のように書かれているとき
-* `folder:app/{assets}/...` / `repo:backend/{assets}/...` / `folder:this/{assets}/...` のようにルート付きでアセットを指すとき
+* `@app/{assets}/...` / `repo:backend/{assets}/...` / `@this/{assets}/...` のようにルート付きでアセットを指すとき
 * パッケージソースと `apm_modules/` 展開先の両方に同じアセットがあり得るとき
 * 「アセットを解決してから読んで」「`{assets}/` の実体はどこ？」と聞かれたとき
 
 ## いつ使わないか
 
 * クォート相対 `path/to/file`、Markdown リンク `[text](rel)` → `workspace-resolve-file-path`
-* `{assets}/` を含まない純粋な `folder:` / `repo:` パスだけ → `workspace-resolve-root-directory`
+* `{assets}/` を含まない純粋な `@` / `repo:` パスだけ → `workspace-resolve-root-directory`
 * `.ai-agent/` の導入・置き場 → `workspace-layout` / `workspace-agent-temporary`
 * GitHub Issue URL から ID/タイトルを取る（本 SKILL の範囲外）
 * キーワードで文書を探すだけ → `markdown-search`
 
 ## 作業手順
 
-1. 参照文字列に `folder:` / `repo:` があれば剥がし、**スコープルート**を決める（下記）
+1. 参照文字列に `@` / `repo:` があれば剥がし、**スコープルート**を決める（下記）
 2. `{assets}/` 以降をサフィックスとする
-3. 基準ファイルから候補ディレクトリ一覧を集める（候補行自体に `folder:` / `repo:` があれば、行ごとにスコープを上書きしてよい）
+3. 基準ファイルから候補ディレクトリ一覧を集める（候補行自体に `@` / `repo:` があれば、行ごとにスコープを上書きしてよい）
 4. 各候補について、リテラルならそのまま・ワイルドカードなら展開し、**文書相対**と **スコープルート相対**（必要ならその Git ルート相対）で存在確認する
 5. ヒットを明示し、1 件なら採用、0 件なら推測読みしない
 
-## スコープルート（`folder:` / `repo:` / 暗黙の `folder:this`）
+## スコープルート（`@` / `repo:` / 暗黙の `@this`）
 
 アセット探索の「ルート相対」ベースを決める。詳細アルゴリズムは `workspace-resolve-root-directory` に従う。
 
 | 指定 | 意味 |
 | --- | --- |
-| **無し**（通常の `{assets}/...`） | 暗黙の `folder:this` — 基準ファイルが属する **インストール先ワークスペース folder** |
-| `folder:this/...` | 同上を明示 |
-| `folder:{name}/...`（例: `folder:app/`） | その Multi-Root folder（または単一ルート互換）をスコープにする。プロジェクト専用 SKILL から他ルートのアセットを指すときに使う |
+| **無し**（通常の `{assets}/...`） | 暗黙の `@this` — 基準ファイルが属する **インストール先ワークスペース folder** |
+| `@this/...` | 同上を明示 |
+| `@{name}/...`（例: `@app/`） | その Multi-Root folder（または単一ルート互換）をスコープにする。プロジェクト専用 SKILL から他ルートのアセットを指すときに使う |
 | `repo:{name}/...` / `repo:this/...` | 対応する **Git リポジトリルート**をスコープにする |
 
 参照例:
 
-* `{assets}/template.md` → スコープ = `folder:this`、サフィックス = `template.md`
-* `folder:app/{assets}/example-skill/assets` → スコープ = `folder:app`、サフィックス = `example-skill/assets`
+* `{assets}/template.md` → スコープ = `@this`、サフィックス = `template.md`
+* `@app/{assets}/example-skill/assets` → スコープ = `@app`、サフィックス = `example-skill/assets`
 * `repo:backend/{assets}/template.md` → スコープ = `repo:backend`、サフィックス = `template.md`
 
-`folder:example` / `repo:example` の文脈読み替えも root-directory の変数規則に従う。
+`@example` / `repo:example` の文脈読み替えも root-directory の変数規則に従う。
 
 スコープが決まらない（name 不一致・文脈不足）ときはアセット探索に進まず、root-directory と同様に候補 name を報告する。
 
 ## 入力の読み方
 
-1. **参照文字列**: 任意の `folder:` / `repo:` プレフィックスを除き、`{assets}/` 以降をサフィックスとする
+1. **参照文字列**: 任意の `@` / `repo:` プレフィックスを除き、`{assets}/` 以降をサフィックスとする
 2. **候補ディレクトリ**: 同じファイルから、次の順で集める（重複は先勝ちで 1 回にまとめる）
    1. 本文の `## アセットディレクトリ`（または同等見出し `## assets` / `### assets`）直下の箇条書き
    2. frontmatter の `metadata.assets`（旧形式・互換用）
-   * プレーン文字列: ディレクトリパス（または glob）。先頭が `folder:` / `repo:` ならその行のスコープを差し替える
+   * プレーン文字列: ディレクトリパス（または glob）。先頭が `@` / `repo:` ならその行のスコープを差し替える
    * Markdown リンク `[label](path)`: `path` を使う
    * インラインコード `` `path` ``: 中身を使う
 3. **基準ファイル**: `{assets}/` が書かれているファイル自身（`SKILL.md` / `.prompt.md` / `.cursor/commands/*.md` など）
@@ -108,7 +108,7 @@ APM などでインストール先が変わっても参照を保てるよう、�
 
 ## 解決手順
 
-`SCOPE_ROOT` = 上記スコープルート（絶対パス）。`folder:` スコープのとき、`REPO_OF_SCOPE = git -C SCOPE_ROOT rev-parse --show-toplevel`（失敗したらスキップ）。
+`SCOPE_ROOT` = 上記スコープルート（絶対パス）。`@` / `folder:` スコープのとき、`REPO_OF_SCOPE = git -C SCOPE_ROOT rev-parse --show-toplevel`（失敗したらスキップ）。
 
 各候補（リテラル、または glob 展開後の各ディレクトリ）について、次の基準で候補ファイルを作る。
 
@@ -153,14 +153,14 @@ metadata:
   → .apm/assets/example.command/template.md
 
 # スコープルート相対 × 2件目（glob。install / fork 先が揺れても拾う）
-# 暗黙 folder:this（または明示 folder:/repo:）の SCOPE_ROOT / REPO_OF_SCOPE 基準
+# 暗黙 @this（または明示 @/repo:）の SCOPE_ROOT / REPO_OF_SCOPE 基準
 apm_modules/_local/agentic-workspace/.apm/assets/example.command/template.md
 apm_modules/**/agentic-workspace/.apm/assets/example.command/template.md
 ```
 
 ```bash
 # SCOPE_ROOT は workspace-resolve-root-directory で決める
-# 例: 暗黙 folder:this / 明示 folder:app / repo:backend
+# 例: 暗黙 @this / 明示 @app / repo:backend
 SCOPE_ROOT="..."  # 絶対パス
 REPO_OF_SCOPE="$(git -C "$SCOPE_ROOT" rev-parse --show-toplevel 2>/dev/null || true)"
 SOURCE_MD="path/to/example.command.prompt.md"
@@ -202,21 +202,21 @@ do
 done
 ```
 
-### 実例（明示スコープ `folder:app`）
+### 実例（明示スコープ `@app`）
 
-参照: `folder:app/{assets}/example-skill/assets`
+参照: `@app/{assets}/example-skill/assets`
 
-1. `workspace-resolve-root-directory` で `folder:app` → `SCOPE_ROOT`（例: `.../repo/pocket_kosodate`）
+1. `workspace-resolve-root-directory` で `@app` → `SCOPE_ROOT`（例: `.../repo/pocket_kosodate`）
 2. サフィックス = `example-skill/assets`
 3. 候補が無い／`.` 相当なら `SCOPE_ROOT/example-skill/assets` を試す
 4. 無ければ miss を報告（推測で別 folder を探さない）
 
-プロジェクト専用 SKILL が「アプリ側のアセット」を指すときは、参照または候補に `folder:app/` を付ける。
+プロジェクト専用 SKILL が「アプリ側のアセット」を指すときは、参照または候補に `@app/` を付ける。
 
 ## 書き手向けメモ
 
 * 本文・関連ファイルにはインストール先の絶対的な 1 パスだけを書かず、`{assets}/...` を使う
-* インストール先 WS 内のアセットは暗黙の `folder:this` で足りる。他ルートを指すときだけ `folder:{name}/` を付ける
+* インストール先 WS 内のアセットは暗黙の `@this` で足りる。他ルートを指すときだけ `@{name}/` を付ける
 * 探索先は本文の `## アセットディレクトリ` に **ソース相対**（開発時）と **install 後ルート相対**（利用者ワークスペース）を並べる
 * install 後パスは固定の `apm_modules/eaglesakura/.../packages/<pkg>/` より、**ワイルドカード推奨**（fork・`_local`・ネスト深さの揺れに耐える）
   * 推奨例: `apm_modules/**/<package-name>/.apm/assets/`
@@ -230,10 +230,10 @@ done
 
 * 通常の相対パス解決やリテラルな `{assets}` フォルダ探索に落とさない
 
-### DO: スコープは暗黙 `folder:this`、明示は `folder:` / `repo:`
+### DO: スコープは暗黙 `@this`、明示は `@` / `repo:`
 
 * インストール先ワークスペースをルート相対の基準にする（cwd の偶然の Git ルートに依存しない）
-* 他プロジェクトのアセットは `folder:app/` 等で明示する
+* 他プロジェクトのアセットは `@app/` 等で明示する
 * プレフィックスの解決は `workspace-resolve-root-directory` に委譲する
 
 ### DO: 全候補を試し、ヒットを明示する
@@ -254,4 +254,4 @@ done
 
 * 候補とルールを報告し、存在しないパスを開かない
 * glob が 0 件でも、勝手に別パッケージ名へ読み替えない
-* `folder:app` が miss でも別 `folders[].name` へ勝手に読み替えない
+* `@app` が miss でも別 `folders[].name` へ勝手に読み替えない

@@ -76,9 +76,9 @@ metadata:
 * path 表記は次のいずれかとし、実行時に対応 SKILL で解決できる形にする
   * Markdown リンク（SKILL.md 相対）→ `workspace-resolve-file-path`
   * クォート `path/to/file`（Git リポジトリルート相対）→ `workspace-resolve-file-path`
-  * `folder:{name}/...` / `repo:{name}/...`（`this` / `example` 可）→ `workspace-resolve-root-directory`
+  * `@{name}/...` / `repo:{name}/...`（`this` / `example` 可）→ `workspace-resolve-root-directory`
 * 同梱 `references/` は SKILL 相対の Markdown リンクを推奨
-* Multi-Root や別リポジトリをまたぐ参照は `folder:` / `repo:` を優先する
+* Multi-Root や別リポジトリをまたぐ参照は `@` / `repo:` を優先する
 * 他 package の path を本文に書く場合は、所属 package の `apm.yml` 依存に沿う（`tool-skill-creator-extension`）
 
 ### 境界と委譲
@@ -144,7 +144,7 @@ slash-command 用の Mermaid 必須・バリデーション表・非対話エラ
 * 各表記を `workspace-resolve-file-path` / `workspace-resolve-root-directory` で実体へ落とし、存在確認する
 * 必要なら `markdown-search` で Stage 1 TOC だけ取り、`description` 用のトリガー語彙を把握する（内容要約を本文に落とさない。Stage 3 を既定にしない）
 * 重複内容のコピーが複数 path にある場合は、生成 SKILL の一覧では代表 path を優先し、二重ロード注意を手順に残す
-* 生成本文の path 表記は、解決できた形式（リンク / クォート相対 / `folder:`・`repo:`）のまま残す
+* 生成本文の path 表記は、解決できた形式（リンク / クォート相対 / `@`・`repo:`）のまま残す
 
 ### ステップ3: frontmatter と本文の完成
 
@@ -163,7 +163,7 @@ slash-command 用の Mermaid 必須・バリデーション表・非対話エラ
 * [ ] `description` に「いつ読むか」が集約され、押し気味のトリガーになっている（内容要約ではない）
 * [ ] 本文に「いつ使うか」の重複セクションや、ドキュメント内容要約が無い
 * [ ] 「対象ドキュメント」が path のみ（個別の要約・いつ読むか注記が無い）
-* [ ] path がリンク / クォート相対 / `folder:`・`repo:` のいずれかである
+* [ ] path がリンク / クォート相対 / `@`・`repo:` のいずれかである
 * [ ] 「読み方」が `markdown-search` 誘導のみで、Stage 手順・出力の目安の再掲が無い
 * [ ] 関連に `markdown-search` とパス解決 SKILL がある
 * [ ] 探索アルゴリズム・lint・パス解決・段階ロード手順を本 SKILL 内で再発明していない

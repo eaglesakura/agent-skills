@@ -39,7 +39,7 @@ metadata:
 * path は次のいずれかで書き、実行時に対応 SKILL で実体へ解決する（推測読みしない）
   * Markdown リンク `[label](relative/path.md)` → この SKILL.md からの相対。`workspace-resolve-file-path`
   * クォート `path/to/file.md` → Git リポジトリルート相対。`workspace-resolve-file-path`
-  * `folder:{name}/...` / `repo:{name}/...`（`this` / `example` 可）→ `workspace-resolve-root-directory`
+  * `@{name}/...` / `repo:{name}/...`（`this` / `example` 可）→ `workspace-resolve-root-directory`
 * 実在しないパスを推測で書かない。解決失敗時は候補とルールを報告する
 -->
 

@@ -3,11 +3,11 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Multi-Root（pocket-kosodate.code-workspace）で、作業対象は app folder（repo/pocket_kosodate）配下の調査。使い捨てスクリプト probe.sh をどこに置く？絶対パスまたは folder:this 表記で短く答えて。HQ の headquarters/.ai-agent には置かない。",
-      "expected_output": "folder:this/.ai-agent/tmp/probe.sh → .../repo/pocket_kosodate/.ai-agent/tmp/probe.sh。headquarters/.ai-agent ではない。",
+      "prompt": "Multi-Root（pocket-kosodate.code-workspace）で、作業対象は app folder（repo/pocket_kosodate）配下の調査。使い捨てスクリプト probe.sh をどこに置く？絶対パスまたは @this 表記で短く答えて。HQ の headquarters/.ai-agent には置かない。",
+      "expected_output": "@this/.ai-agent/tmp/probe.sh → .../repo/pocket_kosodate/.ai-agent/tmp/probe.sh。headquarters/.ai-agent ではない。",
       "files": [],
       "assertions": [
-        "Places under pocket_kosodate/.ai-agent/tmp (or folder:this/.ai-agent/tmp with this=app)",
+        "Places under pocket_kosodate/.ai-agent/tmp (or @this/.ai-agent/tmp with this=app)",
         "Does not choose headquarters/.ai-agent as the destination",
         "Uses singular .ai-agent and tmp/ for disposable script"
       ]
@@ -15,17 +15,17 @@
     {
       "id": 2,
       "prompt": "workspace-agent-temporary で一時ファイルのベースパスは何？旧ルールの headquarters/.ai-agent 優先はまだ有効？短く。",
-      "expected_output": "常に folder:this/.ai-agent。HQ 優先の Git ルート走査は無効。",
+      "expected_output": "常に @this/.ai-agent。HQ 優先の Git ルート走査は無効。",
       "files": [],
       "assertions": [
-        "States base is always folder:this/.ai-agent",
+        "States base is always @this/.ai-agent",
         "Says HQ-priority / git-root headquarters/.ai-agent scan is no longer used"
       ]
     },
     {
       "id": 3,
       "prompt": "この評価用サンドボックスをリポジトリルートとみなしてください。.ai-agent は既にある想定です。実行計画メモ plan/sample-feature.md と、調査下書き用の短いメモを適切な場所に置いてください（計画は進行中、下書きは使い捨て）。",
-      "expected_output": "進行中の計画は .ai-agent/plan/、使い捨て下書きは .ai-agent/tmp/。ルートや docs に置かない。folder:this 基準。",
+      "expected_output": "進行中の計画は .ai-agent/plan/、使い捨て下書きは .ai-agent/tmp/。ルートや docs に置かない。@this 基準。",
       "files": [],
       "assertions": [
         "Active plan markdown is under .ai-agent/plan/",
@@ -35,7 +35,7 @@
     },
     {
       "id": 4,
-      "prompt": "agent-skills folder で作業中。folder:this/.ai-agent/tmp/notes.md の実体はどの絶対パス？code-workspace は headquarters/pocket-kosodate.code-workspace。短く。",
+      "prompt": "agent-skills folder で作業中。@this/.ai-agent/tmp/notes.md の実体はどの絶対パス？code-workspace は headquarters/pocket-kosodate.code-workspace。短く。",
       "expected_output": ".../repo/agent-skills/.ai-agent/tmp/notes.md",
       "files": [],
       "assertions": [
