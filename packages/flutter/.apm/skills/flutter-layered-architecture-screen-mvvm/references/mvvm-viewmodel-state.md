@@ -14,6 +14,7 @@ ViewModel は単一の `MutableStateStream<ScreenState>` を持ち、View はそ
 * **プロパティはすべて required**: `@Default` は使用しない。設定ミス・設定忘れを誘発するため、nullable を含めすべてのプロパティに `required` を付ける。
 * **初期状態は ViewModel の初期化時で指定する**: 初期状態を返す factory は State に持たせず、**ViewModel.provider** の内部（概ね Provider のコールバック内）で初期状態を構築する。ViewModel の定義方法は [mvvm-viewmodel-design.md](./mvvm-viewmodel-design.md) を参照する。このアーキテクチャでは `@riverpod` は非推奨である。
 * **const プライベートコンストラクタ**: ScreenState には `const {型名}._();` を定義することがベストプラクティスである。
+* **ライフサイクル紐づきリソース**: 画面 dispose で解放するものは State に載せる。詳細は [mvvm-viewmodel-lifecycle-resource.md](./mvvm-viewmodel-lifecycle-resource.md)。
 
 ## ScreenState の型選択（abstract class / sealed class）
 
@@ -342,3 +343,8 @@ const factory AccountScreenState.loading({
   required AccountScreenEvent event,
 }) = AccountScreenStateLoading;
 ```
+
+### DO NOT: ViewModel のライフサイクルに紐づくリソースが State の外に定義されている
+
+* 理由・Example（`FutureContext` 等）・dispose / State 遷移の引き継ぎは [mvvm-viewmodel-lifecycle-resource.md](./mvvm-viewmodel-lifecycle-resource.md) を参照する
+* 可変フラグ（本節）と異なり、**解放が必要なオブジェクト**を ViewModel 単独フィールドに置かないことが主題である

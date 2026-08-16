@@ -210,6 +210,7 @@ Stream<SettingsScreenEvent> get event =>
 * 理由: ViewModel インスタンスが Stateful になり、ライフサイクル・テスト・二重呼び出しの追跡が困難になる
 * 理由: 画面の可変状態は `MutableStateStream<ScreenState>`（ScreenState）に閉じる。初期化済みフラグ等も State のプロパティとする
 * 例外: フィールドはすべて `final` の依存参照（Repository、StateStream、StateToEntityDelegate 等）に限る
+* 関連: 解放が必要なライフサイクル紐づきリソースは別 DO NOT — [mvvm-viewmodel-lifecycle-resource.md](./mvvm-viewmodel-lifecycle-resource.md)
 
 ```dart
 // 非推奨パターン

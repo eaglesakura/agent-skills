@@ -65,6 +65,7 @@ Screen 層の画面を **Model–View–ViewModel** で組む。状態は ViewMo
 | [mvvm-viewmodel-design.md](./references/mvvm-viewmodel-design.md) | VM 基本・provider・ファイルレイアウト |
 | [mvvm-viewmodel-design-action.md](./references/mvvm-viewmodel-design-action.md) | `onXXXX` / Delegate / `.action.dart` |
 | [mvvm-viewmodel-state.md](./references/mvvm-viewmodel-state.md) | ScreenState |
+| [mvvm-viewmodel-lifecycle-resource.md](./references/mvvm-viewmodel-lifecycle-resource.md) | 画面ライフサイクル紐づきリソース（State 外禁止） |
 | [mvvm-viewmodel-entity.md](./references/mvvm-viewmodel-entity.md) | ScreenEntity / StateToEntity |
 | [mvvm-viewmodel-event.md](./references/mvvm-viewmodel-event.md) | ScreenEvent |
 | [mvvm-viewmodel-usecase.md](./references/mvvm-viewmodel-usecase.md) | 画面固有 Usecase |
@@ -99,7 +100,10 @@ Screen 層の画面を **Model–View–ViewModel** で組む。状態は ViewMo
 ### DO NOT: ViewModel に可変値を保存する
 
 * 可変値は ScreenState（`MutableStateStream`）に保持する。詳細は [mvvm-viewmodel-design.md](./references/mvvm-viewmodel-design.md)
-* 画面ライフサイクル用 `FutureContext` も State に載せる（ViewModel の単独フィールドにしない）
+
+### DO NOT: ViewModel のライフサイクルに紐づくリソースが State の外に定義されている
+
+* キャンセル用コンテキスト等、画面 dispose で解放すべきものは ScreenState に載せる。詳細は [mvvm-viewmodel-lifecycle-resource.md](./references/mvvm-viewmodel-lifecycle-resource.md)
 
 ### DO NOT: ViewModel の非同期初期化をコンストラクタや Provider から呼ぶ
 
