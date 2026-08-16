@@ -599,3 +599,14 @@ Future<GetKanjiEntriesResult> getKanjiEntries(GetKanjiEntriesRequest request);
 
 * 理由: 依存の向きが不明確になり保守性が低下する
 * 共通データは別 Repository や Datasource に切り出し、一方向依存を保つ
+
+### DO: キャンセル可能な操作の Request に FutureContext? を載せる
+
+* freezed Request に `FutureContext? context` を任意プロパティとして追加する
+* Connect RPC では `RpcFetchRequest.authorized(context: request.context)` とし、`signal: req.abortSignal` を渡す
+
+### DO NOT: CancellationException を failure Result に落とす
+
+* 理由: 画面離脱キャンセルがエラー SnackBar になる
+* `on CancellationException { rethrow; }` する
+* abort 由来の一般例外でも `request.context?.isCanceled == true` なら failure にせずキャンセルとして扱う

@@ -107,3 +107,7 @@ Screen 層の画面を **Model–View–ViewModel** で組む。状態は ViewMo
 ### DO NOT: StatefulWidget を作成する
 
 * Widget は Stateless（`HookConsumerWidget` / `ConsumerWidget` / `HookWidget` 等）。状態は Hooks または ViewModel の State に寄せる。詳細は [mvvm-widget.md](./references/mvvm-widget.md)
+
+### DO NOT: updateWithLock 内で長時間の I/O・RPC を行う
+
+* 状態遷移のみ短ロックし、通信はロック外。詳細は [mvvm-viewmodel-design-action.md](./references/mvvm-viewmodel-design-action.md)

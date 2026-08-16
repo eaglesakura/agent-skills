@@ -379,3 +379,28 @@ Future<void> onSave() async {
   await delegate.execute();
 }
 ```
+
+### DO NOT: updateWithLock 内で長時間の I/O・RPC を行う
+
+* 理由: ロック中は他の `updateWithLock`（入力変更等）が待ち、UX とキャンセル挿入が壊れる
+* 対応: (1) 短ロックで状態遷移 (2) ロック外で通信 (3) 短ロックで結果反映
+
+```dart
+// DO NOT: 通信を updateWithLock 内に置く
+await state.updateWithLock((old, emitter) async {
+  await emitter.emit(old.copyWith(isSaving: true));
+  final result = await repository.update(...); // NG
+  await emitter.emit(...);
+});
+```
+
+```dart
+// DO: 通信はロック外
+await state.updateWithLock((old, emitter) async {
+  await emitter.emit(old.copyWith(isSaving: true));
+});
+final result = await repository.update(...);
+await state.updateWithLock((old, emitter) async {
+  await emitter.emit(old.copyWith(isSaving: false));
+});
+```
