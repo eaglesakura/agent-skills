@@ -1,0 +1,21 @@
+name: coding-security
+version: 0.1.0
+description: |
+  モバイル/バックエンド/GCP/Firebase のセキュリティナレッジ SKILL。
+  OWASP MAS 等の references を段階ロードし、要件の DO 提案とレビューの DO NOT 監査に使う。
+  agentic-workspace（markdown-search / markdown-documentation）と
+  coding-xm3（Coding-Commands / 要件・設計 SKILL）に依存する。
+author: "@eaglesakura"
+license: MIT
+type: skill
+includes: auto
+targets:
+  - cursor
+  - claude
+  - copilot
+  - codex
+
+dependencies:
+  apm:
+    - eaglesakura/agent-skills/packages/agentic-workspace
+    - eaglesakura/agent-skills/packages/coding-xm3
