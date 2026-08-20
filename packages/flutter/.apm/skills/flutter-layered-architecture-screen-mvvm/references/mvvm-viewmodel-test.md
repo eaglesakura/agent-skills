@@ -381,7 +381,24 @@ Future<void> configure() async {
 
 * StateToEntityDelegate は状態ヘルパーで入力を組み立て、返却 Entity を検証する。
 * アクション用 Delegate は依存を Mock し、`MutableStateStream` と `execute()` の前後で状態・verify を検証する。
-* 画面固有 Usecase は `testContext.injectForTesting()` と `ref.testReady(Repository.provider)` で依存を取得し、直接インスタンス化して検証する。
+* 画面固有 Usecase は依存を Mock または `ref.testReady(Repository.provider)` で取得し、直接インスタンス化して検証する。
+* Repository の Action（`Update*Delegate` / package internal Usecase）も `_impl/test` で単体テストしてよい。VM 結合だけで担保しない。
+
+### DO: Repository 依存は Mock + overrideWithValue を既定とする
+
+* `injectForTesting()` の後、対象 Repository を Mock で上書きする。
+* `watch` 系は `MutableStateStream` / `StreamController` を stub し、テストから emit する。
+* Testing\* Repository（`emitProfile` / `updateProfileHandler` 等）は、認証のように振る舞いが厚い場合を除き新規追加しない。
+
+```dart
+await testContext.injectForTesting();
+final mockRepo = _MockAccountRepository();
+when(() => mockRepo.watchProfile()).thenAnswer((_) => profileStream.stream);
+refBuilder.override(
+  AccountRepository.provider,
+  AccountRepository.provider.overrideWithValue(mockRepo),
+);
+```
 
 ### DO: テストグループを機能単位で構造化する
 

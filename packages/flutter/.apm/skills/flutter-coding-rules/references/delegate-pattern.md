@@ -324,11 +324,6 @@ class OnInputTextChangedDelegate {
 }
 ```
 
-### DO: Datasource パースを担う Delegate は try-catch / DTO 境界規約に従う
-
-* `execute()` 内で外部由来 Map の `fromJson` を行う場合、失敗を親へ投げっぱなしにして watch ストリームを壊さない。
-* 詳細は [try-catch.md](./try-catch.md) と [data_object.md](./data_object.md)、Repository 側は `flutter-layered-architecture-design-patterns` の repository-pattern を参照する。
-
 ### DO NOT: 親クラスに複雑な処理を直書きする
 
 * 理由: クラスが肥大化し、テストが困難になる。
@@ -356,3 +351,50 @@ class BadDelegate {
   }
 }
 ```
+
+### DO: Delegate 間の共通処理は package internal Usecase に切り出す
+
+* 複数 Delegate が同じ処理（例: Storage 1 回 get、JWT パース）を共有するとき、**Delegate から Delegate を呼ばない**
+* `_impl` 配下の `usecase/` に `@internal` Usecase を置き、各 Delegate がコンストラクタまたは都度生成で利用する
+* 画面層の同様ルールは `flutter-layered-architecture-screen-mvvm` の `mvvm-viewmodel-design-action.md` を正とする
+* 公開 Usecase 層（`app_packages/usecase/*` の IF/Impl）とは別物である。パッケージ内の実装詳細として閉じる
+
+```dart
+// DO: package internal Usecase
+@internal
+class FetchProfileImageUsecase {
+  const FetchProfileImageUsecase({required this.storage, required this.uid});
+  Future<ProfileImageImplState> execute() async { /* ... */ }
+}
+
+// WatchProfileImageStateDelegate / UpdateProfileImageDelegate の双方から利用
+```
+
+### DO: Repository / 親の公開メソッドは Delegate に委譲する
+
+* Impl の public メソッド本体に put・再取得・map・distinct を直書きしない
+* 変換だけの薄い Delegate が隣接する場合は、公開 `watch*` Delegate へ統合してよい（Map 専用クラスの乱立を避ける）
+
+### DO NOT: Delegate in Delegate にする
+
+* 理由: 共通ロジックが Delegate 層に閉じ、単体テストと Mock 注入が困難になる
+* 対応: package internal Usecase に抽出し、各 Delegate は Usecase を呼ぶ
+
+```dart
+// DO NOT
+return Stream.fromFuture(
+  WatchProfileImageDelegate(storage: storage, uid: uid).execute(),
+);
+```
+
+```dart
+// DO
+return Stream.fromFuture(
+  FetchProfileImageUsecase(storage: storage, uid: uid).execute(),
+);
+```
+
+### DO NOT: listen とほぼ同時に同じ現在値を先出し sync する
+
+* 理由: `StateStream.stream.listen` が直後に現在値相当を届ける場合、初期 `updateWithLock` はタイミング差がほぼなく冗長
+* 先出し sync が必要なのは、listen が現在値を流さない、または sync 無しだと直後の同期 API が壊れることが実証できるときに限る

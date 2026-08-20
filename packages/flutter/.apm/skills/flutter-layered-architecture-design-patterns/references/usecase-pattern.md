@@ -1456,3 +1456,21 @@ final usecase = ref.watch(KanjiSearchUsecase.provider);
 
 * 理由: 結合度が上がり変更影響が広がる
 * 最小限の依存のみを持つ
+
+## package internal Usecase（Repository / 画面 _impl 内）
+
+公開 Usecase 層（`app_packages/usecase/*` の IF/Impl）とは別に、**実装パッケージ内部**に
+`@internal` Usecase を置いてよい。目的は Delegate 間の共通処理の切り出しである。
+
+* 配置例: `data_repository_*_impl/lib/src/**/usecase/`、`screen_feature_*/lib/src/viewmodel/usecase/`
+* IF/Impl 分離・Riverpod Provider は **必須としない**（パッケージ外に出さない）
+* Delegate in Delegate の代替として使う（正本: `delegate-pattern.md` / `mvvm-viewmodel-design-action.md`）
+* 命名は `{動詞}{カテゴリ}Usecase`（例: `FetchProfileImageUsecase`）
+
+```dart
+@internal
+class FetchProfileImageUsecase {
+  const FetchProfileImageUsecase({required this.storage, required this.uid});
+  Future<ProfileImageImplState> execute() async { /* ... */ }
+}
+```

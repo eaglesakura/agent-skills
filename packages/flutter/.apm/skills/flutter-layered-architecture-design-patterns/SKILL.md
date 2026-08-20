@@ -67,14 +67,15 @@ Usecase 層・Data（Repository）層の **定番実装パターン** を適用�
 
 | 参照 | 使うとき |
 | --- | --- |
-| [usecase-pattern.md](./references/usecase-pattern.md) | Usecase IF・実装・Request/Result |
-| [repository-pattern.md](./references/repository-pattern.md) | Repository IF・実装・監視・命名 |
+| [usecase-pattern.md](./references/usecase-pattern.md) | Usecase IF・実装・Request/Result・package internal Usecase |
+| [repository-pattern.md](./references/repository-pattern.md) | Repository IF・実装・監視・命名・テスト差し替え |
 
 ## ナレッジベース
 
 ### DO: Usecase は細かく切る、Repository は機能グループでまとめる
 
 * Usecase を肥大化させず、Repository にデータ操作を寄せすぎない／散らしすぎないバランスを取る
+* Repository / 画面の Delegate 共通処理は package internal Usecase に切る（Delegate in Delegate 禁止）
 
 ### DO: 公開面は interface、詳細は実装 package
 

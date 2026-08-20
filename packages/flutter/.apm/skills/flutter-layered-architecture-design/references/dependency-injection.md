@@ -174,7 +174,7 @@ app_packages/screen/
 │   │       ├── screen/
 │   │       ├── viewmodel/
 │   │       └── factory/
-│   └── login2/
+│   └── login/
 │       └── lib/src/
 │           ├── screen/
 │           ├── viewmodel/
@@ -879,6 +879,22 @@ static Future<void> inject(DependencyBuilder builder) async {
 setUp(() async {
   await testContext.injectForTesting();
 });
+```
+
+### DO: シナリオ制御が必要な Repository は inject 後に Mock で override する
+
+* `injectForTesting()` の直後に `refBuilder.override(..., overrideWithValue(mock))` する
+* Testing\* 専用 API（`emitProfile` 等）に依存しない
+* `registerFallbackValue` を `setUpAll` で登録する
+
+```dart
+await testContext.injectForTesting();
+final mockRepo = _MockAccountRepository();
+when(() => mockRepo.watchProfile()).thenAnswer((_) => profileStream.stream);
+refBuilder.override(
+  AccountRepository.provider,
+  AccountRepository.provider.overrideWithValue(mockRepo),
+);
 ```
 
 ### DO NOT: レイヤー間の循環参照を作る

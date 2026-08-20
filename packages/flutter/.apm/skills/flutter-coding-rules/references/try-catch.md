@@ -5,7 +5,7 @@
 本ドキュメントは、Dart における **例外処理（try-catch）** の規約を定義する。
 
 * **基本的に `Error` 型の例外を catch しない**。`Error` はプログラムのバグを示すため、通常は上位で捕捉せず修正対象とする。
-* **`Error` を catch する場合**、**`on Object catch` する場合**（`Error` を含む）、または**型を指定せずにすべての例外を catch する場合**（例外を握りつぶす場合）は、**必ず理由をコメントで追記**する。意図が明確になり、レビュー時に判断しやすくなる。
+* **`Error` を catch する場合**、または**型を指定せずにすべての例外を catch する場合**（例外を握りつぶす場合）は、**必ず理由をコメントで追記**する。意図が明確になり、レビュー時に判断しやすくなる。
 * **`Exception` 型**（予期される例外）は、適切に型を指定して catch し、処理する。
 
 ## Error と Exception の区別
@@ -15,13 +15,11 @@ Dart では例外は **`Error`** と **`Exception`** に分類される。
 * **`Error`**: プログラムのバグを示す（例: `AssertionError`、`OutOfMemoryError`）。通常は catch せず、コードの修正で対処する。
 * **`Exception`**: 予期しうる例外（例: `FormatException`、`TimeoutException`、`SocketException`）。`on ExceptionType catch (e)` で型を指定して catch し、適切に処理する。
 
-`Error` を catch する、`on Object catch` する、または型を指定しない `catch (e)` で握りつぶす場合は、**必ず理由をコメントで明記**する。
+`Error` を catch する、または型を指定しない `catch (e)` で握りつぶす場合は、**必ず理由をコメントで明記**する。
 
 ### Error と Exception の区別の補足
 
-理由のコメントにより、意図的な例外処理であることが明確になり、コードレビュー時に「なぜ `Error` を catch しているか」「なぜ `Object` で catch しているか」「なぜ型指定なしで catch しているか」を判断しやすくなる。例外の隠蔽を避け、デバッグしやすいコードを維持する。
-
-`on Object catch` は `Exception` だけでなく `TypeError` などの `Error` も捕捉する。ログがあるだけでは足りず、**なぜ Error を含むのか**をコメントで書く。
+理由のコメントにより、意図的な例外処理であることが明確になり、コードレビュー時に「なぜ `Error` を catch しているか」「なぜ型指定なしで catch しているか」を判断しやすくなる。例外の隠蔽を避け、デバッグしやすいコードを維持する。
 
 ## try-catch の実装例
 
@@ -76,34 +74,11 @@ try {
 }
 ```
 
-### 信頼できない JSON/Map の fromJson で Object を catch する場合
-
-`json_serializable` 生成の `fromJson` は、フィールド型不一致時に `TypeError`（`Error`）を投げうる。
-Firestore やリモート JSON など信頼できない `Map` をパースする境界では、ストリームや API を落とさないために `on Object catch` してよい。その場合も理由コメントは必須である。
-
-```dart
-// data_repository_account_impl, watch_profile_delegate.dart
-try {
-  final dto = UserPublicProfileDto.fromJson(data);
-  return WatchProfileResult.data(
-    nickname: dto.nickname == null
-        ? null
-        : AccountNickname(dto.nickname!),
-  );
-} on Object catch (e) {
-  // json_serializable 生成コードは型不一致時に TypeError（Error）を投げうる。
-  // Firestore の不正ドキュメントで watch ストリームを落とさないため Object を catch する。
-  _log.w("public profile parse error: ${e.runtimeType}");
-  return const WatchProfileResult.empty();
-}
-```
-
 ## try-catch のアンチパターン
 
-* **Error / Object を catch しているが理由がコメントで明記されていない**: 意図が伝わらず、レビューで指摘されやすくなる。必ず理由を書く。
+* **Error を catch しているが理由がコメントで明記されていない**: 意図が伝わらず、レビューで指摘されやすくなる。必ず理由を書く。
 * **型を指定せずに例外を握りつぶしているが理由が明記されていない**: 例外が隠蔽され、デバッグが困難になる。握りつぶす場合は理由をコメントする。
 * **Exception を catch すべきところで Error を catch している**: 例として `int.parse` は `FormatException`（Exception のサブクラス）を throw する。`on Error` で catch するのではなく、`on FormatException` で catch する。
-* **ログ出力だけで理由コメントを省略する**: `_log.w(...)` があっても、なぜ `Error` を含む catch なのかは別途 `//` で書く。
 
 ```dart
 // アンチパターン: Error を catch しているが理由が不明確
@@ -150,10 +125,9 @@ try {
 }
 ```
 
-### DO: Error / Object / 型なし catch には理由コメントを書く
+### DO: Error / 型なし catch には理由コメントを書く
 
-* `Error` を catch する場合、`on Object catch` する場合、または `catch (e)` で握りつぶす場合は、必ず理由をコメントで追記する。
-* `on Object catch` は `TypeError` 等の `Error` を含むため、ログだけでは不十分である。
+* `Error` を catch する場合、または `catch (e)` で握りつぶす場合は、必ず理由をコメントで追記する。
 
 ```dart
 try {
@@ -163,23 +137,6 @@ try {
   // すべての例外を catch してログに記録し、デフォルト値を返す
   logger.error('クリティカルな操作が失敗しました: $e');
   return defaultValue;
-}
-```
-
-### DO: 信頼できない JSON/Map の fromJson 失敗は境界で握り、理由コメントを書く
-
-* `json_serializable` はフィールド型不一致で `TypeError`（`Error`）を投げうる。
-* Firestore / リモート JSON 等の watch・取得境界では `on Object catch` + empty / failure Result へ落としてよい。
-* ログは `runtimeType` のみとし、PII（nickname / uid 等）を出さない。
-* 理由コメントで「なぜ Error を含む Object を catch するか」を書く（`try-catch.md` 本則）。
-
-```dart
-// data_repository_account_impl, watch_profile_delegate.dart
-} on Object catch (e) {
-  // json_serializable 生成コードは型不一致時に TypeError（Error）を投げうる。
-  // Firestore の不正ドキュメントで watch ストリームを落とさないため Object を catch する。
-  _log.w("public profile parse error: ${e.runtimeType}");
-  return const WatchProfileResult.empty();
 }
 ```
 
@@ -193,21 +150,6 @@ try {
   someOperation();
 } on Error catch (e) {
   return defaultValue;  // 理由のコメントがない
-}
-```
-
-### DO NOT: 理由コメントなしで Object を catch する
-
-* 理由: `on Object catch` は `Error` を含む。ログがあっても、なぜ Error まで握るのかが不明だとレビュー不能になる。
-
-```dart
-// アンチパターン: Object を catch しているが理由コメントがない
-try {
-  final dto = SomeDto.fromJson(data);
-  return dto;
-} on Object catch (e) {
-  _log.w("parse error: ${e.runtimeType}");
-  return null;  // 理由のコメントがない
 }
 ```
 
@@ -247,3 +189,38 @@ try {
   return 0;
 }
 ```
+
+### DO NOT: 同一型を catch して何もせず rethrow する
+
+* 理由: 制御フローが変わらず冗長。後続の `on OtherException` を書くためだけに挟むなら、先に具体型を catch する
+* 理由: 「握りつぶしていない」ことを示す目的でも、空の `rethrow` 節はノイズになる
+
+```dart
+// DO NOT: 意味のない rethrow
+try {
+  return await client.get(path: path);
+} on ProfileImageObjectNotFoundException {
+  rethrow;
+} on FirebaseException catch (e) {
+  // ...
+}
+```
+
+```dart
+// DO: 変換が必要な型だけ catch する
+try {
+  return await client.get(path: path);
+} on FirebaseException catch (e, st) {
+  if (e.code == "object-not-found") {
+    throw ProfileImageObjectNotFoundException(
+      path: path,
+      cause: e,
+      stackTrace: st,
+    );
+  }
+  rethrow;
+}
+```
+
+独自例外の定義（`message` / `cause` / `stackTrace` / `toString`）は
+[exception-definition.md](./exception-definition.md) を正とする。

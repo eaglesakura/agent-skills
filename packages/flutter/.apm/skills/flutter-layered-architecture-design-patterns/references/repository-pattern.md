@@ -236,110 +236,77 @@ abstract interface class JapaneseCharacterRepository {
 
 ## テスタビリティ
 
+### Unit Test での差し替え方針（優先順位）
+
+1. **Mock（mocktail 等）+ `overrideWithValue` / コンストラクタ注入**（既定）
+   * ViewModel / Screen Delegate / 画面固有 Usecase のシナリオ制御に使う
+   * `watch` は `MutableStateStream` / `StreamController` を `when(() => mock.watch...).thenAnswer` で返す
+2. **package internal Fake**（`_impl/test` の Fake Storage 等）
+   * Repository Impl の Unit Test でインフラ境界だけ差し替える
+3. **`_testing` の Testing\* 実装**（例外的）
+   * 認証フロー・EULA・埋め込みデータなど、**振る舞いが厚く Mock だとテストが読めなくなる**場合のみ
+   * 「emit 用ヘルパー」や「呼び出し回数カウンタ」だけの Testing\* は作らない
+
 ### Fake 実装と Mock 実装
 
-* 単体テストや統合テストでは、Repository の Fake 実装または Mock 実装を用意し、DI で差し替える
-* Fake は「実際の永続化は行わないが、振る舞いを再現する実装」として利用する
-* 必要に応じて Mock により特定の戻り値や例外を返すようにする
+* 単体テストや統合テストでは、Repository を Fake または Mock で差し替える
+* Fake は「実際の永続化は行わないが、振る舞いを再現する実装」
+* Mock は呼び出し検証・戻り値のシナリオ制御に使う
 
 #### Fake 実装と Mock 実装の補足
 
-テスト時に Firebase や DB に依存しないようにするため、`TestingAuthenticationRepository` や `TestingAiQuotaRepository` のように、テスト専用の実装を別パッケージ（例: `_testing`）に用意する。これにより、テストの実行速度と安定性が向上する。
+Firebase / DB に依存しないことが目的なら、必ずしも `_testing` パッケージは不要である。
+画面・VM テストは **Mock + DI override** を優先する（`account_screen_view_model_test` の方針）。
 
-#### Fake 実装と Mock 実装の実装例
+認証のようにセッション状態・EULA・複数 API が絡む場合は、`TestingAuthenticationRepository` のような Testing\* を `_testing` に置いてよい。
 
-良い例：Unit Test 用の Fake 実装（テスト時のみ DI）
+#### Mock + override の実装例（推奨・画面 / VM）
+
+```dart
+class _MockAccountRepository extends Mock implements AccountRepository {}
+
+setUp(() async {
+  await testContext.injectForTesting();
+  final mockRepo = _MockAccountRepository();
+  final profileStream = MutableStateStream<WatchProfileResult>(
+    const WatchProfileResult.empty(),
+  );
+  when(() => mockRepo.watchProfile()).thenAnswer((_) => profileStream.stream);
+  when(() => mockRepo.updateProfile(any())).thenAnswer((invocation) async {
+    final request = invocation.positionalArguments.first as UpdateProfileRequest;
+    return UpdateProfileResult.success(nickname: request.nickname);
+  });
+  refBuilder.override(
+    AccountRepository.provider,
+    AccountRepository.provider.overrideWithValue(mockRepo),
+  );
+});
+```
+
+#### Testing\* 実装の実装例（例外・厚い振る舞い）
 
 ```dart
 // data_repository_authentication_testing, testing_authentication_repository.dart
 class TestingAuthenticationRepository implements AuthenticationRepository {
-  static final provider = Provider<TestingAuthenticationRepository>(
-    (ref) {
-      const initial = AuthenticationState.initializeInProgress();
-      final stateStream = MutableStateStream<AuthenticationState>(initial);
-      final embeddedLocalDataSource = ref.watch(
-        EmbeddedLocalDataSource.provider,
-      );
-      ref.keepAlive();
-      return TestingAuthenticationRepository(
-        stateStream: stateStream,
-        embeddedLocalDataSource: embeddedLocalDataSource,
-      );
-    },
-    dependencies: [EmbeddedLocalDataSource.provider],
-  );
-
-  final MutableStateStream<AuthenticationState> stateStream;
-  @visibleForTesting
-  final EmbeddedLocalDataSource embeddedLocalDataSource;
-  // ... signIn, signOut 等をテスト用に実装
-}
-```
-
-良い例：固定値を返すテスト用 Repository
-
-```dart
-// data_repository_ai_quota_testing, testing_ai_quota_repository.dart
-class TestingAiQuotaRepository implements AiQuotaRepository {
-  static final provider = Provider<AiQuotaRepository>(
-    (ref) {
-      ref.keepAlive();
-      return const TestingAiQuotaRepository._();
-    },
-    dependencies: const [],
-  );
-
-  const TestingAiQuotaRepository._();
-
-  @override
-  Stream<WatchAiQuotaResult> watchAiQuota(WatchAiQuotaRequest request) {
-    return Stream.value(
-      const WatchAiQuotaResult.notify(
-        quota: AiQuota(freeTicket: 10, paidTicket: 10),
-      ),
-    );
-  }
+  // signIn / EULA / stateStream など本番相当のシナリオを再現する
 }
 ```
 
 ### テスト時の DI
 
-* テスト時には `DataInjection` の Override や、テスト用の Container で Repository の Provider を Fake/Mock 実装に差し替える
-* 環境フラグ（例: `isFlutterTesting`）に応じて、本番用実装とテスト用実装を切り替える設計を認める
-
-#### テスト時の DI の補足
-
-Unit Test 専用の実装をテスト時にのみ注入することで、Firebase や DB に依存しないテストが可能になる。`DataInjection` 内で `isFlutterTesting` を見て Provider を切り替えるパターンが利用されている。
-
-#### テスト時の DI の実装例
-
-良い例：テスト時と本番で Repository 実装を切り替える
-
-```dart
-// data_injection, data_injection.dart
-static Future<void> _injectAccount(DependencyBuilder builder) async {
-  builder.inject(
-    AuthenticationRepository.provider,
-    () {
-      if (isFlutterTesting) {
-        return TestingAuthenticationRepository.provider;
-      } else {
-        return FirebaseAccountRepositoryImpl.provider;
-      }
-    }(),
-  );
-}
-```
+* `injectForTesting()` の後、必要な Repository だけ Mock で `overrideWithValue` する
+* `injectForTesting` に Testing\* を結線しない選択肢を認める（未結線なら各テストが必ず override する）
+* 環境フラグで本番/Testing を切り替える設計は、厚い Fake が必要な Repository に限る
 
 ### Fake と実利用の責務分離
 
 * 1 つの Impl クラスが「Fake と本番の両方」を兼ねることは推奨しない
-* テスト用の振る舞いと本番用の振る舞いは、別の実装クラスに分離する
-* 責務を分離することで、本番実装の変更がテスト用実装に不要な影響を与えず、またテスト用の条件分岐が本番コードに混入することを防ぐ
+* テスト用の振る舞いと本番用の振る舞いは、別の実装クラス（または Mock）に分離する
 
 #### Fake と実利用の責務分離の補足
 
-「if (isTest) then ... else ...」を 1 つの Impl 内に書くと、本番コードが読みにくくなり、テスト専用の分岐が増えやすい。そのため、`FirebaseAccountRepositoryImpl`（本番）と `TestingAuthenticationRepository`（テスト）は別クラスとして存在し、DI で切り替える形が推奨される。
+「if (isTest) then ... else ...」を 1 つの Impl 内に書くと、本番コードが読みにくくなる。
+差し替えは DI（Mock override または Testing\* Provider）で行う。
 
 ## パッケージ構成
 
@@ -354,8 +321,10 @@ app_packages/data/repository/
 ├── ${機能名}_impl/               # 実装パッケージ
 │   └── lib/src/
 │       └── ${実装名}/
-│           └── ${実装名}_impl.dart
-├── ${機能名}_testing/            # テスト用実装パッケージ（任意）
+│           ├── ${実装名}_impl.dart
+│           ├── delegate/
+│           └── usecase/          # package internal Usecase（任意）
+├── ${機能名}_testing/            # 厚い Fake が必要なときのみ（任意）
 │   └── lib/src/
 │       └── testing_${機能名}_repository.dart
 └── （injection は data/injection に集約）
@@ -365,7 +334,7 @@ app_packages/data/repository/
 
 * インターフェース: `data_repository_${機能名}`（例: `data_repository_preferences`, `data_repository_authentication`）
 * 実装: `data_repository_${機能名}_impl`
-* テスト用実装: `data_repository_${機能名}_testing`
+* テスト用実装: `data_repository_${機能名}_testing`（**必須ではない**。Mock で足りるなら作らない）
 
 ## インターフェースの定義
 
@@ -499,6 +468,7 @@ Stream<Preferences> get preferencesStream => stateStream.stream
 ### DO: 肥大化する場合は Delegate に処理を委譲する
 
 * 操作ごとに Delegate を切り出し、Repository Impl は組み立てと委譲に専念する
+* 複数 Delegate で共有する処理は `_impl` の `usecase/` に package internal Usecase を置く（Delegate in Delegate 禁止。詳細は `delegate-pattern.md`）
 
 ```dart
 // data_repository_preferences_impl, preferences_repository_impl.dart
@@ -506,36 +476,28 @@ final DatabaseSyncDelegate databaseSyncDelegate;
 final DatabaseEditDelegate databasePutDelegate;
 ```
 
-### DO: watch 系は Datasource 不正データでストリームを落とさない
+### DO: 内部状態型と公開 Result を分離する
 
-* Firestore / リモート JSON はスキーマ逸脱がありうる
-* freezed DTO の `fromJson` 失敗時は empty / 既存 Result の failure 相当へフォールバックする
-* ログは `runtimeType` のみとし、PII（nickname / uid / email 等）を出さない
-* `on Object catch` する場合は `flutter-coding-rules` の [try-catch.md](../../flutter-coding-rules/references/try-catch.md) に従い、理由コメントを必須とする
+* StateStream が保持する内部型（例: `ProfileImageImplState`）と、公開 API の Result（例: `WatchProfileImageResult`）を混在させない
+* 公開 `watch*` は map/distinct で Result に変換する（変換は公開 watch Delegate に統合してよい）
 
-```dart
-// data_repository_account_impl, watch_profile_delegate.dart
-} on Object catch (e) {
-  // json_serializable 生成コードは型不一致時に TypeError（Error）を投げうる。
-  // Firestore の不正ドキュメントで watch ストリームを落とさないため Object を catch する。
-  _log.w("public profile parse error: ${e.runtimeType}");
-  return const WatchProfileResult.empty();
-}
-```
+### DO: Unit Test の差し替えは Mock を既定とし、Testing\* は厚い振る舞いに限る
 
-### DO: テスト用実装は本番 Impl と別クラス・別パッケージ（`_testing`）に分離する
-
-* Fake / Testing 実装は `data_repository_*_testing` 等に置き、DI で差し替える
-* 本番パッケージの依存関係にテスト用実装を含めない
+* ViewModel / Screen テスト: Mock + `overrideWithValue`（またはコンストラクタ注入）
+* `_testing` の Testing\* は認証などシナリオが厚い場合のみ
+* emit ヘルパーや callCount だけの Testing\* は作らない
 
 ```dart
-// data_injection, data_injection.dart
-if (isFlutterTesting) {
-  return TestingAuthenticationRepository.provider;
-} else {
-  return FirebaseAccountRepositoryImpl.provider;
-}
+refBuilder.override(
+  AccountRepository.provider,
+  AccountRepository.provider.overrideWithValue(mockRepo),
+);
 ```
+
+### DO NOT: シナリオ制御のためだけに `_testing` Testing\* Repository を増やす
+
+* 理由: Mock と MutableStateStream で足りるのにパッケージと DI が増える
+* 理由: テストが Testing\* の独自 API（`emitProfile` 等）にロックされる
 
 ### DO NOT: 1 つの Impl で本番と Fake を兼務する
 
@@ -552,8 +514,7 @@ if (isTest) {
 ```
 
 ```dart
-// DO: 本番 Impl と Testing 実装を別クラスにし DI で切り替える
-FirebaseAccountRepositoryImpl / TestingAuthenticationRepository
+// DO: Mock override、または本番 Impl と Testing\* を別クラスにし DI で切り替える
 ```
 
 ### DO NOT: Repository インターフェースを省略し実装クラスのみ公開する
@@ -590,23 +551,7 @@ Future<FirestoreDocument> getDocument(...);
 Future<GetKanjiEntriesResult> getKanjiEntries(GetKanjiEntriesRequest request);
 ```
 
-### DO NOT: 信頼できない Map を as キャストだけでパースし失敗処理を省略する
-
-* 理由: `data?["nickname"] as String?` のような直キャストは型不一致やスキーマ逸脱に弱く、DTO 化と境界での失敗吸収を省略しがちである
-* 可能なら freezed DTO + `fromJson` とし、失敗時は empty / failure へ落とす（上記 DO 参照）
-
 ### DO NOT: Repository 同士で循環参照する
 
 * 理由: 依存の向きが不明確になり保守性が低下する
 * 共通データは別 Repository や Datasource に切り出し、一方向依存を保つ
-
-### DO: キャンセル可能な操作の Request に FutureContext? を載せる
-
-* freezed Request に `FutureContext? context` を任意プロパティとして追加する
-* Connect RPC では `RpcFetchRequest.authorized(context: request.context)` とし、`signal: req.abortSignal` を渡す
-
-### DO NOT: CancellationException を failure Result に落とす
-
-* 理由: 画面離脱キャンセルがエラー SnackBar になる
-* `on CancellationException { rethrow; }` する
-* abort 由来の一般例外でも `request.context?.isCanceled == true` なら failure にせずキャンセルとして扱う

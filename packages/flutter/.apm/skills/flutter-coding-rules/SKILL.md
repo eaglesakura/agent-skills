@@ -20,7 +20,7 @@ metadata:
 ## いつ使うか
 
 * Dart の新規実装・修正・レビュー指摘の反映
-* データオブジェクト / Delegate / enum / 例外処理 / 可視性 / ファイルレイアウト / コメント
+* データオブジェクト / Delegate / enum / 例外の定義・catch / 可視性 / ファイルレイアウト / コメント
 
 ## 作業手順
 
@@ -42,6 +42,7 @@ metadata:
 | [dart_file_layout](./references/dart_file_layout.md) | ファイル名・1クラス1ファイル・library・配置 |
 | [enum](./references/enum.md) | enum・dot-shorthands・switch 網羅 |
 | [try-catch](./references/try-catch.md) | 例外処理・Error/Exception の catch |
+| [exception-definition](./references/exception-definition.md) | 独自 Exception / Error の定義（message / cause / stackTrace / toString） |
 | [fix-error](./references/fix-error.md) | Analyzer / よくある修正の手順 |
 
 必要な参照だけ読む。全部を一度にロードしない。
