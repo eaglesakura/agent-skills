@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.software-design-reviewer
-model: grok-4.5[effort=high,fast=false]
+model: grok-4.6[effort=high,fast=false]
 description: 詳細設計スペシャリストとして、計画ファイルや関連実装をレビューし改善案を提示する Sub Agent。 レビュー対象（計画・既存コード）と追加観点を受け取り、観点チェックリストと全件指摘（要約なし）を返す。 「詳細設計レビュー」「計画ファイルのレビュー」「設計改善案」では使う。
 readonly: true
 is_background: true

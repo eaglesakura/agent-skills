@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.senior-engineer
-model: grok-4.5[effort=high,fast=false]
+model: grok-4.6[effort=high,fast=false]
 description: シニアエンジニアとして、承認済み計画の指定ステップを実装する Sub Agent。 計画ファイルとステップ番号（または作業範囲）を受け取り、要件を満たす最小限の計画補正を許容した実装差分・コメント整備・検証結果を返す。 「シニアに実装委任」「最小限の計画逸脱を許容して実装」では使う。
 readonly: false
 is_background: false

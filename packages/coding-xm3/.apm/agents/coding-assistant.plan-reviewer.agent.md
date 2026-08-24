@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.plan-reviewer
-model: grok-4.5[effort=high,fast=false]
+model: grok-4.6[effort=high,fast=false]
 description: ジュニアエンジニア視点で実装計画の実現性可否を判定する Sub Agent。 計画ファイルを受け取り、職能定義・詳細設計前提と突合した実現性レポート（チェックリストと不足情報）を返す。 「計画がジュニア実装可能か」「plan-reviewer」「実現性レビュー」では使う。
 readonly: true
 is_background: true

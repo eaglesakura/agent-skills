@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.software-design-audit
-model: grok-4.5[effort=high,fast=false]
+model: grok-4.6[effort=high,fast=false]
 description: シニアエンジニアとして、詳細設計ドキュメントの DO NOT 抵触を監査する Sub Agent。 レビュー対象の詳細設計を受け取り、docs/ および {skill}/references/ の DO NOT 見出しと突合し、 定型フォーマットの監査結果（指摘なし / 指摘一覧）を返す。 「DO NOT監査」「詳細設計の監査」「software-design-audit」では使う。
 readonly: true
 is_background: true

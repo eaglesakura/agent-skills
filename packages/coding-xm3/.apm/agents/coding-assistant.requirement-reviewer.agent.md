@@ -1,6 +1,6 @@
 ---
 name: coding-assistant.requirement-reviewer
-model: grok-4.5[effort=high,fast=false]
+model: grok-4.6[effort=high,fast=false]
 description: 要件定義スペシャリストとして、要件ドキュメントの不明瞭点・暗黙要件・矛盾を洗い出す Sub Agent。 現行の要件定義情報を受け取り、要確認・不明点・資料要求を選択肢付きで返す（ファイルは変更しない）。 「要件レビュー」「暗黙要件の洗い出し」「要件の抜け漏れ確認」では使う。
 readonly: true
 is_background: true
