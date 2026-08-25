@@ -2,7 +2,7 @@ name: ohitorisama
 version: 0.1.0
 description: |
   個人開発向けの Slash Command / SKILL / アセット集。
-  GitHub Pull Request 作成コマンド、ブランチ命名ルールなどをまとめる。
+  GitHub Pull Request 作成・分割方針、ブランチ命名ルールなどをまとめる。
 author: "@eaglesakura"
 license: MIT
 type: hybrid

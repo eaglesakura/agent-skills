@@ -1,7 +1,7 @@
 # eaglesakura/ohitorisama
 
 個人開発（お一人様）向けの Slash Command / SKILL / アセット集である。
-GitHub Pull Request 作成コマンド、ブランチ命名ルールなどをまとめる。
+GitHub Pull Request 作成・分割方針、ブランチ命名ルールなどをまとめる。
 
 ## Quick Start
 
@@ -17,6 +17,7 @@ dependencies:
 dependencies:
   apm:
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/workspace-git-branch-rule
+    - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/split-pull-request-rule
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/prompts/github.create-pull-request.prompt.md
 ```
 
@@ -27,6 +28,13 @@ dependencies:
 ## SKILLS
 
 ※ `.apm/skills/` 配下（アルファベット順）。
+
+### split-pull-request-rule
+
+* 大きな変更をレビューしやすい粒度の Pull Request 群へ分ける**方針**を規定する（実行はしない）。
+* 10 分レビュー・レイヤー順・interface / 実装+Test / UI 境界・前提整備の先行切り出しなどを示す。
+* 分割後ブランチ名は `{元のブランチ名}-{通し番号}-{内容}`。Stacked PR では blocking / non-blocking を明示する。
+* `/split-to-prs` 等の実行系と組み合わせて使う。単純な 1 本 PR 作成だけでは使わない。
 
 ### workspace-git-branch-rule
 
