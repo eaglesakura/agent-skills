@@ -1,7 +1,7 @@
 # eaglesakura/ohitorisama
 
 個人開発（お一人様）向けの Slash Command / SKILL / アセット集である。
-GitHub Pull Request 作成・分割方針、ブランチ命名ルールなどをまとめる。
+GitHub Pull Request 作成・分割方針・巨大 PR の Stacked 再分割、ブランチ命名ルールなどをまとめる。
 
 ## Quick Start
 
@@ -18,6 +18,7 @@ dependencies:
   apm:
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/workspace-git-branch-rule
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/split-pull-request-rule
+    - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/decompose-fat-pr-to-stacked-prs
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/prompts/github.create-pull-request.prompt.md
 ```
 
@@ -28,6 +29,13 @@ dependencies:
 ## SKILLS
 
 ※ `.apm/skills/` 配下（アルファベット順）。
+
+### decompose-fat-pr-to-stacked-prs
+
+* 既存の巨大 PR を、依存ありは Stacked PR・なしは独立 PR として再分割・作成する**実行系**。
+* 方針は `split-pull-request-rule` と `/split-to-prs`、本文は `/github.create-pull-request`、Stack 操作は `gh stack`。
+* 既定は分割案の承認後に実行。`/loop` 併用や決定権移譲時は自律確定可。元の巨大 PR は close/edit しない。
+* 各分割 PR の CI Success のための最小差分は、元 PR に無くても許容する。
 
 ### split-pull-request-rule
 
