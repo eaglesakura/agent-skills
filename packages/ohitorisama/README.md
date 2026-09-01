@@ -17,6 +17,8 @@ dependencies:
 dependencies:
   apm:
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/workspace-git-branch-rule
+    - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/git-commit-comment-rule
+    - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/github-comment-rule
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/split-pull-request-rule
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/skills/decompose-fat-pr-to-stacked-prs
     - eaglesakura/agent-skills/packages/ohitorisama/.apm/prompts/github.create-pull-request.prompt.md
@@ -29,6 +31,20 @@ dependencies:
 ## SKILLS
 
 ※ `.apm/skills/` 配下（アルファベット順）。
+
+### git-commit-comment-rule
+
+* AI Agent が `git commit` 等でコミットメッセージを書くときの**文案規約**。
+* 1 行目は `add:` / `chg:` / `fix:` / `mod:` / `del:` のいずれか + 日本語要約。
+* 2 行目以降は「何を・なぜ」の箇条書き。`refs #` は hook が付けるため Agent は書かない。
+* Agent 起草時は末尾に `Co-authored-by: Cursor Agent` を付ける。
+
+### github-comment-rule
+
+* AI Agent が **既存 Pull Request** 上にコメントを書くときの**文案規約**。
+* インライン review comment、スレッド返信、一般 discussion、`gh pr comment` / `gh pr review` などが対象。
+* 日本語・丁寧語・端的な文体。末尾に `---` と `*Cursor Agent*` の署名ブロックを付ける。
+* git commit メッセージや Cursor チャット内返答には使わない（`git-commit-comment-rule` と役割分担）。
 
 ### decompose-fat-pr-to-stacked-prs
 
