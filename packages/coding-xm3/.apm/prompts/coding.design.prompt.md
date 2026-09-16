@@ -211,7 +211,13 @@ flowchart TD
     * 関連ドキュメントが反映されているか
     * セキュリティおよびコーディングの一般的アンチパターンに抵触していないか
   * `/coding-assistant.software-design-reviewer` Sub Agent を実行してレビューを受ける
-    * 実装者視点で、ジュニアが実装可能な具体差分があるか
+    * 次の優先順に従い、一般的な設計・実装観点で指摘を行う
+      1. プロンプトでの特別な指示
+      2. プロジェクト内のドキュメント
+      3. プロジェクト内の既存・関連コードからの慣習
+      4. 公式で推奨される設計・実装パターン
+      5. コミュニティで推奨される設計・実装パターン
+      6. 一般的なコーディングパターン
   * `/coding-assistant.software-design-audit` Sub Agent を実行し、詳細設計の DO NOT 抵触を監査する
 
     ```markdown
@@ -235,6 +241,7 @@ flowchart TD
   * 内容を判断し適切と考える指摘 → 反映する
   * DO NOT監査結果 → 反映する
   * その他は保留とする
+  * 単発実行では保留のままでよい。`/loop /coding.loop` 配下では上位の `coding.loop` が保留・未処理指摘の承認／否認を再判断する
 * `/coding-assistant.plan-reviewer` Sub Agent で、ジュニア視点の計画実現性を確認する
 
   ```markdown

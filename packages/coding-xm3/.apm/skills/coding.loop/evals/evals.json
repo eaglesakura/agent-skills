@@ -4,20 +4,54 @@
     {
       "id": 1,
       "prompt": "/loop /coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer が Success し、login 関連 Unit Test がすべて Success\nタイムアウト: 30分",
-      "expected_output": "要件計画を特定し、login-home_1.md を作成して design → `/coding.design … レビューのみ` を DO NOT0 まで → execute を1ステップずつ（各ステップ後は必ず `/coding.comment` → git diff → 自動 commit）回す。完了条件または30分で停止する。",
-      "files": []
+      "expected_output": "要件計画を特定し、login-home_1.md を作成して design → レビュー指摘を処分（DO NOT は必須修正、その他は承認または否認ログ）→ DO NOT0 かつ保留・未処理0 まで再レビュー → execute を1ステップずつ（各ステップ後は必ず `/coding.comment` → git diff → 自動 commit）回す。完了条件または30分で停止する。",
+      "files": [],
+      "assertions": [
+        "Mentions creating a split plan file named like login-home_1.md",
+        "Includes /coding.design in the planned flow",
+        "Requires DO NOT remaining count to reach zero before execute",
+        "Requires non-DO-NOT review findings to be approved or denied (not left deferred) before execute",
+        "Plans /coding.execute one step at a time (not all steps at once)",
+        "Requires /coding.comment after each execute step",
+        "Honors the 30-minute timeout as a stop condition"
+      ]
     },
     {
       "id": 2,
       "prompt": "/loop /coding.loop .ai-agent/plan/settings-theme.md\n（完了条件の記載なし。計画にも受け入れ条件が無い想定）",
       "expected_output": "次の固定文言のみで緊急停止する: 「タスクの完了条件が不明確です。\\n実装ループを緊急停止します。」 design/execute は行わない。",
-      "files": []
+      "files": [],
+      "assertions": [
+        "final_response.md contains the exact line: タスクの完了条件が不明確です。",
+        "final_response.md contains the exact line: 実装ループを緊急停止します。",
+        "procedure states that /coding.design will not be run",
+        "procedure states that /coding.execute will not be run"
+      ]
     },
     {
       "id": 3,
       "prompt": "/coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer Success",
       "expected_output": "coding.loop を起動しない（/loop 接頭辞が無い）。単体 /coding.loop は不正形式。",
-      "files": []
+      "files": [],
+      "assertions": [
+        "States that coding.loop must not start / is not started",
+        "Cites missing /loop prefix or invalid invocation form as the reason",
+        "Does not plan to run /coding.design as part of this invocation",
+        "Does not plan to run /coding.execute as part of this invocation"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "/loop /coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer Success\n（想定: /coding.design が DO NOT 以外の指摘を一部保留して返した）",
+      "expected_output": "保留をユーザー待ちにせず、loop 側で各指摘を全部/一部承認（計画反映）または否認（否認内容・理由をレビュー否認ログへ）し、再レビューする。DO NOT 残0かつ保留・未処理0になるまで execute に進まない。",
+      "files": [],
+      "assertions": [
+        "Does not treat design 保留 as user-approval wait or leave it unresolved before execute",
+        "For deferred non-DO-NOT findings, chooses approve (reflect) and/or deny with an explicit reason",
+        "Mentions recording denials in a レビュー否認ログ (or equivalent denial log) on the split plan",
+        "Requires re-review after disposition before allowing execute",
+        "Blocks execute while any 保留 or undisposed findings remain, even if DO NOT count is already 0"
+      ]
     }
   ]
 }

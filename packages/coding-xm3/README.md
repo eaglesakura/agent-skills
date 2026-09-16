@@ -65,6 +65,7 @@ flowchart TD
 4. （オプション）`/loop /coding.loop` で詳細設計〜実装を完了条件まで自律反復
     * `/loop` に続けて SKILL `coding.loop` を指定する形式のみ（Prompt は無し・単体呼び出し不可）
     * 要件定義済みが前提。完了条件不明・規定時間超過は緊急停止
+    * design のレビュー保留は loop が承認／否認を再判断し、DO NOT 残ゼロかつ未処理ゼロまで再レビューしてから execute する
     * 手順正本は SKILL `coding.loop`
 
 ```mermaid
