@@ -4,24 +4,50 @@
 
 本ドキュメントは、Golang における一般的なコーディング規約のうち、import 文の別名指定と入れ子 error の確認方法を定義する。
 
-* import 文の package 別名は、package 名の末尾1ワードを用いる。
+* import 別名は、既定の識別子で意味が通じるときは付けない。
+* 末尾だけでは意味が通じない（`/v1` 等）とき、または同一識別子が衝突するときにだけ別名を付ける。
 * 入れ子の error を確認する場合は `errors.As` を使用する。
 
 ## import文
 
-import文のpackage別名指定は、package名の中から末尾の1ワードを使用する。
-バージョンsuffixが付与されている場合、識別可能な文字列を確認してimportする。
+import 文の package 別名は、次の順で判断する。
+
+1. **標準の import 識別子だけで意味が通じる場合、別名を付けない。**
+2. **末尾が `/v1` 等、それ単体では意味が通じない場合は、パス上の段階を 1 つ上げて小文字連結した別名を付ける。**
+3. **同じ識別子が重複した場合は、どちらか片方（判断可能であればレイヤーレベルが低く独立性が高い方）を無別名のまま残し、上位側にパスを小文字連結した別名を付ける。**
+
+根拠: [Go Code Review Comments — Imports](https://go.dev/wiki/CodeReviewComments#imports)（衝突時のみ別名、より局所・プロジェクト固有側を改名する考え方と整合）。
 
 ### import文の補足
 
-別名を末尾1ワードに揃えることで、呼び出し側の識別子が短く一貫し、どのパッケージ由来かが読み取りやすくなる。
+* 既定名（ディレクトリ末尾）が読めるなら別名はノイズになる。必要最小限だけ付ける。
+* `/v1` / `/v2` のような API バージョン suffix は識別子として弱いため、親ディレクトリ名を含めて区別する（例: `secretmanagerapiv1`）。
+* 衝突時は下位レイヤ・横断基盤・標準に近い側を無別名とし、上流・機能寄りの側を別名にする。別名はレイヤ名と package 名など、パス上の意味ある要素を小文字連結する（例: `usecaselogger` / `domainlogger`）。
 
 ### import文の実装例
 
+意味が通じない末尾（バージョン suffix）:
+
 ```go
 import (
-    // ローカルモジュールではない
- secretmanager "cloud.google.com/go/secretmanager/apiv1"
+ secretmanagerapiv1 "cloud.google.com/go/secretmanager/apiv1"
+)
+```
+
+衝突時（下位を無別名、上位に別名）:
+
+```go
+import (
+ "domain/logger"
+ usecaselogger "usecase/logger"
+)
+```
+
+```go
+import (
+ "logger"
+ domainlogger "domain/logger"
+ usecaselogger "usecase/logger"
 )
 ```
 
@@ -44,14 +70,24 @@ import (
 
 ## ナレッジベース
 
-### DO: import の別名に package 名の末尾1ワードを使う
+### DO: 既定の import 識別子で通じるときは別名を付けない
 
-* バージョン suffix がある場合は、識別可能な文字列を確認して import する。
+* 衝突もバージョン suffix もない通常の import は、ディレクトリ末尾の package 名のまま使う。
+
+### DO: `/v1` 等は親ディレクトリを含めた別名にする
 
 ```go
 import (
-    // ローカルモジュールではない
- secretmanager "cloud.google.com/go/secretmanager/apiv1"
+ secretmanagerapiv1 "cloud.google.com/go/secretmanager/apiv1"
+)
+```
+
+### DO: 衝突時は下位・独立性の高い側を無別名にし、上位にパス連結別名を付ける
+
+```go
+import (
+ "domain/logger"
+ usecaselogger "usecase/logger"
 )
 ```
 
@@ -66,6 +102,22 @@ import (
  }
 ```
 
+### DO NOT: 意味が通じる既定名にまで別名を付ける
+
+* 理由: 呼び出し側の識別子が増え、どの package 由来かがかえって読み取りにくくなる。
+
+### DO NOT: `/v1` だけを別名にする（例: `apiv1`）
+
+* 理由: 単体では意味が弱く、他 API の `apiv1` と区別できない。
+
+### DO NOT: 衝突時に下位レイヤ側だけを改名して上位を無別名のままにする
+
+* 理由: 独立性が高い・再利用される側の識別子を安定させ、上流側の別名で区別する。
+
 ### DO NOT: 入れ子 error を文字列比較や不安定な型アサーションだけで判定する
 
 * 理由: ラップ構造の変化に弱く、誤判定や壊れやすいテストになる。
+
+## 参考リンク
+
+* Go Code Review Comments — Imports: <https://go.dev/wiki/CodeReviewComments#imports>
