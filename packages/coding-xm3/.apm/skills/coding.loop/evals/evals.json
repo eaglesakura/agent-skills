@@ -4,15 +4,15 @@
     {
       "id": 1,
       "prompt": "/loop /coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer が Success し、login 関連 Unit Test がすべて Success\nタイムアウト: 30分",
-      "expected_output": "要件計画を特定し、login-home_1.md と login-home_1_review.md を作成して詳細設計ループ → 指摘を _review.md で処分（DO NOT は再レビュー待ち必須、その他は再レビュー待ちまたは不採用）→ Review 確認で全件対応済みまで回す → execute を1ステップずつ（各ステップ後は必ず `/coding.comment` → git diff → 自動 commit）回す。完了条件または30分で停止する。",
+      "expected_output": "要件計画を特定し、login-home_1.md と login-home_1_review.md を作成して詳細設計ループ → 指摘を _review.md で処分（DO NOT は再レビュー待ち必須、その他は再レビュー待ちまたは対応済み＋提案を不採用とした記録）→ 採用分は Review 確認で対応済みまで回す → execute を1ステップずつ（各ステップ後は必ず `/coding.comment` → git diff → 自動 commit）回す。完了条件または30分で停止する。",
       "files": [],
       "assertions": [
         "Mentions creating a split plan file named like login-home_1.md",
         "Mentions creating or using login-home_1_review.md (or equivalent {stem}_review.md)",
         "Includes 詳細設計ループ or references/design-loop.md in the planned flow",
         "Requires all review findings to reach Status 対応済み before execute",
-        "Uses Status legend 要対応 / 再レビュー待ち / 不採用 / 対応済み (not old 再レビュー/リジェクト as Status)",
-        "Requires non-DO-NOT findings to be adopted (再レビュー待ち) or 不採用 (not left as 要対応) before confirmation",
+        "Uses Status legend 要対応 / 再レビュー待ち / 対応済み (not old 再レビュー/リジェクト/不採用 as Status)",
+        "Requires non-DO-NOT findings to be adopted (再レビュー待ち) or rejected as 対応済み with 提案を不採用とした reason (not left as 要対応)",
         "States that software-design-reviewer and software-design-audit both read the same _review.md before reviewing",
         "States that normal review uses cascade (one viewpoint tier only, not all tiers)",
         "Plans /coding.execute one step at a time (not all steps at once)",
@@ -47,16 +47,17 @@
     {
       "id": 4,
       "prompt": "/loop /coding.loop .ai-agent/plan/login-home.md\n完了条件: Analyzer Success\n（想定: 詳細設計ループが DO NOT 以外の指摘を一部 Status 要対応のまま _review.md に残した）",
-      "expected_output": "要対応をユーザー待ちにせず、loop 側で各指摘を全部/一部採用（計画反映→再レビュー待ち）または不採用（Status 不採用＋理由）し、Review 確認で対応済みにする。未完了 Status が残るあいだ execute に進まない。対応済みの再指摘はしない。",
+      "expected_output": "要対応をユーザー待ちにせず、loop 側で各指摘を全部/一部採用（計画反映→再レビュー待ち→Review 確認で対応済み）または不採用（Status 対応済み＋提案を不採用とした理由）する。未完了 Status が残るあいだ execute に進まない。対応済みの再指摘はしない。",
       "files": [],
       "assertions": [
         "Does not treat Status 要対応 findings as user-approval wait or leave them unresolved before execute",
-        "For non-DO-NOT findings, chooses 再レビュー待ち (reflect) and/or 不採用 with an explicit reason on _review.md",
+        "For non-DO-NOT findings, chooses 再レビュー待ち (reflect) and/or 対応済み with 提案を不採用とした reason on _review.md (not Status 不採用)",
         "Mentions updating Status on {stem}_review.md (not a レビュー否認ログ section on the plan)",
-        "Requires Review confirmation of 再レビュー待ち/不採用 before Status 対応済み",
+        "Requires Review confirmation of 再レビュー待ち before Status 対応済み on the adopt path",
+        "Allows Main alone to set 対応済み when rejecting with recorded reason",
         "Blocks execute while any Status other than 対応済み remains",
         "Sub Agents must not re-raise 対応済み findings",
-        "Main agent does not mark 対応済み alone without Review confirmation"
+        "On the adopt path, Main agent does not mark 対応済み alone without Review confirmation"
       ]
     }
   ]
