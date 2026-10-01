@@ -17,7 +17,9 @@
         "States that normal review uses cascade (one viewpoint tier only, not all tiers)",
         "Plans /coding.execute one step at a time (not all steps at once)",
         "Requires /coding.comment after each execute step",
-        "Honors the 30-minute timeout as a stop condition"
+        "Honors the 30-minute timeout as a stop condition",
+        "Records review agent IDs after the first review and resumes them for confirmation reviews within the same {stem}_{N}",
+        "Excludes resolved (対応済み) findings from confirmation-review viewpoints"
       ]
     },
     {
@@ -57,7 +59,9 @@
         "Allows Main alone to set 対応済み when rejecting with recorded reason",
         "Blocks execute while any Status other than 対応済み remains",
         "Sub Agents must not re-raise 対応済み findings",
-        "On the adopt path, Main agent does not mark 対応済み alone without Review confirmation"
+        "On the adopt path, Main agent does not mark 対応済み alone without Review confirmation",
+        "On confirmation review (iteration >= 2), resumes the same review agent when agent ID is available instead of always launching a new one",
+        "On confirmation review, excludes 対応済み (resolved) from review viewpoints and focuses on 再レビュー待ち (except regression on areas touched by the latest plan diff)"
       ]
     }
   ]
