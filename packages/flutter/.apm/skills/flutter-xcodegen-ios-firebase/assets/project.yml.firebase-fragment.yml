@@ -1,11 +1,14 @@
 # project.yml への追記断片（firebase-ios-sdk SPM）
-# バージョンは利用時点の安定版を確認して埋める（推測しない）
+# バージョンは利用時点の安定版を確認して埋める（推測しない）。
+# googleappmeasurement は firebase-ios-sdk と揃う版を選ぶ。
 #
 # 使い方:
 # - packages を既存 project.yml の packages にマージする
 # - targets.Runner.dependencies に dependencies をマージする
 #   （既存の CoreGraphics / FlutterGeneratedPluginSwiftPackage は残す）
 # - targets.Runner.preBuildScripts の先頭付近に preBuildScripts をマージする
+# - Firebase product の明示リンク（例: FirebaseCrashlytics）は
+#   flutter-xcodegen-ios-firebase-crashlytics 側で行う
 
 packages:
   firebase-ios-sdk:

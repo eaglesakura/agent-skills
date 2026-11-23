@@ -1,6 +1,6 @@
 # Flavor なし構成
 
-ユーザーが Flavor を指定していないときの既定。
+ユーザーが Flavor を指定していないときの既定。SPM・ephemeral は [spm.md](./spm.md) を先に読む。
 
 ## 作るもの
 

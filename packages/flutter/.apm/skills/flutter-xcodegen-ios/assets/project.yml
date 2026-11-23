@@ -1,5 +1,6 @@
 # XcodeGen ルート定義（ios/project.yml）
-# プレースホルダをユーザー指定値で置換する。Pods は使わない（SPM 前提）。
+# プレースホルダをユーザー指定値で置換する。
+# CocoaPods は使わない（SPM 前提）。Pods_Runner / Podfile を追加しない。
 name: Runner
 
 options:

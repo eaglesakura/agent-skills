@@ -1,9 +1,12 @@
 # Flavor あり構成
 
+SPM・ephemeral・prepare preAction は [spm.md](./spm.md) を先に読む。
+
 ## 作るもの（Flavor ごと）
 
 1. `Configurations/{flavor}.xcconfig`（`app.xcconfig` を include）
-2. `Configurations/Debug-{flavor}/flavor.xcconfig` ほか Profile / Release
+2. `Configurations/Debug-{flavor}/flavor.xcconfig` / `Profile-{flavor}/` / `Release-{flavor}/`  
+   （assets の `Debug-__FLAVOR__` / `Profile-__FLAVOR__` / `Release-__FLAVOR__` を複製して `__FLAVOR__` 等を置換）
 3. `xcodegen/{flavor}.yml` — assets の `flavor.yml` で `__FLAVOR__` を置換
 4. `project.yml` の `include` に `xcodegen/{flavor}.yml` を列挙（`default.yml` は使わない）
 

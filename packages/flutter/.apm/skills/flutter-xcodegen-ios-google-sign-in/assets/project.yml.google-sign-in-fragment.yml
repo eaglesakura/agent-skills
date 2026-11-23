@@ -4,6 +4,8 @@
 # - targets.Runner.info.properties に properties をマージする
 # - 各 Configuration の flavor.xcconfig には
 #   flavor.xcconfig.google-sign-in-fragment.xcconfig のキーを追加する
+# - GoogleSignIn 用のリモート SPM URL は packages に足さない
+#   （ネイティブ SDK は FlutterGeneratedPluginSwiftPackage 経由）
 
 targets:
   Runner:

@@ -1,5 +1,7 @@
 # GoogleService-Info.plist 配置
 
+CocoaPods や `Runner/` 直下への固定配置ではなく、**Xcode Configuration 名ごと**に置く。コピーは SPM 構成の pre-build スクリプトが行う。
+
 ## パス規則
 
 ```text

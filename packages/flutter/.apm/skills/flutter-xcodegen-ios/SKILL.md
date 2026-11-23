@@ -1,29 +1,34 @@
 ---
 name: flutter-xcodegen-ios
 description: >-
-  Flutter 標準の ios/ を XcodeGen 構成へ移行・整備する SKILL。Configurations（xcconfig）と
-  xcodegen/*.yml・project.yml・Exports（export-options-plist）をテンプレから生成・追加する。
+  Flutter 標準の ios/ を XcodeGen + Swift Package Manager（SPM）構成へ移行・整備する SKILL。
+  Configurations（xcconfig）と xcodegen/*.yml・project.yml・Exports（export-options-plist）を
+  テンプレから生成・追加する。CocoaPods / Podfile / Pods_Runner は扱わない（非推奨）。
   「xcodegen に移行」「iOS Flavor を xcodegen で」「Bundle ID / Provisioning を xcconfig に」
   「flutter build ipa の --export-options-plist」「Flavor なしの Debug/Profile/Release だけ」
-  「Flavor を増やす」では必ず使う。Firebase / Crashlytics / Google Sign-In は
-  flutter-xcodegen-ios-firebase 系に譲る。Pods は扱わない。Runner/ ソースの新規作成は対象外
-  （flutter create 後の移行が前提）。
+  「Flavor を増やす」「SPM 前提の iOS」「CocoaPods をやめて SPM」では必ず使う。
+  Firebase / Crashlytics / Google Sign-In は flutter-xcodegen-ios-firebase 系に譲る。
+  Runner/ ソースの新規作成は対象外（flutter create 後の移行が前提）。
 ---
-# Flutter iOS / XcodeGen 移行
+# Flutter iOS / XcodeGen 移行（SPM 前提）
 
-`flutter create` 等でできた標準 `ios/` を、**XcodeGen 管理**へ移す。
+`flutter create` 等でできた標準 `ios/` を、**XcodeGen 管理 + SPM** へ移す。
 `Runner/` のアプリソースは触らず、`Configurations/`・`xcodegen/`・`project.yml`・`Exports/` を整備する。
+
+CocoaPods は非推奨。`Podfile` / `Pods/` / `Pods_Runner` は追加しない。プラグインのネイティブ依存は `FlutterGeneratedPluginSwiftPackage`（Flutter 生成の path SPM）で解決する。
 
 ## いつ使うか
 
-* 標準 `ios/` を XcodeGen に移行する
+* 標準 `ios/` を XcodeGen + SPM に移行する
 * Flavor なし（`Debug` / `Profile` / `Release`）または Flavor あり構成を作る
 * Flavor を後から追加する
 * Bundle Identifier / Provisioning Profile / export-options-plist を揃える
+* CocoaPods ベースの XcodeGen 構成から SPM のみへ切り替える
 
 ## 前提と必須入力
 
 ユーザーは先に Flutter 標準機能で `ios/` を用意している前提。
+Flutter 3.44 以降は SPM が既定。無効化している場合は有効化してから進む（詳細は [references/spm.md](./references/spm.md)）。
 
 次が **指示に無い場合は推測せずエラーで止める**:
 
@@ -42,18 +47,25 @@ description: >-
 
 1. 必須入力が揃っているか確認する。欠けていれば不足項目を列挙して停止する
 2. Flavor 有無を確定する（無指定 → Flavor なし）
-3. [references/directory-layout.md](./references/directory-layout.md) を読む
+3. [references/directory-layout.md](./references/directory-layout.md) と [references/spm.md](./references/spm.md) を読む
 4. Flavor なしなら [references/no-flavor.md](./references/no-flavor.md)、ありなら [references/flavor.md](./references/flavor.md) を読む
 5. `./assets/` のテンプレを `ios/` へコピーし、プレースホルダ（`__…__`）を実値に置換する
 6. `project.yml` の `include` を Flavor 有無に合わせて直す
 7. `postGenCommand.sh` に実行権限を付ける
-8. `xcodegen` を `ios/` で実行する（`DEVELOPMENT_TEAM` を環境変数で渡す）
-9. Release IPA は `flutter build ipa --export-options-plist <Exports の plist>` で出す旨をユーザーに伝える
+8. CocoaPods 残骸があれば [references/spm.md](./references/spm.md) の削除リストに従い除去する
+9. ephemeral を用意してから `xcodegen` を実行する（下記コマンド）。`DEVELOPMENT_TEAM` を環境変数で渡す
+10. Release IPA は `flutter build ipa --export-options-plist <Exports の plist>` で出す旨をユーザーに伝える
 
 コマンド実行時は、プロジェクト規定のツールチェイン（あれば）に従う。
 
 ```bash
-# 例（ios/ で）
+# アプリルートで（ios/ の親）
+flutter pub get
+flutter build ios --config-only
+# Flavor ありの例:
+# flutter build ios --config-only --flavor __FLAVOR__
+
+# ios/ で
 DEVELOPMENT_TEAM=__TEAM_ID__ xcodegen
 
 # Release IPA
@@ -61,6 +73,8 @@ flutter build ipa --flavor __FLAVOR__ --release --export-options-plist ios/Expor
 ```
 
 Flavor なしなら `--flavor` は付けない。Ad Hoc なら `Exports/Development/adhoc.plist` を使う。
+
+`postGenCommand` が `FlutterGeneratedPluginSwiftPackage/Package.swift` 不在で失敗したら、先に `flutter build ios --config-only` をやり直してから `xcodegen` する。
 
 ## プレースホルダ
 
@@ -76,12 +90,11 @@ Flavor なしなら `--flavor` は付けない。Ad Hoc なら `Exports/Developm
 
 ## SPM と CoreGraphics
 
-`packages` に SPM を足したあと、実質依存が空に近いと解決に失敗することがある。
-テンプレどおり **`CoreGraphics.framework` を `dependencies` に残す**。外さない。
+詳細は [references/spm.md](./references/spm.md)。テンプレどおり **`CoreGraphics.framework` を `dependencies` に残す**。外さない。
 
-## Pods
+## CocoaPods（非推奨）
 
-CocoaPods / `Pods_Runner` / Pods 用 Build Phase は **追加しない**（legacy）。
+CocoaPods / `Pods_Runner` / Pods 用 Build Phase（`[CP] Check Pods Manifest.lock` 含む）は **追加しない**。既存移行時は [references/spm.md](./references/spm.md) の削除リストに従う。CocoaPods との併用は本 SKILL の対象外。
 
 ## 拡張 SKILL
 
@@ -93,7 +106,7 @@ CocoaPods / `Pods_Runner` / Pods 用 Build Phase は **追加しない**（legac
 
 ## アセット一覧
 
-* [Configurations/](./assets/Configurations/) — xcconfig テンプレ
+* [Configurations/](./assets/Configurations/) — xcconfig テンプレ（Flavor なし / `Debug|Profile|Release-__FLAVOR__`）
 * [xcodegen/](./assets/xcodegen/) — `base.yml` / `default.yml` / `flavor.yml` / scripts / workspace
 * [project.yml](./assets/project.yml)
 * [Exports/](./assets/Exports/) — `appstore.plist` / `adhoc.plist`

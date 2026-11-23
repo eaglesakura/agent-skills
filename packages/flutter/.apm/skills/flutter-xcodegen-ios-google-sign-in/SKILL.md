@@ -1,14 +1,18 @@
 ---
 name: flutter-xcodegen-ios-google-sign-in
 description: >-
-  Flutter iOS XcodeGen 構成に Google Sign-In 用の GID_CLIENT_ID / REVERSED_CLIENT_ID（xcconfig）と
-  Info.plist（GIDClientID・URL Scheme）を組み込む SKILL。「Google Sign-In を xcodegen に」
-  「REVERSED_CLIENT_ID」「GIDClientID を xcconfig」では必ず使う。前提は flutter-xcodegen-ios。
-  Firebase Auth 全体や Android 側、Firebase SPM 本体は flutter-xcodegen-ios-firebase に譲る。
+  Flutter iOS XcodeGen + SPM 構成に Google Sign-In 用の GID_CLIENT_ID / REVERSED_CLIENT_ID
+  （xcconfig）と Info.plist（GIDClientID・URL Scheme）を組み込む SKILL。
+  「Google Sign-In を xcodegen に」「REVERSED_CLIENT_ID」「GIDClientID を xcconfig」では必ず使う。
+  前提は flutter-xcodegen-ios。ネイティブ SDK は FlutterGeneratedPluginSwiftPackage 経由で解決し、
+  GoogleSignIn 用の別 SPM URL は packages に足さない。Firebase Auth 全体や Android 側、
+  Firebase SPM 本体は flutter-xcodegen-ios-firebase に譲る。
 ---
 # Flutter iOS / XcodeGen + Google Sign-In
 
 Configuration ごとの OAuth クライアント値を xcconfig に置き、`project.yml` の Info.plist 生成で参照する。
+
+ネイティブの Google Sign-In SDK は Flutter プラグイン経由の **`FlutterGeneratedPluginSwiftPackage`** で解決する。本 SKILL では `packages` に GoogleSignIn のリモート SPM URL を追加しない。責務は xcconfig キーと Info.plist プロパティのみ。
 
 ## 必須入力
 
@@ -31,5 +35,5 @@ Configuration ごとの OAuth クライアント値を xcconfig に置き、`pro
 
 ## 関連
 
-* 土台: `flutter-xcodegen-ios`
+* 土台: `flutter-xcodegen-ios`（SPM・`FlutterGeneratedPluginSwiftPackage`）
 * Firebase 併用時: `flutter-xcodegen-ios-firebase`（plist 配置は別問題）

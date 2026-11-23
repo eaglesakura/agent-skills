@@ -1,4 +1,4 @@
-# project.yml への追記断片（Firebase Crashlytics）
+# project.yml への追記断片（Firebase Crashlytics / SPM）
 #
 # 使い方:
 # - targets.Runner.dependencies に dependencies をマージする
@@ -6,6 +6,8 @@
 #   （Thin Binary の後でよい）
 # - 同梱の xcodegen/scripts/preBuildFirebaseCrashlyticsRun.sh を
 #   ios/xcodegen/scripts/ へ配置する（実行ビット付き）
+# - スクリプトファイル名の preBuild は歴史的命名。呼び出しは postBuildScripts から行う
+# - CocoaPods の Pods/.../Crashlytics/run は使わない（SPM SourcePackages を探索）
 
 targets:
   Runner:

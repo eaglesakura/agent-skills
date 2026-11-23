@@ -1,6 +1,6 @@
 # ディレクトリ構成
 
-`ios/` 直下の目標レイアウト（`Runner/` は Flutter 標準のまま）。
+`ios/` 直下の目標レイアウト（`Runner/` は Flutter 標準のまま）。SPM 前提の詳細は [spm.md](./spm.md)。
 
 ```text
 ios/
@@ -27,10 +27,12 @@ ios/
 │   ├── scripts/
 │   │   └── postGenCommand.sh
 │   └── Runner.xcworkspace/
-│       └── contents.xcworkspacedata
-├── project.yml                      # XcodeGen エントリ
+│       └── contents.xcworkspacedata # Runner.xcodeproj のみ（Pods なし）
+├── project.yml                      # XcodeGen エントリ（packages に SPM）
 ├── Runner/                          # 既存（本 SKILL では新規作成しない）
 └── Flutter/                         # Flutter 生成物（触らない）
+    └── ephemeral/Packages/          # .gitignore。xcodegen 前に生成が必要
+        └── FlutterGeneratedPluginSwiftPackage/
 ```
 
 ## Configuration 名の規則
