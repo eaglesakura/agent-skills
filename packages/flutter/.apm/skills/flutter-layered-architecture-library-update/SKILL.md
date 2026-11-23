@@ -28,7 +28,7 @@ SDK（Flutter／Dart 本体）の版調査は対象外。コマンド例は `flu
 * Flutter SDK の最新版・CHANGELOG 調査 → `flutter-maintenance-check-latest-version`
 * workspace の package 一覧・レイアウト把握だけ → `flutter-layered-architecture-workspace`
 * アプリ起動・ランタイムデバッグ → `flutter-app-debug`
-* 文言／L10n → `flutter-monolith-localization`
+* 文言／L10n → `pub-flutter-monolith-localization`（`eaglesakura/flutter_monolith/skills`）
 * extension type 等の言語規約だけ → `flutter-coding-rules`
 
 ## 前提（なぜ overrides か）

@@ -27,7 +27,6 @@ Dart / pub 依存の更新手順そのものは対象外である（隣接 SKILL
 
 * `flutter pub outdated` や `dependency_overrides` の更新 → `flutter-layered-architecture-library-update`
 * アプリ起動・ランタイムデバッグ → `flutter-app-debug`
-* 文言／L10n → `flutter-monolith-localization`
 
 ## 手順概要
 

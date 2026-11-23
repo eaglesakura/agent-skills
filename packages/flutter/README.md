@@ -1,7 +1,8 @@
 # flutter
 
 Flutter / Dart 向け SKILL 集である。
-コーディング規約、Layered Architecture、デバッグ、L10n、SDK 調査などをまとめる。
+コーディング規約、Layered Architecture、デバッグ、SDK 調査などをまとめる。
+monolith L10n は `eaglesakura/flutter_monolith/skills` 側へ移行した。
 
 ## Quick Start
 
@@ -13,7 +14,7 @@ dependencies:
 
 ## 依存APM Package
 
-* `eaglesakura/agentic-workspace`
+* `eaglesakura/agent-skills/packages/agentic-workspace`
 
 ## SKILLS
 
@@ -77,12 +78,6 @@ dependencies:
 
 * Flutter SDK 自体の最新リリース調査手順を規定する（例: `gh api` で `flutter/flutter` の tags 取得）。
 * `CHANGELOG.md` と `flutter --version` を照らし、採用候補バージョンの変更内容を把握する。
-
-### flutter-monolith-localization
-
-* CSV（`res/strings.csv`）による文字列の外部リソース化・L10n 対応と利用方法を規定する。
-* `monolith` / `monolith_localization` を用い、`dart run monolith_runner:localization` でコード生成する。
-* パッケージごとの `strings.dart` と `L10nStringsMixin` の使い方、他パッケージリソースの参照方法を定める。
 
 ## Commands
 
