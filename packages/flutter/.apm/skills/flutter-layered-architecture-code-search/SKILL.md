@@ -7,8 +7,8 @@ description: >-
   「関連 package 一覧」「TODO/FIXME の洗い出し」では必ず使う。
   Markdown 見出しだけの docs 探索は markdown-search、ドキュメント内パスの解決だけは
   workspace-resolve-file-path、画面 MVVM／Usecase 設計の新規作成は
-  flutter-layered-architecture-screen-mvvm / design-usecase、
-  コーディング規約のみ・アプリ起動デバッグのみでは使わない。
+  flutter-layered-architecture-screen-mvvm / design-usecase /
+  design-repository、コーディング規約のみ・アプリ起動デバッグのみでは使わない。
 license: MIT License
 metadata:
   author: "@eaglesakura"
@@ -28,7 +28,7 @@ metadata:
 
 * Markdown の見出し TOC だけで docs を読む → `markdown-search`
 * 文書中の `path/to/file` を実パスに解決するだけ → `workspace-resolve-file-path`
-* 新規に画面 MVVM や Usecase 設計を書く → `screen-mvvm` / `design-usecase` 等
+* 新規に画面 MVVM や Usecase / Repository 設計を書く → `screen-mvvm` / `design-usecase` / `design-repository` 等
 * Dart の言語規約だけの修正 → `flutter-coding-rules`
 
 ## 入力の解釈

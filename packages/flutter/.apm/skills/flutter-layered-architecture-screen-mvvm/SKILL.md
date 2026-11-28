@@ -7,7 +7,7 @@ description: >-
   `ScreenImpl` 分割では必ず使う。「画面を作る」「ViewModel 追加」「onInitialize」
   「Entity 設計」「ViewModel テスト」でもロードし、該当 `references/` だけ読む。
   画面間遷移・Factory/Launcher は flutter-layered-architecture-screen-navigation、
-  Usecase/Repository 定番は design-patterns、レイヤー地図は design、所在調査は
+  Usecase/Repository 定番は design-usecase / design-repository、所在調査は
   code-search、Dart 規約のみは flutter-coding-rules では使わない。
 license: MIT License
 metadata:
@@ -27,8 +27,7 @@ Screen 層の画面を **Model–View–ViewModel** で組む。状態は ViewMo
 ## いつ使わないか
 
 * 画面遷移・`*Factory` / `*Launcher` / `go_router` 隠蔽 → `flutter-layered-architecture-screen-navigation`
-* Usecase / Repository の Request&Result 定番だけ → `flutter-layered-architecture-design-patterns`
-* どのレイヤーに置くかだけ → `flutter-layered-architecture-design`
+* Usecase / Repository の定番だけ → `design-usecase` / `design-repository`
 * 既存コードの所在調査 → `flutter-layered-architecture-code-search`
 * 言語規約だけ → `flutter-coding-rules`
 

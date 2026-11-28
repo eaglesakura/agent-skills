@@ -50,7 +50,7 @@ metadata:
 ## 他 SKILL との境界
 
 * 画面の MVVM: `flutter-layered-architecture-screen-mvvm`
-* Usecase / Repository 設計: `flutter-layered-architecture-design-patterns`
+* Usecase / Repository 設計: `flutter-layered-architecture-design-usecase` / `flutter-layered-architecture-design-repository`
 * アプリ起動・DTD デバッグ: `flutter-app-debug`
 
 ## ナレッジベース

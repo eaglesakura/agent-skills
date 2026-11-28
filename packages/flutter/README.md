@@ -3,8 +3,9 @@
 Flutter / Dart 向け SKILL 集である。
 コーディング規約、Layered Architecture、デバッグ、SDK 調査などをまとめる。
 monolith L10n は `eaglesakura/flutter_monolith/skills` 側へ移行した。
-workspace 構造把握（`flutter-layered-architecture-workspace`）、Usecase 設計（`flutter-layered-architecture-design-usecase`）、
-および annotations / linter rule SKILL は `eaglesakura/flutter_layered_architecture` 側へ移行した（またはそちらが正本である）。
+workspace 構造把握（`flutter-layered-architecture-workspace`）、Usecase / Repository 設計
+（`design-usecase` / `design-repository`）、および annotations / linter rule SKILL は
+`eaglesakura/flutter_layered_architecture` 側へ移行した（またはそちらが正本である）。
 
 ## Quick Start
 
@@ -46,11 +47,10 @@ dependencies:
 * Usecase の切り出し・共通／画面固有・命名など設計判断は、そちらの APM パッケージを使う。
 * レイヤー地図・依存方向は `resolve-package-layer` / architecture linter、構造は usecase linter が保証する。
 
-### flutter-layered-architecture-design-patterns
+### flutter-layered-architecture-design-patterns（移行済み）
 
-* Repository（data）の実装パターンを規定する。Usecase 側は `flutter-layered-architecture-design-usecase`（FLA）へ統合した。
-* `{機能グループ}Repository`、Read/Write・監視、interface/impl 分離を扱う。
-* Repository と Usecase の相互 IF 依存と、循環参照を避けるための Riverpod `Provider.dependencies` の扱いを定める。
+* `eaglesakura/flutter_layered_architecture` の `flutter-layered-architecture-design-repository` へ移行した。
+* Repository の窓口・状態・DataInjection・テスト差し替えは、そちらの APM パッケージを使う。
 
 ### flutter-layered-architecture-library-update
 
