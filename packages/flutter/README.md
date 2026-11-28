@@ -3,6 +3,8 @@
 Flutter / Dart 向け SKILL 集である。
 コーディング規約、Layered Architecture、デバッグ、SDK 調査などをまとめる。
 monolith L10n は `eaglesakura/flutter_monolith/skills` 側へ移行した。
+workspace 構造把握（`flutter-layered-architecture-workspace`）および annotations / linter rule SKILL は
+`eaglesakura/flutter_layered_architecture` 側へ移行した（またはそちらが正本である）。
 
 ## Quick Start
 
@@ -68,11 +70,10 @@ dependencies:
 * `screen_navigation` に Request/Result を集約し、`{画面名}Factory` と DI で画面間を疎結合にする。
 * `go_router` を推奨し、`Navigator` の直接利用を避けてナビゲーションライブラリを隠蔽する。
 
-### flutter-layered-architecture-workspace
+### flutter-layered-architecture-workspace（移行済み）
 
-* Dart workspace（ルート `pubspec.yaml` の `workspace:`）によるパッケージ一覧とレイアウトの把握手順を規定する。
-* ルートの `dependency_overrides` による依存の一元管理と、`app/` でのビルド慣習を示す。
-* レイヤードアーキテクチャ SKILL と併用し、変更対象パッケージの特定に使う。
+* `eaglesakura/flutter_layered_architecture`（`.apm/skills/flutter-layered-architecture-workspace`）へ移行した。
+* dart workspace の package 一覧・アプリ入口の把握は、そちらの APM パッケージをインストールして使う。
 
 ### flutter-maintenance-check-latest-version
 

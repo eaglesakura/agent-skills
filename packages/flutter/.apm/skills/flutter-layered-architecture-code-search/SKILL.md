@@ -43,9 +43,9 @@ metadata:
 
 ## 調査手順
 
-1. ルート `pubspec.yaml` の `workspace:` からローカル package 一覧を把握する
-2. 必要なら `flutter-layered-architecture-workspace` / `design` 等でレイヤー慣習を確認する
-3. 機能名・レイヤー名から候補 package を絞る（パス断片・package 名の一致）
+1. ルート `pubspec.yaml` の `workspace:` からローカル package 一覧を把握する（詳細は `flutter-layered-architecture-workspace`）
+2. 所属レイヤーが必要なら `flutter-layered-architecture-resolve-package-layer` で確定する（名前推測しない）
+3. 機能名・パス断片から候補 package を絞る
 4. 候補配下を探索し、ツリー・要点・TODO/FIXME・コメント留意点を集める
 5. [assets/report.md](./assets/report.md) のテンプレートで報告する
 
@@ -76,9 +76,10 @@ workspace:
 
 ## ナレッジベース
 
-### DO: まず workspace、次にレイヤー推測
+### DO: まず workspace、必要なら所属レイヤーを機械的に確定する
 
-* 全ディスクを無秩序に grep する前に、`workspace:` と命名規則で候補を絞る
+* 全ディスクを無秩序に grep する前に、`workspace:` で候補を絞る
+* レイヤー所属は package 名ではなく `resolve-package-layer` で決める
 
 ### DO: 発見有無を明示する
 
