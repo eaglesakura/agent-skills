@@ -4,8 +4,8 @@ description: >-
   Flutter SDK（エンジン／フレームワーク）自体の最新・対象バージョン調査用 SKILL。
   `gh` で flutter/flutter の tag 一覧、master の CHANGELOG.md、ローカル `flutter --version`
   との差分確認を行う。「Flutter の最新版」「3.x に上げたい」「Stable の変更点」「今の SDK と最新の差」
-  では必ず使う。 pub パッケージの outdated／dependency_overrides 更新は
-  flutter-layered-architecture-library-update、アプリ起動・DTD デバッグは flutter-app-debug、
+  では必ず使う。 pub パッケージの outdated／依存版管理は
+  flutter-layered-architecture-dependencies、アプリ起動・DTD デバッグは flutter-app-debug、
   Dart コーディング規約のみ、Go／Firebase 調査のみでは使わない。
 license: MIT License
 metadata:
@@ -25,7 +25,7 @@ Dart / pub 依存の更新手順そのものは対象外である（隣接 SKILL
 
 ## いつ使わないか
 
-* `flutter pub outdated` や `dependency_overrides` の更新 → `flutter-layered-architecture-library-update`
+* `flutter pub outdated` や外部依存の版管理 → `flutter-layered-architecture-dependencies`
 * アプリ起動・ランタイムデバッグ → `flutter-app-debug`
 
 ## 手順概要
