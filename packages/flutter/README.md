@@ -3,8 +3,9 @@
 Flutter / Dart 向け SKILL 集である。
 コーディング規約、Layered Architecture、デバッグ、SDK 調査などをまとめる。
 monolith L10n は `eaglesakura/flutter_monolith/skills` 側へ移行した。
-workspace 構造把握、コーディング規約（`coding-rules`）、Usecase / Repository / Screen MVVM 設計
-（`design-usecase` / `design-repository` / `design-screen-mvvm`）、および annotations / linter rule SKILL は
+workspace 構造把握、コーディング規約（`coding-rules`）、Usecase / Repository / Screen MVVM / 画面遷移設計
+（`design-usecase` / `design-repository` / `design-screen-mvvm` / `design-screen-navigation`）、
+および annotations / linter rule SKILL は
 `eaglesakura/flutter_layered_architecture` 側へ移行した（またはそちらが正本である）。
 
 ## Quick Start
@@ -64,11 +65,10 @@ dependencies:
 * Screen / ScreenImpl・State/Entity/Event の役割・`onXXXX` 設計判断は、そちらの APM パッケージを使う。
 * `@viewModel` 等の構造保証は annotations / linter-rule が正本である。
 
-### flutter-layered-architecture-screen-navigation
+### flutter-layered-architecture-design-screen-navigation（移行済み）
 
-* Flutter-Layered-Architecture の画面遷移設計能力を提供する。
-* `screen_navigation` に Request/Result を集約し、`{画面名}Factory` と DI で画面間を疎結合にする。
-* `go_router` を推奨し、`Navigator` の直接利用を避けてナビゲーションライブラリを隠蔽する。
+* `eaglesakura/flutter_layered_architecture` の `flutter-layered-architecture-design-screen-navigation` へ移行した。
+* Factory / Launcher / Finisher / Proxy・Request/Result・go_router の置き場所は、そちらの APM パッケージを使う。
 
 ### flutter-layered-architecture-workspace（移行済み）
 
