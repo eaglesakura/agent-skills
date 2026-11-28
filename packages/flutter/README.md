@@ -3,7 +3,8 @@
 Flutter / Dart 向け SKILL 集である。
 コーディング規約、Layered Architecture、デバッグ、SDK 調査などをまとめる。
 monolith L10n は `eaglesakura/flutter_monolith/skills` 側へ移行した。
-workspace 構造把握、コーディング規約（`coding-rules`）、Usecase / Repository / Screen MVVM / 画面遷移設計
+workspace 構造把握、コーディング規約（`coding-rules`）、外部依存管理（`dependencies`）、
+Usecase / Repository / Screen MVVM / 画面遷移設計
 （`design-usecase` / `design-repository` / `design-screen-mvvm` / `design-screen-navigation`）、
 および annotations / linter rule SKILL は
 `eaglesakura/flutter_layered_architecture` 側へ移行した（またはそちらが正本である）。
@@ -36,11 +37,10 @@ dependencies:
 * コメント・DTO・enum・例外・Delegate 切り出し判断などは、そちらの APM パッケージを使う。
 * `@delegate` / `@state` / `@entity` 等の構造保証は annotations / linter-rule が正本である。
 
-### flutter-layered-architecture-code-search
+### flutter-layered-architecture-code-search（削除）
 
-* コードベースのドキュメントや既存コードの「場所」の詳細調査に特化する。
-* 指定された機能・アーキテクチャ・パッケージ・ソースに対応するファイル・ツリーをレポートする。
-* TODO/FIXME やコメントから推測される留意事項も出力に含める。
+* 廃止した。機能・package の所在調査は `eaglesakura/flutter_layered_architecture` の
+  `flutter-layered-architecture-workspace`（＋必要なら `resolve-package-layer`）で足りる。
 
 ### flutter-layered-architecture-design（移行済み）
 
@@ -53,11 +53,11 @@ dependencies:
 * `eaglesakura/flutter_layered_architecture` の `flutter-layered-architecture-design-repository` へ移行した。
 * Repository の窓口・状態・DataInjection・テスト差し替えは、そちらの APM パッケージを使う。
 
-### flutter-layered-architecture-library-update
+### flutter-layered-architecture-dependencies（移行済み）
 
-* Layered Architecture の推奨に沿って依存ライブラリの更新手順を規定する。
-* `flutter pub outdated` で更新候補を確認し、ルート `pubspec.yaml` の `dependency_overrides` を更新する。
-* `flutter pub get` 等で検証し、互換性の問題で上げられないバージョンはスキップする。
+* 旧 `flutter-layered-architecture-library-update`。
+* `eaglesakura/flutter_layered_architecture` の `flutter-layered-architecture-dependencies` へ移行した。
+* 外部 pub はルートに実効版・worktree は `any`、追加・outdated・検証はそちらを使う。
 
 ### flutter-layered-architecture-design-screen-mvvm（移行済み）
 
