@@ -356,7 +356,7 @@ class BadDelegate {
 
 * 複数 Delegate が同じ処理（例: Storage 1 回 get、JWT パース）を共有するとき、**Delegate から Delegate を呼ばない**
 * `_impl` 配下の `usecase/` に `@internal` Usecase を置き、各 Delegate がコンストラクタまたは都度生成で利用する
-* 画面層の同様ルールは `flutter-layered-architecture-screen-mvvm` の `mvvm-viewmodel-design-action.md` を正とする
+* 画面層の同様ルールは `flutter-layered-architecture-design-screen-mvvm` の `references/action-and-delegate.md` を正とする
 * 公開 Usecase 層（`app_packages/usecase/*` の IF/Impl）とは別物である。パッケージ内の実装詳細として閉じる
 
 ```dart

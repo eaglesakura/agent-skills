@@ -3,8 +3,8 @@
 Flutter / Dart 向け SKILL 集である。
 コーディング規約、Layered Architecture、デバッグ、SDK 調査などをまとめる。
 monolith L10n は `eaglesakura/flutter_monolith/skills` 側へ移行した。
-workspace 構造把握（`flutter-layered-architecture-workspace`）、Usecase / Repository 設計
-（`design-usecase` / `design-repository`）、および annotations / linter rule SKILL は
+workspace 構造把握、Usecase / Repository / Screen MVVM 設計
+（`design-usecase` / `design-repository` / `design-screen-mvvm`）、および annotations / linter rule SKILL は
 `eaglesakura/flutter_layered_architecture` 側へ移行した（またはそちらが正本である）。
 
 ## Quick Start
@@ -58,11 +58,11 @@ dependencies:
 * `flutter pub outdated` で更新候補を確認し、ルート `pubspec.yaml` の `dependency_overrides` を更新する。
 * `flutter pub get` 等で検証し、互換性の問題で上げられないバージョンはスキップする。
 
-### flutter-layered-architecture-screen-mvvm
+### flutter-layered-architecture-design-screen-mvvm（移行済み）
 
-* Screen 層の Model-View-ViewModel 設計 SKILL。画面の設計・開発時に必須とする。
-* Riverpod / Hooks / StateStream / freezed 等を用いた View/ViewModel/State/Entity/Event の設計を規定する。
-* 関連参照ドキュメント（ViewModel 設計・Entity・Usecase・State・Event・View・テスト）に従って実装する。
+* `eaglesakura/flutter_layered_architecture` の `flutter-layered-architecture-design-screen-mvvm` へ移行した。
+* Screen / ScreenImpl・State/Entity/Event の役割・`onXXXX` 設計判断は、そちらの APM パッケージを使う。
+* `@viewModel` 等の構造保証は annotations / linter-rule が正本である。
 
 ### flutter-layered-architecture-screen-navigation
 

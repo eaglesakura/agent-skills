@@ -6,7 +6,7 @@ description: >-
   に分離し、`{画面名}Factory` / `Launcher` / `Finisher` / `Proxy` で遷移する。
   「画面遷移を足す」「Launcher の IF」「遷移引数・戻り値」「go_router をどこに置くか」
   「画面 package 同士の循環を避けたい」では必ず使う。詳細は references/navigation.md。
-  Screen 内 MVVM（ViewModel/Entity）は flutter-layered-architecture-screen-mvvm、
+  Screen 内 MVVM（ViewModel/Entity）は flutter-layered-architecture-design-screen-mvvm、
   レイヤー地図は design、所在調査は code-search、Dart 規約のみは coding-rules では使わない。
 license: MIT License
 metadata:
@@ -27,7 +27,7 @@ Screen 層の画面間を **疎結合**にする。ルーティング実装（�
 
 ## いつ使わないか
 
-* 画面内部の MVVM（ViewModel / Entity / `onXXXX`）→ `flutter-layered-architecture-screen-mvvm`
+* 画面内部の MVVM（ViewModel / Entity / `onXXXX`）→ `flutter-layered-architecture-design-screen-mvvm`
 * レイヤー責務の地図だけ → `flutter-layered-architecture-design`
 * 既存コードの所在調査 → `flutter-layered-architecture-code-search`
 * Dart 言語規約だけ → `flutter-coding-rules`
@@ -85,4 +85,4 @@ Screen 層の画面間を **疎結合**にする。ルーティング実装（�
 
 ### DO NOT: MVVM の State/Entity 設計を本 SKILL だけで済ませようとする
 
-* 画面の中身は `screen-mvvm` へ
+* 画面の中身は `design-screen-mvvm` へ
