@@ -29,7 +29,7 @@ metadata:
 * Markdown の見出し TOC だけで docs を読む → `markdown-search`
 * 文書中の `path/to/file` を実パスに解決するだけ → `workspace-resolve-file-path`
 * 新規に画面 MVVM や Usecase / Repository 設計を書く → `design-screen-mvvm` / `design-usecase` / `design-repository` 等
-* Dart の言語規約だけの修正 → `flutter-coding-rules`
+* Dart の言語規約だけの修正 → `flutter-layered-architecture-coding-rules`
 
 ## 入力の解釈
 

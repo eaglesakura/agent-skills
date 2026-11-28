@@ -3,7 +3,7 @@
 Flutter / Dart 向け SKILL 集である。
 コーディング規約、Layered Architecture、デバッグ、SDK 調査などをまとめる。
 monolith L10n は `eaglesakura/flutter_monolith/skills` 側へ移行した。
-workspace 構造把握、Usecase / Repository / Screen MVVM 設計
+workspace 構造把握、コーディング規約（`coding-rules`）、Usecase / Repository / Screen MVVM 設計
 （`design-usecase` / `design-repository` / `design-screen-mvvm`）、および annotations / linter rule SKILL は
 `eaglesakura/flutter_layered_architecture` 側へ移行した（またはそちらが正本である）。
 
@@ -29,11 +29,11 @@ dependencies:
 * `launch.json` 読取、`flutter devices` / `flutter run --print-dtd`、Dart MCP（DTD）での検査・操作を規定する。
 * Maestro の黒箱 UI テストとは役割を分け、VM Service（`http://`）と DTD（`ws://`）を混同しない。
 
-### flutter-coding-rules
+### flutter-layered-architecture-coding-rules（移行済み）
 
-* Flutter / Dart のコーディング規約遵守用 SKILL。`*.dart` の実装・修正時に必ず従う。
-* データオブジェクト・Delegate パターン・コメント・可視性・ファイルレイアウト・enum・例外処理などのルールを定める。
-* 文脈に応じて `references/` の追加ドキュメントをロードして詳細を満たす。
+* `eaglesakura/flutter_layered_architecture` の `flutter-layered-architecture-coding-rules` へ移行した。
+* コメント・DTO・enum・例外・Delegate 切り出し判断などは、そちらの APM パッケージを使う。
+* `@delegate` / `@state` / `@entity` 等の構造保証は annotations / linter-rule が正本である。
 
 ### flutter-layered-architecture-code-search
 
